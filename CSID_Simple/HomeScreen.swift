@@ -112,9 +112,10 @@ struct HomeScreen: View {
         .overlay(alignment: .topLeading, content: {
             Image("csidAssistLogo")
                 .resizable()
-                .frame(width: 80, height: 80)
+                .frame(width: 70, height: 70)
                 .safeAreaPadding(.top)
                 .padding(.leading)
+                .padding(.top, 10)
         })
         .ignoresSafeArea()
     }
