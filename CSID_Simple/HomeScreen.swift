@@ -22,17 +22,23 @@ enum HomeScreenSections: Identifiable, CaseIterable {
     }
 }
 
+enum Search: CaseIterable {
+    case inactive, active
+}
+
 struct HomeScreen: View {
     
     @FocusState private var isFocused: Bool
     
     @State private var sections: HomeScreenSections = .activity
+    @State private var search: Search = .inactive
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
     
     private var sortingOptions = ["Relevance", "Carbs (Low to High)", "Carbs (High to Low)", "Sugars (Low to High)", "Sugars (High to Low)", "Starches (Low to High)", "Starches (High to Low)"]
     
     var body: some View {
+        
         NavigationStack {
             ZStack (alignment: .top) {
                 LinearGradient(colors: [.backgroundColor1,.backgroundColor2,.backgroundColor1], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -53,6 +59,14 @@ struct HomeScreen: View {
                                     TextField("", text: $searchText)
                                         .foregroundColor(.black)
                                         .frame(width: 245, height: 35)
+                                        .focused($isFocused)
+                                        .onChange(of: isFocused, initial: false) {
+                                            if isFocused {
+                                                search = .active
+                                            } else {
+                                                search = .inactive
+                                            }
+                                        }
                                 }
                             }.padding(.leading)
                         }
@@ -78,34 +92,39 @@ struct HomeScreen: View {
                     .onTapGesture {
                         isFocused = true
                     }
-                    List {
-                        ForEach(HomeScreenSections.allCases) {section in
-                            Section {
-                                switch sections {
-                                case .activity:
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(UIColor.label).opacity(0.5))
-                                        .frame(width: 350, height: 100)
-                                case .meals:
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(UIColor.label).opacity(0.5))
-                                        .frame(width: 350, height: 100)
-                                case .lists:
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(UIColor.label).opacity(0.5))
-                                        .frame(width: 350, height: 100)
+                    switch search {
+                    case .inactive:
+                        List {
+                            ForEach(HomeScreenSections.allCases) {section in
+                                Section {
+                                    switch sections {
+                                    case .activity:
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(Color(UIColor.label).opacity(0.5))
+                                            .frame(width: 350, height: 100)
+                                    case .meals:
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(Color(UIColor.label).opacity(0.5))
+                                            .frame(width: 350, height: 100)
+                                    case .lists:
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(Color(UIColor.label).opacity(0.5))
+                                            .frame(width: 350, height: 100)
+                                    }
+                                } header: {
+                                    Text(section.label)
+                                        .font(.system(size: 30, weight: .semibold))
+                                        .foregroundStyle(Color(UIColor.label))
                                 }
-                            } header: {
-                                Text(section.label)
-                                    .font(.system(size: 30, weight: .semibold))
-                                    .foregroundStyle(Color(UIColor.label))
                             }
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 0, trailing: 15))
                         }
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 0, trailing: 15))
+                        .listStyle(.plain)
+                    case .active:
+                        Text("Search Results To Be Added")
                     }
-                    .listStyle(.plain)
                 }
             }
         }
@@ -115,7 +134,7 @@ struct HomeScreen: View {
                 .frame(width: 70, height: 70)
                 .safeAreaPadding(.top)
                 .padding(.leading)
-                .padding(.top, 10)
+                .padding(.top, 20)
         })
         .ignoresSafeArea()
     }
