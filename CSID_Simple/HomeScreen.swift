@@ -35,7 +35,13 @@ struct HomeScreen: View {
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
     
-    private var sortingOptions = ["Relevance", "Carbs (Low to High)", "Carbs (High to Low)", "Sugars (Low to High)", "Sugars (High to Low)", "Starches (Low to High)", "Starches (High to Low)"]
+    private var sortingOptions = ["Relevance",
+                                  "Carbs (Low to High)",
+                                  "Carbs (High to Low)",
+                                  "Sugars (Low to High)",
+                                  "Sugars (High to Low)",
+                                  "Starches (Low to High)",
+                                  "Starches (High to Low)"]
     
     var body: some View {
         
@@ -92,24 +98,58 @@ struct HomeScreen: View {
                     .onTapGesture {
                         isFocused = true
                     }
+                    
                     switch search {
                     case .inactive:
                         List {
                             ForEach(HomeScreenSections.allCases) {section in
                                 Section {
-                                    switch sections {
-                                    case .activity:
+                                    if section == .activity {
                                         RoundedRectangle(cornerRadius: 15)
-                                            .fill(Color(UIColor.label).opacity(0.5))
+                                            .fill(.textField)
                                             .frame(width: 350, height: 100)
-                                    case .meals:
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .fill(Color(UIColor.label).opacity(0.5))
-                                            .frame(width: 350, height: 100)
-                                    case .lists:
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .fill(Color(UIColor.label).opacity(0.5))
-                                            .frame(width: 350, height: 100)
+                                    } else if section == .meals {
+                                        MealTypeIconView()
+                                    } else {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .fill(.textField)
+                                                .frame(width: 350, height: 170)
+                                            List {
+                                                Section {
+                                                    HStack {
+                                                        Image(systemName: "plus")
+                                                            .foregroundStyle(.iconTeal)
+                                                        Text("Create New List")
+                                                            .font(.system(size: 16))
+                                                            .foregroundStyle(.iconTeal)
+                                                    }
+                                                    HStack {
+                                                        Image(systemName: "bookmark")
+                                                        Text("Safe Foods")
+                                                            .font(.system(size: 16))
+                                                    }
+                                                    HStack {
+                                                        Image(systemName: "bookmark")
+                                                        Text("Unsafe Foods")
+                                                            .font(.system(size: 16))
+                                                    }
+                                                    HStack {
+                                                        Image(systemName: "bookmark")
+                                                        Text("Favorite Snacks")
+                                                            .font(.system(size: 16))
+                                                    }
+                                                    HStack {
+                                                        Image(systemName: "bookmark")
+                                                        Text("Favorite Treats")
+                                                            .font(.system(size: 16))
+                                                    }
+                                                }
+                                                .listRowBackground(Color.clear)
+                                            }
+                                            .scrollIndicators(.hidden)
+                                            .padding(.trailing)
+                                        }
                                     }
                                 } header: {
                                     Text(section.label)
@@ -142,4 +182,35 @@ struct HomeScreen: View {
 
 #Preview {
     HomeScreen()
+}
+
+struct MealTypeIconView: View {
+    
+    private var meals: [String] = ["Breakfast","Lunch","Dinner","Snack"]
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(.textField)
+                .frame(width: 350, height: 100)
+            LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
+                ForEach(meals, id: \.self) { meal in
+                    VStack (spacing: 5) {
+                        Image(meal.lowercased())
+                            .resizable()
+                            .frame(width: 55, height: 55)
+                            .mask {
+                                Circle()
+                                    .frame(width: 50, height: 50)
+                            }
+                        Text(meal)
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                    .onTapGesture {
+                        print(meal)
+                    }
+                }
+            }).frame(width: 300, alignment: .center)
+        }
+    }
 }
