@@ -23,7 +23,7 @@ enum HomeScreenSections: Identifiable, CaseIterable {
 }
 
 enum Search: CaseIterable {
-    case unfocused, focused, active
+    case unfocused, focused, inProgress
 }
 
 enum SearchFilter: Identifiable, CaseIterable {
@@ -50,7 +50,7 @@ struct HomeScreen: View {
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
     @State private var selectedFilter: SearchFilter = .allFoods
-    @State private var searchResults: [FoodDetails] = [FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"),FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"),FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no")]
+    @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
     
     private let searchFilters: [SearchFilter] = SearchFilter.allCases
@@ -78,13 +78,18 @@ struct HomeScreen: View {
                                 .fill(.textField)
                                 .frame(width: 300, height: 40)
                             HStack {
-                                Image(systemName: isFocused || search == .active ? "arrow.left" :  "magnifyingglass")
+                                Image(systemName:  search != .unfocused ? "arrow.left" :  "magnifyingglass")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(Color(UIColor.label).opacity(0.6))
                                     .onTapGesture {
-                                        isFocused = false
-                                        search = .unfocused
-                                        searchText = ""
+                                        if search != .unfocused {
+                                            isFocused = false
+                                            searchText = ""
+                                            searchResults = []
+                                            search = .unfocused
+                                            selectedSort = "Relevance"
+                                            selectedFilter = .allFoods
+                                        }
                                     }
                                 ZStack (alignment: .leading) {
                                     searchText.count > 0 ? nil : SearchCarouselView()
@@ -92,13 +97,13 @@ struct HomeScreen: View {
                                         .foregroundColor(Color(UIColor.label))
                                         .frame(width: 245, height: 35)
                                         .focused($isFocused)
-                                        .onChange(of: isFocused, initial: false) {
-                                            if isFocused && search != .active {
+                                        .onChange(of: isFocused, {
+                                            if isFocused == true {
                                                 search = .focused
                                             }
-                                        }
+                                        })
                                         .onSubmit {
-                                            search = .active
+                                            searchFoods()
                                         }
                                 }
                             }.padding(.leading)
@@ -106,7 +111,9 @@ struct HomeScreen: View {
                         Menu {
                             Picker("", selection: $selectedSort) {
                                 ForEach(sortingOptions, id: \.self){ option in
-                                    Button(action: {self.selectedSort = option}, label: {
+                                    Button(action: {
+                                        self.selectedSort = option
+                                    }, label: {
                                         Text(option)
                                     })
                                 }
@@ -120,11 +127,11 @@ struct HomeScreen: View {
                                     .foregroundColor(Color(UIColor.label))
                             }
                         }
+                        .onChange(of: selectedSort) {
+                            search == .focused ? searchFoods() : nil
+                        }
                     }
                     .padding(.top, 10)
-                    .onTapGesture {
-                        isFocused = true
-                    }
                     
                     switch search {
                     case .unfocused:
@@ -146,8 +153,10 @@ struct HomeScreen: View {
                                                 Section {
                                                     if savedListMockData.firstIndex(of: list) == 0 {
                                                         HStack {
-                                                            Image(systemName: "plus")
-                                                                .foregroundStyle(.iconTeal)
+                                                            Group {
+                                                                Image(systemName: "plus")
+                                                                    .foregroundStyle(.iconTeal)
+                                                            }
                                                             Text("Create New List")
                                                                 .font(.system(size: 16))
                                                                 .foregroundStyle(.iconTeal)
@@ -177,14 +186,13 @@ struct HomeScreen: View {
                         }
                         .listStyle(.plain)
                     case .focused:
-                        Text("Recent searches live here along with recommendations")
-                    case .active:
                         LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
                             ForEach(searchFilters, id: \.self) { filter in
-                                Button(action: {selectedFilter = filter}, label: {
+                                Button(action: {selectedFilter = filter; searchFoods()}, label: {
                                     Text(filter.selected)
                                         .font(.system(size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold))
-                                        .foregroundStyle( selectedFilter.selected == filter.selected ? Color(UIColor.label) : Color(UIColor.label).opacity(0.3))
+                                        .foregroundStyle( selectedFilter.selected == filter.selected ? Color(UIColor.label) :
+                                                            Color(UIColor.label).opacity(0.3))
                                 })
                                 .background(
                                     RoundedRectangle(cornerRadius: 7)
@@ -193,13 +201,16 @@ struct HomeScreen: View {
                                         .frame(width: 105, height: 30))
                             }
                         }.padding(.horizontal, 25).padding(.vertical, 20)
-                        List(searchResults, id: \.self) {food in
-                            SearchResultCellView(result: food)
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
+                        
+                        ScrollView {
+                            LazyVGrid (columns: [GridItem(.flexible())], spacing: 3) {
+                                ForEach(searchResults, id: \.self) {food in
+                                    SearchResultCellView(result: food)
+                                }.padding(.bottom, 5)
+                            }.padding(.top)
                         }
-                        .listStyle(.plain)
+                    case .inProgress:
+                        Text("Search In Progress")
                     }
                 }
             }
@@ -218,6 +229,63 @@ struct HomeScreen: View {
             }
         })
     }
+    
+    func searchFoods() {
+        searchResults = []
+        search = .inProgress
+        // Prepare search components
+        let searchComponents = searchText.lowercased()
+            .components(separatedBy: " ")
+            .filter { !$0.isEmpty }
+        
+        // Configure whole food filter
+        let wF = selectedFilter == .wholeFoods ? "USDAFoodSearchTable.wholeFood='yes' AND" :
+                 selectedFilter == .brandedFoods ? "USDAFoodSearchTable.wholeFood='no' AND" : ""
+        
+        // Construct search terms
+        let searchTerms = searchComponents
+            .map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }
+            .joined(separator: " AND ")
+        
+        let fullSearchTerms = "\(wF) \(searchTerms)"
+        
+        // Set sorting filter based on label
+        let sortFilter: String
+        switch selectedSort {
+        case "Relevance":
+            sortFilter = "wholeFood DESC, length(description)"
+        case "Sugars (Low to High)":
+            sortFilter = "CAST(totalSugars AS REAL)"
+        case "Sugars (High to Low)":
+            sortFilter = "CAST(totalSugars AS REAL) DESC"
+        case "Starches (Low to High)":
+            sortFilter = "CAST(totalStarches AS REAL)"
+        case "Starches (High to Low)":
+            sortFilter = "CAST(totalStarches AS REAL) DESC"
+        case "Carbs (Low to High)":
+            sortFilter = "CAST(carbs AS REAL)"
+        case "Carbs (High to Low)":
+            sortFilter = "CAST(carbs AS REAL) DESC"
+        default:
+            sortFilter = "wholeFood DESC, length(description)"
+        }
+        
+        // Perform database query on a background queue
+        DispatchQueue(label: "search.serial.queue").async {
+            let queryResult = DatabaseQueries.databaseSearch(
+                searchTerms: fullSearchTerms,
+                databasePointer: databasePointer,
+                sortFilter: sortFilter
+            )
+            
+            // Update UI on main queue
+            DispatchQueue.main.async {
+                self.searchResults = queryResult
+                search = .focused
+            }
+        }
+    }
+
 }
 
 #Preview {

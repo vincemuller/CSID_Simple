@@ -24,11 +24,11 @@ extension String {
     
     func brandFormater(brandOwner: String) -> String {
         
-        if brandOwner == "" && self != "" {
+        if brandOwner == "N/A" && self != "N/A" {
             return self.capitalized
-        } else if brandOwner != "" && self == "" {
+        } else if brandOwner != "N/A" && self == "N/A" {
             return brandOwner.capitalized
-        } else if brandOwner != "" && self != "" {
+        } else if brandOwner != "N/A" && self != "N/A" {
             return "\(brandOwner.capitalized) | \(self.capitalized)"
         } else {
             return ""
