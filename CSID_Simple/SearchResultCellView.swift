@@ -7,25 +7,10 @@
 
 import SwiftUI
 
-struct newUSDAFoodDetails: Codable, Hashable {
-    var searchKeyWords:         String
-    var fdicID:                 Int
-    var brandOwner:             String?
-    var brandName:              String?
-    var brandedFoodCategory:    String
-    var description:            String
-    var servingSize:            Float
-    var servingSizeUnit:        String
-    var carbs:                  String
-    var totalSugars:            String
-    var totalStarches:          String
-    var wholeFood:              String
-}
-
 
 struct SearchResultCellView: View {
     
-    @State var result: newUSDAFoodDetails
+    @State var result: FoodDetails
     
     var body: some View {
         
@@ -83,5 +68,5 @@ struct SearchResultCellView: View {
 }
 
 #Preview {
-    SearchResultCellView(result: newUSDAFoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"))
+    SearchResultCellView(result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"))
 }

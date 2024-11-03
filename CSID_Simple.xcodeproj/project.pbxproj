@@ -14,6 +14,11 @@
 		EBC290722CD20F2200500D84 /* SearchCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290712CD20F2200500D84 /* SearchCarouselView.swift */; };
 		EBC290762CD59B6F00500D84 /* SearchResultCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290752CD59B6F00500D84 /* SearchResultCellView.swift */; };
 		EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290772CD59BBD00500D84 /* Extensions.swift */; };
+		EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290792CD6CE8500500D84 /* Models.swift */; };
+		EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */; };
+		EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */; };
+		EBC290802CD71C3500500D84 /* Singletons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907F2CD71C3500500D84 /* Singletons.swift */; };
+		EBC290822CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db in Resources */ = {isa = PBXBuildFile; fileRef = EBC290812CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +30,11 @@
 		EBC290712CD20F2200500D84 /* SearchCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCarouselView.swift; sourceTree = "<group>"; };
 		EBC290752CD59B6F00500D84 /* SearchResultCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCellView.swift; sourceTree = "<group>"; };
 		EBC290772CD59BBD00500D84 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		EBC290792CD6CE8500500D84 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
+		EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseQueries.swift; sourceTree = "<group>"; };
+		EBC2907F2CD71C3500500D84 /* Singletons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singletons.swift; sourceTree = "<group>"; };
+		EBC290812CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = CSIDAssistPlusFoodDatabase.db; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +67,7 @@
 		EBC290622CD1FF9D00500D84 /* CSID_Simple */ = {
 			isa = PBXGroup;
 			children = (
+				EBC290812CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db */,
 				EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */,
 				EBC290652CD1FF9D00500D84 /* HomeScreen.swift */,
 				EBC290672CD1FF9F00500D84 /* Assets.xcassets */,
@@ -64,6 +75,10 @@
 				EBC290712CD20F2200500D84 /* SearchCarouselView.swift */,
 				EBC290752CD59B6F00500D84 /* SearchResultCellView.swift */,
 				EBC290772CD59BBD00500D84 /* Extensions.swift */,
+				EBC290792CD6CE8500500D84 /* Models.swift */,
+				EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */,
+				EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */,
+				EBC2907F2CD71C3500500D84 /* Singletons.swift */,
 			);
 			path = CSID_Simple;
 			sourceTree = "<group>";
@@ -136,6 +151,7 @@
 			files = (
 				EBC2906B2CD1FF9F00500D84 /* Preview Assets.xcassets in Resources */,
 				EBC290682CD1FF9F00500D84 /* Assets.xcassets in Resources */,
+				EBC290822CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +165,10 @@
 				EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */,
 				EBC290722CD20F2200500D84 /* SearchCarouselView.swift in Sources */,
 				EBC290762CD59B6F00500D84 /* SearchResultCellView.swift in Sources */,
+				EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */,
+				EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */,
+				EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */,
+				EBC290802CD71C3500500D84 /* Singletons.swift in Sources */,
 				EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */,
 				EBC290642CD1FF9D00500D84 /* CSID_SimpleApp.swift in Sources */,
 			);

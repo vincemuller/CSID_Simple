@@ -23,7 +23,7 @@ enum HomeScreenSections: Identifiable, CaseIterable {
 }
 
 enum Search: CaseIterable {
-    case inactive, active
+    case unfocused, focused, active
 }
 
 enum SearchFilter: Identifiable, CaseIterable {
@@ -46,10 +46,12 @@ struct HomeScreen: View {
     @FocusState private var isFocused: Bool
     
     @State private var sections: HomeScreenSections = .activity
-    @State private var search: Search = .inactive
+    @State private var search: Search = .unfocused
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
     @State private var selectedFilter: SearchFilter = .allFoods
+    @State private var searchResults: [FoodDetails] = [FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"),FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"),FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no")]
+    @State private var activeSearch: Bool = false
     
     private let searchFilters: [SearchFilter] = SearchFilter.allCases
     private var sortingOptions = ["Relevance",
@@ -76,21 +78,27 @@ struct HomeScreen: View {
                                 .fill(.textField)
                                 .frame(width: 300, height: 40)
                             HStack {
-                                Image(systemName: "magnifyingglass")
+                                Image(systemName: isFocused || search == .active ? "arrow.left" :  "magnifyingglass")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                                    .onTapGesture {
+                                        isFocused = false
+                                        search = .unfocused
+                                        searchText = ""
+                                    }
                                 ZStack (alignment: .leading) {
                                     searchText.count > 0 ? nil : SearchCarouselView()
                                     TextField("", text: $searchText)
-                                        .foregroundColor(.black)
+                                        .foregroundColor(Color(UIColor.label))
                                         .frame(width: 245, height: 35)
                                         .focused($isFocused)
                                         .onChange(of: isFocused, initial: false) {
-                                            if isFocused {
-                                                search = .active
-                                            } else {
-                                                search = .inactive
+                                            if isFocused && search != .active {
+                                                search = .focused
                                             }
+                                        }
+                                        .onSubmit {
+                                            search = .active
                                         }
                                 }
                             }.padding(.leading)
@@ -119,7 +127,7 @@ struct HomeScreen: View {
                     }
                     
                     switch search {
-                    case .inactive:
+                    case .unfocused:
                         List {
                             ForEach(HomeScreenSections.allCases) {section in
                                 Section {
@@ -168,6 +176,8 @@ struct HomeScreen: View {
                             .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 0, trailing: 15))
                         }
                         .listStyle(.plain)
+                    case .focused:
+                        Text("Recent searches live here along with recommendations")
                     case .active:
                         LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
                             ForEach(searchFilters, id: \.self) { filter in
@@ -183,8 +193,8 @@ struct HomeScreen: View {
                                         .frame(width: 105, height: 30))
                             }
                         }.padding(.horizontal, 25).padding(.vertical, 20)
-                        List(0...100, id: \.self) {food in
-                            SearchResultCellView(result: newUSDAFoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Candy Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"))
+                        List(searchResults, id: \.self) {food in
+                            SearchResultCellView(result: food)
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
@@ -203,6 +213,10 @@ struct HomeScreen: View {
                 .padding(.top, 20)
         })
         .ignoresSafeArea()
+        .onAppear(perform: {
+            if databasePointer == nil {databasePointer = CA_DatabaseHelper.getDatabasePointer(databaseName: "CSIDAssistPlusFoodDatabase.db")
+            }
+        })
     }
 }
 
