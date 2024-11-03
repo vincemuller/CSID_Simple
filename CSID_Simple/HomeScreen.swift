@@ -53,7 +53,6 @@ struct HomeScreen: View {
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
     
-    private let searchFilters: [SearchFilter] = SearchFilter.allCases
     private var sortingOptions = ["Relevance",
                                   "Carbs (Low to High)",
                                   "Carbs (High to Low)",
@@ -68,8 +67,7 @@ struct HomeScreen: View {
         
         NavigationStack {
             ZStack (alignment: .top) {
-                LinearGradient(colors: [.backgroundColor1,.backgroundColor2,.backgroundColor1], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .ignoresSafeArea()
+                BackgroundView()
                     .navigationTitle("CSIDAssist")
                 VStack (spacing: 0) {
                     HStack (spacing: 10) {
@@ -186,29 +184,9 @@ struct HomeScreen: View {
                         }
                         .listStyle(.plain)
                     case .focused:
-                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
-                            ForEach(searchFilters, id: \.self) { filter in
-                                Button(action: {selectedFilter = filter; searchFoods()}, label: {
-                                    Text(filter.selected)
-                                        .font(.system(size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold))
-                                        .foregroundStyle( selectedFilter.selected == filter.selected ? Color(UIColor.label) :
-                                                            Color(UIColor.label).opacity(0.3))
-                                })
-                                .background(
-                                    RoundedRectangle(cornerRadius: 7)
-                                        .fill(.clear)
-                                        .stroke(selectedFilter.selected == filter.selected ? Color(UIColor.label) : Color(UIColor.label).opacity(0.3), lineWidth: selectedFilter.selected == filter.selected ? 2 : 1)
-                                        .frame(width: 105, height: 30))
-                            }
-                        }.padding(.horizontal, 25).padding(.vertical, 20)
+                        SearchFiltersView(selectedFilter: $selectedFilter, searchFoods: searchFoods)
+                        SearchResultsView(searchResults: searchResults)
                         
-                        ScrollView {
-                            LazyVGrid (columns: [GridItem(.flexible())], spacing: 3) {
-                                ForEach(searchResults, id: \.self) {food in
-                                    SearchResultCellView(result: food)
-                                }.padding(.bottom, 5)
-                            }.padding(.top)
-                        }
                     case .inProgress:
                         Text("Search In Progress")
                     }
