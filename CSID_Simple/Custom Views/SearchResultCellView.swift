@@ -58,7 +58,7 @@ struct SearchResultCellView: View {
                 .fill(.textField)
             HStack (spacing: 0) {
                 ZStack {
-                    VStack (spacing: 5) {
+                    VStack (spacing: 3) {
                         Text("\(nutritionalData[0])g")
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(Color(UIColor.label))
@@ -75,16 +75,17 @@ struct SearchResultCellView: View {
                     Text(brand ?? "")
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundStyle(.iconTeal)
+                        .lineLimit(1)
                         .offset(y: 1)
                     Text(result.description)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(UIColor.label))
                         .lineLimit(3)
                         .minimumScaleFactor(0.75)
-                        .frame(width: 250, height: 45, alignment: .topLeading)
+                        .frame(width: 245, height: 45, alignment: .topLeading)
                         .offset(y: 7)
                     Spacer()
-                }.frame(width: 250, height: 80).offset(x: 3, y: 2)
+                }.frame(width: 245, height: 80).offset(x: 3, y: 2)
             }
         }
         .frame(width: 360, height: 80)

@@ -12,11 +12,13 @@ struct SearchResultsView: View {
     @State var searchResults: [FoodDetails] = []
     @State var selectedSort: String
     
+    var savedFoods: [Int] = [378617,398152,423680]
+    
     var body: some View {
         ScrollView {
             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                 ForEach(searchResults, id: \.self) {food in
-                    SearchResultCellView(result: food, isFavorite: true, selectedSort: selectedSort)
+                    SearchResultCellView(result: food, isFavorite: savedFoods.contains(food.fdicID), selectedSort: selectedSort)
                 }.padding(.bottom, 5)
             }.padding(.top)
         }

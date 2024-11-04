@@ -157,7 +157,14 @@ struct HomeScreen: View {
                         SearchResultsView(searchResults: searchResults, selectedSort: selectedSort)
                         
                     case .searchInProgress:
-                        Text("Search In Progress")
+                        VStack {
+                            Image("csidAssistLogo")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundStyle(Color(UIColor.label).opacity(0.5))
+                                .frame(width: 160, height: 160)
+                        }
+                        .frame(height: 500)
                     }
                 }
             }
