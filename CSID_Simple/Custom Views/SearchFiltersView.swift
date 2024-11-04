@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchFiltersView: View {
     
     @Binding var selectedFilter: SearchFilter
+    @State var searchText: String
     
     let searchFoods: () -> ()
     
@@ -19,7 +20,7 @@ struct SearchFiltersView: View {
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
             ForEach(searchFilters, id: \.self) { filter in
-                Button(action: {selectedFilter = filter; searchFoods()}, label: {
+                Button(action: {selectedFilter = filter; searchText.isEmpty ? nil : searchFoods()}, label: {
                     Text(filter.selected)
                         .font(.system(size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold))
                         .foregroundStyle( selectedFilter.selected == filter.selected ? Color(UIColor.label) :
@@ -36,7 +37,7 @@ struct SearchFiltersView: View {
 }
 
 #Preview {
-    SearchFiltersView(selectedFilter: .constant(.allFoods)) {
+    SearchFiltersView(selectedFilter: .constant(.allFoods), searchText: "") {
         print("search executed!")
     }
 }

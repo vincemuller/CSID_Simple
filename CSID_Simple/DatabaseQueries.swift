@@ -32,7 +32,7 @@ class DatabaseQueries {
             WHERE \(searchTerms)
             ORDER BY \(sortFilter);
         """
-        
+        print(query)
         var results: [FoodDetails] = []
         executeQuery(databasePointer: databasePointer, query: query) { statement in
             results.append(

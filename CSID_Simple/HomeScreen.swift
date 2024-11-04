@@ -23,7 +23,7 @@ enum HomeScreenSections: Identifiable, CaseIterable {
 }
 
 enum Search: CaseIterable {
-    case unfocused, focused, inProgress
+    case isNotFocused, isFocused, searchInProgress
 }
 
 enum SearchFilter: Identifiable, CaseIterable {
@@ -46,20 +46,12 @@ struct HomeScreen: View {
     @FocusState private var isFocused: Bool
     
     @State private var sections: HomeScreenSections = .activity
-    @State private var search: Search = .unfocused
+    @State private var search: Search = .isNotFocused
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
     @State private var selectedFilter: SearchFilter = .allFoods
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
-    
-    private var sortingOptions = ["Relevance",
-                                  "Carbs (Low to High)",
-                                  "Carbs (High to Low)",
-                                  "Sugars (Low to High)",
-                                  "Sugars (High to Low)",
-                                  "Starches (Low to High)",
-                                  "Starches (High to Low)"]
     
     private var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
     
@@ -76,17 +68,12 @@ struct HomeScreen: View {
                                 .fill(.textField)
                                 .frame(width: 300, height: 40)
                             HStack {
-                                Image(systemName:  search != .unfocused ? "arrow.left" :  "magnifyingglass")
+                                Image(systemName:  search != .isNotFocused ? "arrow.left" :  "magnifyingglass")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(Color(UIColor.label).opacity(0.6))
                                     .onTapGesture {
-                                        if search != .unfocused {
-                                            isFocused = false
-                                            searchText = ""
-                                            searchResults = []
-                                            search = .unfocused
-                                            selectedSort = "Relevance"
-                                            selectedFilter = .allFoods
+                                        if search != .isNotFocused {
+                                            resetSearch()
                                         }
                                     }
                                 ZStack (alignment: .leading) {
@@ -97,7 +84,7 @@ struct HomeScreen: View {
                                         .focused($isFocused)
                                         .onChange(of: isFocused, {
                                             if isFocused == true {
-                                                search = .focused
+                                                search = .isFocused
                                             }
                                         })
                                         .onSubmit {
@@ -106,33 +93,15 @@ struct HomeScreen: View {
                                 }
                             }.padding(.leading)
                         }
-                        Menu {
-                            Picker("", selection: $selectedSort) {
-                                ForEach(sortingOptions, id: \.self){ option in
-                                    Button(action: {
-                                        self.selectedSort = option
-                                    }, label: {
-                                        Text(option)
-                                    })
-                                }
+                        SortResultsView(selectedSort: $selectedSort)
+                            .onChange(of: selectedSort) {
+                                search == .isFocused ? searchFoods() : nil
                             }
-                        } label: {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.textField)
-                                    .frame(width: 40, height: 40)
-                                Image(systemName: "arrow.up.and.down.text.horizontal")
-                                    .foregroundColor(Color(UIColor.label))
-                            }
-                        }
-                        .onChange(of: selectedSort) {
-                            search == .focused ? searchFoods() : nil
-                        }
                     }
                     .padding(.top, 10)
                     
                     switch search {
-                    case .unfocused:
+                    case .isNotFocused:
                         List {
                             ForEach(HomeScreenSections.allCases) {section in
                                 Section {
@@ -183,11 +152,11 @@ struct HomeScreen: View {
                             .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 0, trailing: 15))
                         }
                         .listStyle(.plain)
-                    case .focused:
-                        SearchFiltersView(selectedFilter: $selectedFilter, searchFoods: searchFoods)
-                        SearchResultsView(searchResults: searchResults)
+                    case .isFocused:
+                        SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
+                        SearchResultsView(searchResults: searchResults, selectedSort: selectedSort)
                         
-                    case .inProgress:
+                    case .searchInProgress:
                         Text("Search In Progress")
                     }
                 }
@@ -208,9 +177,18 @@ struct HomeScreen: View {
         })
     }
     
+    func resetSearch() {
+        isFocused = false
+        searchText = ""
+        searchResults = []
+        search = .isNotFocused
+        selectedSort = "Relevance"
+        selectedFilter = .allFoods
+    }
+    
     func searchFoods() {
         searchResults = []
-        search = .inProgress
+        search = .searchInProgress
         // Prepare search components
         let searchComponents = searchText.lowercased()
             .components(separatedBy: " ")
@@ -225,7 +203,7 @@ struct HomeScreen: View {
             .map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }
             .joined(separator: " AND ")
         
-        let fullSearchTerms = "\(wF) \(searchTerms)"
+        var fullSearchTerms = "\(wF) \(searchTerms)"
         
         // Set sorting filter based on label
         let sortFilter: String
@@ -233,21 +211,26 @@ struct HomeScreen: View {
         case "Relevance":
             sortFilter = "wholeFood DESC, length(description)"
         case "Sugars (Low to High)":
+            fullSearchTerms += " AND USDAFoodSearchTable.totalSugars IS NOT NULL"
             sortFilter = "CAST(totalSugars AS REAL)"
         case "Sugars (High to Low)":
+            fullSearchTerms += " AND USDAFoodSearchTable.totalSugars IS NOT NULL"
             sortFilter = "CAST(totalSugars AS REAL) DESC"
         case "Starches (Low to High)":
+            fullSearchTerms += " AND USDAFoodSearchTable.totalStarches IS NOT NULL"
             sortFilter = "CAST(totalStarches AS REAL)"
         case "Starches (High to Low)":
+            fullSearchTerms += " AND USDAFoodSearchTable.totalStarches IS NOT NULL"
             sortFilter = "CAST(totalStarches AS REAL) DESC"
         case "Carbs (Low to High)":
+            fullSearchTerms += " AND USDAFoodSearchTable.carbs IS NOT NULL"
             sortFilter = "CAST(carbs AS REAL)"
         case "Carbs (High to Low)":
+            fullSearchTerms += " AND USDAFoodSearchTable.carbs IS NOT NULL"
             sortFilter = "CAST(carbs AS REAL) DESC"
         default:
             sortFilter = "wholeFood DESC, length(description)"
         }
-        
         // Perform database query on a background queue
         DispatchQueue(label: "search.serial.queue").async {
             let queryResult = DatabaseQueries.databaseSearch(
@@ -259,7 +242,7 @@ struct HomeScreen: View {
             // Update UI on main queue
             DispatchQueue.main.async {
                 self.searchResults = queryResult
-                search = .focused
+                search = .isFocused
             }
         }
     }
@@ -268,35 +251,4 @@ struct HomeScreen: View {
 
 #Preview {
     HomeScreen()
-}
-
-struct MealTypeIconView: View {
-    
-    private var meals: [String] = ["Breakfast","Lunch","Dinner","Snack"]
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 15)
-                .fill(.textField)
-                .frame(width: 350, height: 100)
-            LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
-                ForEach(meals, id: \.self) { meal in
-                    VStack (spacing: 5) {
-                        Image(meal.lowercased())
-                            .resizable()
-                            .frame(width: 55, height: 55)
-                            .mask {
-                                Circle()
-                                    .frame(width: 50, height: 50)
-                            }
-                        Text(meal)
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .onTapGesture {
-                        print(meal)
-                    }
-                }
-            }).frame(width: 300, alignment: .center)
-        }
-    }
 }

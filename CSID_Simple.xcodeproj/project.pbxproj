@@ -22,6 +22,8 @@
 		EBC290842CD83E6B00500D84 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290832CD83E6B00500D84 /* SearchResultsView.swift */; };
 		EBC290862CD83F3600500D84 /* SearchFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290852CD83F3600500D84 /* SearchFiltersView.swift */; };
 		EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290872CD8416E00500D84 /* BackgroundView.swift */; };
+		EBC2908C2CD84F5200500D84 /* SortResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2908B2CD84F5200500D84 /* SortResultsView.swift */; };
+		EBC2908E2CD850F600500D84 /* MealTypeIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2908D2CD850F600500D84 /* MealTypeIconView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +43,8 @@
 		EBC290832CD83E6B00500D84 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
 		EBC290852CD83F3600500D84 /* SearchFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFiltersView.swift; sourceTree = "<group>"; };
 		EBC290872CD8416E00500D84 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
+		EBC2908B2CD84F5200500D84 /* SortResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortResultsView.swift; sourceTree = "<group>"; };
+		EBC2908D2CD850F600500D84 /* MealTypeIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealTypeIconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,16 +82,12 @@
 				EBC290652CD1FF9D00500D84 /* HomeScreen.swift */,
 				EBC290672CD1FF9F00500D84 /* Assets.xcassets */,
 				EBC290692CD1FF9F00500D84 /* Preview Content */,
-				EBC290712CD20F2200500D84 /* SearchCarouselView.swift */,
-				EBC290752CD59B6F00500D84 /* SearchResultCellView.swift */,
+				EBC2908F2CD872B600500D84 /* Custom Views */,
 				EBC290772CD59BBD00500D84 /* Extensions.swift */,
 				EBC290792CD6CE8500500D84 /* Models.swift */,
 				EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */,
 				EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */,
 				EBC2907F2CD71C3500500D84 /* Singletons.swift */,
-				EBC290832CD83E6B00500D84 /* SearchResultsView.swift */,
-				EBC290852CD83F3600500D84 /* SearchFiltersView.swift */,
-				EBC290872CD8416E00500D84 /* BackgroundView.swift */,
 			);
 			path = CSID_Simple;
 			sourceTree = "<group>";
@@ -98,6 +98,20 @@
 				EBC2906A2CD1FF9F00500D84 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EBC2908F2CD872B600500D84 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				EBC290712CD20F2200500D84 /* SearchCarouselView.swift */,
+				EBC290752CD59B6F00500D84 /* SearchResultCellView.swift */,
+				EBC290832CD83E6B00500D84 /* SearchResultsView.swift */,
+				EBC290852CD83F3600500D84 /* SearchFiltersView.swift */,
+				EBC290872CD8416E00500D84 /* BackgroundView.swift */,
+				EBC2908B2CD84F5200500D84 /* SortResultsView.swift */,
+				EBC2908D2CD850F600500D84 /* MealTypeIconView.swift */,
+			);
+			path = "Custom Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,12 +185,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBC2908E2CD850F600500D84 /* MealTypeIconView.swift in Sources */,
 				EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */,
 				EBC290722CD20F2200500D84 /* SearchCarouselView.swift in Sources */,
 				EBC290762CD59B6F00500D84 /* SearchResultCellView.swift in Sources */,
 				EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */,
 				EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */,
 				EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */,
+				EBC2908C2CD84F5200500D84 /* SortResultsView.swift in Sources */,
 				EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */,
 				EBC290802CD71C3500500D84 /* Singletons.swift in Sources */,
 				EBC290842CD83E6B00500D84 /* SearchResultsView.swift in Sources */,
@@ -322,8 +338,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -351,8 +366,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

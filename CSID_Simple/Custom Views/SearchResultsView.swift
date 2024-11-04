@@ -10,12 +10,13 @@ import SwiftUI
 struct SearchResultsView: View {
     
     @State var searchResults: [FoodDetails] = []
+    @State var selectedSort: String
     
     var body: some View {
         ScrollView {
-            LazyVGrid (columns: [GridItem(.flexible())], spacing: 3) {
+            LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                 ForEach(searchResults, id: \.self) {food in
-                    SearchResultCellView(result: food)
+                    SearchResultCellView(result: food, isFavorite: true, selectedSort: selectedSort)
                 }.padding(.bottom, 5)
             }.padding(.top)
         }
@@ -23,5 +24,5 @@ struct SearchResultsView: View {
 }
 
 #Preview {
-    SearchResultsView()
+    SearchResultsView(selectedSort: "Relevance")
 }
