@@ -77,16 +77,14 @@
 		EBC290622CD1FF9D00500D84 /* CSID_Simple */ = {
 			isa = PBXGroup;
 			children = (
-				EBC290812CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db */,
+				EBC290912CD970AE00500D84 /* Database Management */,
+				EBC290902CD9709800500D84 /* Screens */,
 				EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */,
-				EBC290652CD1FF9D00500D84 /* HomeScreen.swift */,
 				EBC290672CD1FF9F00500D84 /* Assets.xcassets */,
 				EBC290692CD1FF9F00500D84 /* Preview Content */,
 				EBC2908F2CD872B600500D84 /* Custom Views */,
 				EBC290772CD59BBD00500D84 /* Extensions.swift */,
 				EBC290792CD6CE8500500D84 /* Models.swift */,
-				EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */,
-				EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */,
 				EBC2907F2CD71C3500500D84 /* Singletons.swift */,
 			);
 			path = CSID_Simple;
@@ -112,6 +110,24 @@
 				EBC2908D2CD850F600500D84 /* MealTypeIconView.swift */,
 			);
 			path = "Custom Views";
+			sourceTree = "<group>";
+		};
+		EBC290902CD9709800500D84 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				EBC290652CD1FF9D00500D84 /* HomeScreen.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		EBC290912CD970AE00500D84 /* Database Management */ = {
+			isa = PBXGroup;
+			children = (
+				EBC290812CD71C7700500D84 /* CSIDAssistPlusFoodDatabase.db */,
+				EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */,
+				EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */,
+			);
+			path = "Database Management";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

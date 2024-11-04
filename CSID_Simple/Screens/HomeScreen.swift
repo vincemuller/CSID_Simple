@@ -115,7 +115,7 @@ struct HomeScreen: View {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 15)
                                                 .fill(.textField)
-                                                .frame(width: 350, height: 170)
+                                                .frame(width: 350, height: 175)
                                             List(savedListMockData, id: \.self) {list in
                                                 Section {
                                                     if savedListMockData.firstIndex(of: list) == 0 {
@@ -163,8 +163,7 @@ struct HomeScreen: View {
                                 .renderingMode(.template)
                                 .foregroundStyle(Color(UIColor.label).opacity(0.5))
                                 .frame(width: 160, height: 160)
-                        }
-                        .frame(height: 500)
+                        }.offset(y: 150)
                     }
                 }
             }

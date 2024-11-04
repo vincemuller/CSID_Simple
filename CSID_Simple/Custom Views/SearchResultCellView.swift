@@ -24,6 +24,7 @@ enum nutritionalLabel: CaseIterable {
 
 struct SearchResultCellView: View {
     
+    @State private var deepDive: Bool = false
     @State var result: FoodDetails
     @State var isFavorite: Bool
     @State var selectedSort: String = "Relevance"
@@ -52,12 +53,12 @@ struct SearchResultCellView: View {
     var body: some View {
         
         let brand = result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
-        
-        ZStack (alignment: .topLeading) {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.textField)
-            HStack (spacing: 0) {
-                ZStack {
+        switch deepDive {
+        case false:
+            ZStack (alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.textField)
+                HStack (alignment: .top, spacing: 0) {
                     VStack (spacing: 3) {
                         Text("\(nutritionalData[0])g")
                             .font(.system(size: 16, weight: .semibold))
@@ -65,44 +66,126 @@ struct SearchResultCellView: View {
                         Text(nutritionalData[1])
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(Color(UIColor.label).opacity(0.6))
-                    }.frame(width: 70, height: 80)
+                    }.frame(width: 70, height: 80, alignment: .top).offset(y: 20)
+                    Rectangle()
+                        .fill(.iconTeal)
+                        .frame(width: 4, height: 50)
+                        .offset(y: 18)
+                        .padding(.trailing, 5)
+                    VStack (alignment: .leading, spacing: 0) {
+                        Text(brand ?? "")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(.iconTeal)
+                            .lineLimit(1)
+                            .offset(y: 1)
+                        Text(result.description)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label))
+                            .lineLimit(deepDive ? 5 : 3)
+                            .minimumScaleFactor(0.75)
+                            .frame(width: 245, height: deepDive ? nil : 45, alignment: .topLeading)
+                            .offset(y: 7)
+                        Spacer()
+                    }.frame(width: 245, height: deepDive ? 100 : 80).offset(x: 3, y: 2)
                 }
-                Rectangle()
-                    .fill(.iconTeal)
-                    .frame(width: 4, height: 50)
-                    .padding(.trailing, 5)
-                VStack (alignment: .leading, spacing: 0) {
-                    Text(brand ?? "")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundStyle(.iconTeal)
-                        .lineLimit(1)
-                        .offset(y: 1)
-                    Text(result.description)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(UIColor.label))
-                        .lineLimit(3)
-                        .minimumScaleFactor(0.75)
-                        .frame(width: 245, height: 45, alignment: .topLeading)
-                        .offset(y: 7)
-                    Spacer()
-                }.frame(width: 245, height: 80).offset(x: 3, y: 2)
             }
-        }
-        .frame(width: 360, height: 80)
-        .overlay(alignment: .topTrailing) {
-            !isFavorite  ? nil :
-            Image(systemName: "bookmark.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(.iconTeal)
-                .padding(.horizontal, 5)
-                .padding(.top, 10)
-        }
-        .onTapGesture {
-            print(result.fdicID)
+            .overlay(alignment: .topTrailing) {
+                !isFavorite  ? nil :
+                Image(systemName: "bookmark.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(.iconTeal)
+                    .padding(.horizontal, 5)
+                    .padding(.top, 7)
+            }
+            .frame(width: 360, height: !deepDive ? 80 : 120)
+            .onTapGesture {
+                print(result.fdicID)
+            }
+            .onLongPressGesture {
+                withAnimation(.bouncy) {
+                    deepDive.toggle()
+                }
+            }
+        case true:
+            ZStack (alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.textField)
+                    .stroke(Color(UIColor.label))
+                HStack (alignment: .top, spacing: 0) {
+                    VStack (spacing: 0) {
+                        Text("\(result.carbs)g")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label))
+                        Text("Total Carbs")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                            .padding(.bottom, 7)
+                        Text("\(result.totalSugars)g")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label))
+                        Text("Total Sugars")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                            .padding(.bottom, 7)
+                        Text("\(result.totalStarches)g")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label))
+                        Text("Total Starches")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                    }.frame(width: 70, height: 80, alignment: .top).offset(y: 20)
+                    Rectangle()
+                        .fill(.iconTeal)
+                        .frame(width: 4, height: 110)
+                        .offset(y: 18)
+                        .padding(.trailing, 5)
+                    VStack (alignment: .leading, spacing: 0) {
+                        VStack (alignment: .leading) {
+                            Text(brand ?? "")
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(.iconTeal)
+                                .lineLimit(1)
+                                .offset(y: 1)
+                            Text(result.description)
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color(UIColor.label))
+                                .lineLimit(deepDive ? 5 : 3)
+                                .minimumScaleFactor(0.75)
+                                .frame(width: 245, alignment: .topLeading)
+                                .offset(y: 5)
+                        }
+                        .frame(width: 245, height: 100, alignment: .topLeading)
+                        .padding(.bottom, 5)
+                        
+                        Text("Serving Size: \(result.servingSize.description)\(result.servingSizeUnit)")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(.iconTeal)
+                            .lineLimit(1)
+                        Spacer()
+                    }.offset(x: 3, y: 2)
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                !isFavorite  ? nil :
+                Image(systemName: "bookmark.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(.iconTeal)
+                    .padding(.horizontal, 5)
+                    .padding(.top, 7)
+            }
+            .frame(width: 360, height: 140)
+            .onTapGesture {
+                print(result.fdicID)
+            }
+            .onLongPressGesture {
+                withAnimation(.bouncy) {
+                    deepDive.toggle()
+                }
+            }
         }
     }
 }
 
 #Preview {
-    SearchResultCellView(result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"), isFavorite: true, selectedSort: "Relevance")
+    SearchResultCellView(result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, Chocolate Bar, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"), isFavorite: true, selectedSort: "Relevance")
 }
