@@ -24,6 +24,8 @@ enum nutritionalLabel: CaseIterable {
 
 struct SearchResultCellView: View {
     
+    @State var isPresenting: Bool = false
+    
     @State private var deepDive: Bool = false
     @State var result: FoodDetails
     @State var isFavorite: Bool
@@ -53,11 +55,13 @@ struct SearchResultCellView: View {
     var body: some View {
         
         let brand = result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
-        switch deepDive {
-        case false:
-            ZStack (alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.textField)
+        
+        ZStack (alignment: .topLeading) {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.textField)
+                .stroke(deepDive ? Color(UIColor.label) : .clear)
+            switch deepDive {
+            case false:
                 HStack (alignment: .top, spacing: 0) {
                     VStack (spacing: 3) {
                         Text("\(nutritionalData[0])g")
@@ -81,36 +85,14 @@ struct SearchResultCellView: View {
                         Text(result.description)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(Color(UIColor.label))
-                            .lineLimit(deepDive ? 5 : 3)
+                            .lineLimit(3)
                             .minimumScaleFactor(0.75)
-                            .frame(width: 245, height: deepDive ? nil : 45, alignment: .topLeading)
+                            .frame(width: 245, height: 45, alignment: .topLeading)
                             .offset(y: 7)
                         Spacer()
-                    }.frame(width: 245, height: deepDive ? 100 : 80).offset(x: 3, y: 2)
+                    }.frame(width: 245, height: 80).offset(x: 3, y: 2)
                 }
-            }
-            .overlay(alignment: .topTrailing) {
-                !isFavorite  ? nil :
-                Image(systemName: "bookmark.fill")
-                    .font(.system(size: 20))
-                    .foregroundStyle(.iconTeal)
-                    .padding(.horizontal, 5)
-                    .padding(.top, 7)
-            }
-            .frame(width: 360, height: !deepDive ? 80 : 120)
-            .onTapGesture {
-                print(result.fdicID)
-            }
-            .onLongPressGesture {
-                withAnimation(.bouncy) {
-                    deepDive.toggle()
-                }
-            }
-        case true:
-            ZStack (alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.textField)
-                    .stroke(Color(UIColor.label))
+            case true:
                 HStack (alignment: .top, spacing: 0) {
                     VStack (spacing: 0) {
                         Text("\(result.carbs)g")
@@ -165,27 +147,31 @@ struct SearchResultCellView: View {
                     }.offset(x: 3, y: 2)
                 }
             }
-            .overlay(alignment: .topTrailing) {
-                !isFavorite  ? nil :
-                Image(systemName: "bookmark.fill")
-                    .font(.system(size: 20))
-                    .foregroundStyle(.iconTeal)
-                    .padding(.horizontal, 5)
-                    .padding(.top, 7)
-            }
-            .frame(width: 360, height: 140)
-            .onTapGesture {
-                print(result.fdicID)
-            }
-            .onLongPressGesture {
-                withAnimation(.bouncy) {
-                    deepDive.toggle()
-                }
+        }
+        .overlay(alignment: .topTrailing) {
+            !isFavorite  ? nil :
+            Image(systemName: "bookmark.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(.iconTeal)
+                .padding(.horizontal, 5)
+                .padding(.top, 7)
+        }
+        .frame(width: 360, height: deepDive ? 140 : 80)
+        .onTapGesture {
+            print(result.fdicID)
+            isPresenting = true
+        }
+        .onLongPressGesture {
+            withAnimation(.bouncy) {
+                deepDive.toggle()
             }
         }
+        .sheet(isPresented: $isPresenting, onDismiss: {print("dismissed")}, content: {
+            FoodDetailsScreen(food: result)
+        })
     }
 }
 
 #Preview {
-    SearchResultCellView(result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, Chocolate Bar, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"), isFavorite: true, selectedSort: "Relevance")
+    SearchResultCellView(isPresenting: false, result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, Chocolate Bar, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf, asdfasdfasdf", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"), isFavorite: true, selectedSort: "Relevance")
 }

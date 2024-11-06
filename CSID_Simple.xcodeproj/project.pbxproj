@@ -24,6 +24,7 @@
 		EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290872CD8416E00500D84 /* BackgroundView.swift */; };
 		EBC2908C2CD84F5200500D84 /* SortResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2908B2CD84F5200500D84 /* SortResultsView.swift */; };
 		EBC2908E2CD850F600500D84 /* MealTypeIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2908D2CD850F600500D84 /* MealTypeIconView.swift */; };
+		EBC290932CDAEE9D00500D84 /* FoodDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290922CDAEE9C00500D84 /* FoodDetailsScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		EBC290872CD8416E00500D84 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		EBC2908B2CD84F5200500D84 /* SortResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortResultsView.swift; sourceTree = "<group>"; };
 		EBC2908D2CD850F600500D84 /* MealTypeIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealTypeIconView.swift; sourceTree = "<group>"; };
+		EBC290922CDAEE9C00500D84 /* FoodDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailsScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				EBC290652CD1FF9D00500D84 /* HomeScreen.swift */,
+				EBC290922CDAEE9C00500D84 /* FoodDetailsScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				EBC2908E2CD850F600500D84 /* MealTypeIconView.swift in Sources */,
 				EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */,
 				EBC290722CD20F2200500D84 /* SearchCarouselView.swift in Sources */,
+				EBC290932CDAEE9D00500D84 /* FoodDetailsScreen.swift in Sources */,
 				EBC290762CD59B6F00500D84 /* SearchResultCellView.swift in Sources */,
 				EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */,
 				EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */,

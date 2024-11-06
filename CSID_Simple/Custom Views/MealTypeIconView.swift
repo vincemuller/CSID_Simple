@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MealTypeIconView: View {
     
+    @State var opacity = 1.0
+    
     private var meals: [String] = ["Breakfast","Lunch","Dinner","Snack"]
     
     var body: some View {
