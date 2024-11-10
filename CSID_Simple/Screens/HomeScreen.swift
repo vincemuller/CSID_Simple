@@ -44,6 +44,8 @@ enum SearchFilter: Identifiable, CaseIterable {
 struct HomeScreen: View {
     
     @FocusState private var isFocused: Bool
+    @StateObject private var viewModel = ViewModel()
+    @State private var opacityAnimation: CGFloat = 0.3
     
     @State private var sections: HomeScreenSections = .activity
     @State private var search: Search = .isNotFocused
@@ -55,6 +57,11 @@ struct HomeScreen: View {
     
     private var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
     
+    var repeatingAnimation: Animation {
+        Animation
+            .easeInOut(duration: 2).speed(2.5) //.easeIn, .easyOut, .linear, etc...
+            .repeatForever()
+    }
     
     var body: some View {
         
@@ -155,7 +162,23 @@ struct HomeScreen: View {
                         .listStyle(.plain)
                     case .isFocused:
                         SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
-                        SearchResultsView(searchResults: searchResults, selectedSort: selectedSort)
+                        viewModel.compareQueue.count < 2 ? nil :
+                        NavigationLink(destination: ComparisonScreen(foods: viewModel.compareQueue, nutrition: [DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[0].fdicID, databasePointer: databasePointer), DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[1].fdicID, databasePointer: databasePointer)]), label: {
+                            Text("Compare Foods")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(.green)
+                                .padding(.bottom, 5)
+                                .onAppear(perform: {
+                                    withAnimation(repeatingAnimation) {
+                                        opacityAnimation = 1.0
+                                    }
+                                })
+                                .onDisappear(perform: {
+                                    opacityAnimation = 0.3
+                                })
+                                .opacity(opacityAnimation)
+                        })
+                        SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: searchResults, selectedSort: selectedSort)
                         
                     case .searchInProgress:
                         VStack {
@@ -178,6 +201,11 @@ struct HomeScreen: View {
                 .padding(.top, 20)
         })
         .ignoresSafeArea()
+        .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
+            viewModel.foodDetalsPresenting = false
+        }) {
+            FoodDetailsScreen(nutrition: DatabaseQueries.getNutrientData(fdicID: viewModel.selectedFood.fdicID, databasePointer: databasePointer), food: viewModel.selectedFood)
+        }
         .onAppear(perform: {
             if databasePointer == nil {databasePointer = CA_DatabaseHelper.getDatabasePointer(databaseName: "CSIDAssistPlusFoodDatabase.db")
             }
@@ -191,9 +219,11 @@ struct HomeScreen: View {
         search = .isNotFocused
         selectedSort = "Relevance"
         selectedFilter = .allFoods
+        viewModel.compareQueue = []
     }
     
     func searchFoods() {
+        viewModel.compareQueue = []
         searchResults = []
         search = .searchInProgress
         // Prepare search components

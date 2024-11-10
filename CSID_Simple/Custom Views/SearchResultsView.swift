@@ -9,6 +9,9 @@ import SwiftUI
 
 struct SearchResultsView: View {
     
+    @Binding var isPresenting: Bool
+    @Binding var selectedFood: FoodDetails
+    @Binding var compareQueue: [FoodDetails]
     @State var searchResults: [FoodDetails] = []
     @State var selectedSort: String
     
@@ -18,13 +21,14 @@ struct SearchResultsView: View {
         ScrollView {
             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                 ForEach(searchResults, id: \.self) {food in
-                    SearchResultCellView(result: food, isFavorite: savedFoods.contains(food.fdicID), selectedSort: selectedSort)
+                    SearchResultCellView(isPresenting: $isPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, isFavorite: savedFoods.contains(food.fdicID), selectedSort: selectedSort)
                 }.padding(.bottom, 5)
             }.padding(.top)
         }
     }
+    
 }
 
 #Preview {
-    SearchResultsView(selectedSort: "Relevance")
+    SearchResultsView(isPresenting: .constant(false), selectedFood: .constant(FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")), compareQueue: .constant([]), selectedSort: "Relevance")
 }
