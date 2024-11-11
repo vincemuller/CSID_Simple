@@ -23,7 +23,7 @@ struct SearchResultsView: View {
                 ForEach(searchResults, id: \.self) {food in
                     SearchResultCellView(isPresenting: $isPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, isFavorite: savedFoods.contains(food.fdicID), selectedSort: selectedSort)
                 }.padding(.bottom, 5)
-            }.padding(.top)
+            }
         }
     }
     

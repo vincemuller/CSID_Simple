@@ -9,13 +9,14 @@ import SwiftUI
 
 struct FoodDetailsScreen: View {
     
-    @State var nutrition: NutrientData?
+    @State private var nutData: NutrientData?
     @State private var isFavorite: Bool = true
     @State private var customServing: String = ""
     
     @State var food: FoodDetails
     
     var body: some View {
+        
         ZStack (alignment: .topLeading) {
             BackgroundView()
             VStack {
@@ -85,8 +86,25 @@ struct FoodDetailsScreen: View {
                 }
                 .frame(width: 365, height: 50, alignment: .leading)
                 .offset(y: 5)
+                Text(nutData?.carbs ?? "")
             }.padding()
+                .onAppear(perform: {
+                    getNutDetails()
+                })
         }
+    }
+    
+    func getNutDetails() {
+
+        DispatchQueue(label: "nutrition.serial.queue").async {
+            let queryResult = DatabaseQueries.getNutrientData(fdicID: self.food.fdicID, databasePointer: databasePointer)
+            
+            // Update UI on main queue
+            DispatchQueue.main.async {
+                self.nutData = queryResult
+            }
+        }
+
     }
 }
 

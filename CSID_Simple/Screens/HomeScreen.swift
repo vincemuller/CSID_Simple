@@ -55,14 +55,6 @@ struct HomeScreen: View {
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
     
-    private var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
-    
-    var repeatingAnimation: Animation {
-        Animation
-            .easeInOut(duration: 2).speed(2.5) //.easeIn, .easyOut, .linear, etc...
-            .repeatForever()
-    }
-    
     var body: some View {
         
         NavigationStack {
@@ -118,36 +110,9 @@ struct HomeScreen: View {
                                             .fill(.textField)
                                             .frame(width: 350, height: 100)
                                     } else if section == .meals {
-                                        MealTypeIconView()
+                                        MealTypeSectionView()
                                     } else {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .fill(.textField)
-                                                .frame(width: 350, height: 175)
-                                            List(savedListMockData, id: \.self) {list in
-                                                Section {
-                                                    if savedListMockData.firstIndex(of: list) == 0 {
-                                                        HStack {
-                                                            Group {
-                                                                Image(systemName: "plus")
-                                                                    .foregroundStyle(.iconTeal)
-                                                            }
-                                                            Text("Create New List")
-                                                                .font(.system(size: 16))
-                                                                .foregroundStyle(.iconTeal)
-                                                        }
-                                                    }
-                                                    
-                                                    HStack {
-                                                        Image(systemName: "bookmark")
-                                                        Text(list)
-                                                            .font(.system(size: 16))
-                                                    }
-                                                }                                          .listRowBackground(Color.clear)
-                                            }
-                                            .scrollIndicators(.hidden)
-                                            .padding(.trailing)
-                                        }
+                                        ListsSectionView()
                                     }
                                 } header: {
                                     Text(section.label)
@@ -162,24 +127,20 @@ struct HomeScreen: View {
                         .listStyle(.plain)
                     case .isFocused:
                         SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
-                        viewModel.compareQueue.count < 2 ? nil :
-                        NavigationLink(destination: ComparisonScreen(foods: viewModel.compareQueue, nutrition: [DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[0].fdicID, databasePointer: databasePointer), DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[1].fdicID, databasePointer: databasePointer)]), label: {
-                            Text("Compare Foods")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundStyle(.green)
-                                .padding(.bottom, 5)
-                                .onAppear(perform: {
-                                    withAnimation(repeatingAnimation) {
-                                        opacityAnimation = 1.0
-                                    }
-                                })
-                                .onDisappear(perform: {
-                                    opacityAnimation = 0.3
-                                })
-                                .opacity(opacityAnimation)
-                        })
+                        
                         SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: searchResults, selectedSort: selectedSort)
                         
+                        searchResults.isEmpty ? nil : Text(viewModel.compareQueue.count != 2 ? "\(searchResults.count) foods found" : "Compare Foods")
+                            .font(.system(size: viewModel.compareQueue.count != 2 ? 14 : 18, weight: .semibold))
+                            .foregroundStyle(viewModel.compareQueue.count != 2 ? Color(UIColor.label) : .iconTeal)
+                            .frame(height: 25)
+                            .offset(y: 12)
+                            .onTapGesture {
+                                if viewModel.compareQueue.count == 2 {
+                                    viewModel.compareFoodsSheetPresenting = true
+                                }
+                            }
+
                     case .searchInProgress:
                         VStack {
                             Image("csidAssistLogo")
@@ -201,10 +162,15 @@ struct HomeScreen: View {
                 .padding(.top, 20)
         })
         .ignoresSafeArea()
+        .sheet(isPresented: $viewModel.compareFoodsSheetPresenting, onDismiss: {
+            viewModel.compareFoodsSheetPresenting = false
+        }) {
+            ComparisonScreen(foods: viewModel.compareQueue)
+        }
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(nutrition: DatabaseQueries.getNutrientData(fdicID: viewModel.selectedFood.fdicID, databasePointer: databasePointer), food: viewModel.selectedFood)
+            FoodDetailsScreen(food: viewModel.selectedFood)
         }
         .onAppear(perform: {
             if databasePointer == nil {databasePointer = CA_DatabaseHelper.getDatabasePointer(databaseName: "CSIDAssistPlusFoodDatabase.db")
@@ -223,7 +189,6 @@ struct HomeScreen: View {
     }
     
     func searchFoods() {
-        viewModel.compareQueue = []
         searchResults = []
         search = .searchInProgress
         // Prepare search components
@@ -288,4 +253,40 @@ struct HomeScreen: View {
 
 #Preview {
     HomeScreen()
+}
+
+struct ListsSectionView: View {
+    
+    private var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(.textField)
+                .frame(width: 350, height: 175)
+            List(savedListMockData, id: \.self) {list in
+                Section {
+                    if savedListMockData.firstIndex(of: list) == 0 {
+                        HStack {
+                            Group {
+                                Image(systemName: "plus")
+                                    .foregroundStyle(.iconTeal)
+                            }
+                            Text("Create New List")
+                                .font(.system(size: 16))
+                                .foregroundStyle(.iconTeal)
+                        }
+                    }
+                    HStack {
+                        Image(systemName: "bookmark")
+                        Text(list)
+                            .font(.system(size: 16))
+                    }
+                }
+                .listRowBackground(Color.clear)
+            }
+            .scrollIndicators(.hidden)
+            .padding(.trailing)
+        }
+    }
 }

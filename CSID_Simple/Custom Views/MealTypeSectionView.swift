@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MealTypeIconView: View {
+struct MealTypeSectionView: View {
     
     @State var opacity = 1.0
     
@@ -41,5 +41,5 @@ struct MealTypeIconView: View {
 }
 
 #Preview {
-    MealTypeIconView()
+    MealTypeSectionView()
 }
