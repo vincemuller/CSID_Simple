@@ -36,7 +36,7 @@ struct SortResultsView: View {
                     .fill(.textField)
                     .frame(width: 40, height: 40)
                 Image(systemName: "arrow.up.and.down.text.horizontal")
-                    .foregroundColor(Color(UIColor.label))
+                    .foregroundColor(.white)
             }
         }
     }

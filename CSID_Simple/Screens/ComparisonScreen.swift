@@ -9,123 +9,161 @@ import SwiftUI
 
 struct ComparisonScreen: View {
     
-    var foods: [FoodDetails] = [FoodDetails(searchKeyWords: "", fdicID: 100, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar", servingSize: 28, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"),FoodDetails(searchKeyWords: "", fdicID: 200, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar", servingSize: 28, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no")]
+    var foods: [FoodDetails] = [FoodDetails(searchKeyWords: "", fdicID: 100, brandOwner: "M&M Mars", brandName: "Snickers, asdfasdf, asdfasdf, asdfasdf, asdfasdf", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar", servingSize: 28, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"),FoodDetails(searchKeyWords: "", fdicID: 200, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar, Snickers Crunchers, Chocolate Bar", servingSize: 28, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no")]
     
-    @State var nutrition: [NutrientData] = []
+    @Binding var nutrition: [NutrientData]
+    @State var adjustedNutrition: [NutrientData] = []
     @State private var ingredientsExpand = false
-//    var foods: [FoodDetails] = []
+    @State private var customServingExpand = false
+    @State private var customServing: String = ""
     
     var body: some View {
+        let brand = [foods[0].brandName?.brandFormater(brandOwner: foods[0].brandOwner ?? ""), foods[1].brandName?.brandFormater(brandOwner: foods[1].brandOwner ?? "")]
+        
         ZStack (alignment: .top) {
             BackgroundView()
-            VStack {
-                Grid {
-                    GridRow {
-                        ForEach(foods) { food in
-                            GeometryReader(content: { geometry in
-                                ScrollView {
-                                    Text(food.description)
-                                        .font(.system(size: 12))
-                                        .lineLimit(nil)
-                                        .multilineTextAlignment(.center)
-                                        .frame(width: geometry.size.width)
-                                }
-                            }).frame(height: 60).padding(.bottom, 5)
+            VStack (spacing: 15) {
+                    Text("Nutritional Comparison")
+                        .font(.title)
+                        .padding(.top, 10)
+                VStack {
+                    Grid (horizontalSpacing: 35) {
+                        GridRow {
+                            ForEach(brand, id: \.self) { brand in
+                                GeometryReader(content: { geometry in
+                                    ScrollView {
+                                        Text(brand ?? "N/A")
+                                            .font(.system(size: 10))
+                                            .foregroundStyle(.iconTeal)
+                                            .lineLimit(nil)
+                                            .multilineTextAlignment(.center)
+                                            .frame(width: geometry.size.width)
+                                        
+                                        // Set the content’s min height to the parent
+                                            .frame(minHeight: geometry.size.height)
+                                    }
+                                }).frame(height: 25).padding(.bottom, 5)
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Total Carbs")
-                        .font(.system(size: 12))
-                    GridRow {
-                        ForEach(nutrition) { food in
-                            Text("\(food.carbs)g")
+                        Divider()
+                        GridRow {
+                            ForEach(foods) { food in
+                                GeometryReader(content: { geometry in
+                                    ScrollView {
+                                        Text(food.description)
+                                            .font(.system(size: 12))
+                                            .lineLimit(nil)
+                                            .multilineTextAlignment(.center)
+                                            .frame(width: geometry.size.width)
+                                        
+                                        // Set the content’s min height to the parent
+                                            .frame(minHeight: geometry.size.height)
+                                    }
+                                }).frame(height: 60).padding(.bottom, 5)
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Fiber")
-                        .font(.system(size: 12))
-                    GridRow {
-                        ForEach(nutrition) { food in
-                            Text("\(food.fiber)g")
+                        Divider()
+                        Text("Total Carbs")
+                            .font(.system(size: 12))
+                        GridRow {
+                            ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
+                                Text("\(food.carbs)g")
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Net Carbs")
-                        .font(.system(size: 12))
-                    GridRow {
-                        ForEach(nutrition) { food in
-                            Text("\(food.carbs)g")
+                        Divider()
+                        Text("Fiber")
+                            .font(.system(size: 12))
+                        GridRow {
+                            ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
+                                Text("\(food.fiber)g")
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Total Sugars")
-                        .font(.system(size: 12))
-                    GridRow {
-                        ForEach(nutrition) { food in
-                            Text("\(food.totalSugars)g")
+                        Divider()
+                        Text("Net Carbs")
+                            .font(.system(size: 12))
+                        GridRow {
+                            ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
+                                Text("\(food.carbs)g")
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Total Starches")
-                        .font(.system(size: 12))
-                    GridRow {
-                        ForEach(nutrition) { food in
-                            Text("\(food.totalStarches)g")
+                        Divider()
+                        Text("Total Sugars")
+                            .font(.system(size: 12))
+                        GridRow {
+                            ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
+                                Text("\(food.totalSugars)g")
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Serving Size")
-                        .font(.system(size: 12))
-                    GridRow {
-                        ForEach(foods) { food in
-                            Text("\(food.servingSize.formatted())\(food.servingSizeUnit)")
+                        Divider()
+                        Text("Total Starches")
+                            .font(.system(size: 12))
+                        GridRow {
+                            ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
+                                Text("\(food.totalStarches)g")
+                            }
                         }
-                    }
-                    Divider()
-                    Text("Ingredients")
-                        .font(.system(size: 12))
-                    Image(systemName: ingredientsExpand ? "chevron.up" : "chevron.down")
-                        .padding(.top, 5)
-                        .onTapGesture {
-                            ingredientsExpand.toggle()
+                        Divider()
+                        Text("Serving Size")
+                            .font(.system(size: 12))
+                        GridRow {
+                            ForEach(foods) { food in
+                                Text("\(food.servingSize.formatted())\(food.servingSizeUnit)")
+                            }
                         }
-                    !ingredientsExpand ? nil : GridRow {
-                        ForEach(nutrition) { food in
-                            GeometryReader(content: { geometry in
-                                ScrollView {
-                                    Text(food.ingredients)
-                                        .font(.system(size: 12))
-                                        .lineLimit(nil)
-                                        .multilineTextAlignment(.center)
-                                        .frame(width: geometry.size.width-10)
-                                }
-                            }).frame(height: 200)
+                            TextField("Custom Serving", text: $customServing)
+                                .foregroundStyle(.white)
+                                .font(.system(size: 12, weight: .semibold))
+                                .lineLimit(2)
+                                .multilineTextAlignment(.center)
+                                .frame(width: 110, height: 30)
+                                .keyboardType(.decimalPad)
+                                .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.white.opacity(0.4))
+                                    )
+                                .offset(y: -10)
+                        Divider()
+                        Text("Ingredients")
+                            .font(.system(size: 12))
+                        Image(systemName: ingredientsExpand ? "chevron.up" : "chevron.down")
+                            .padding(.top, 5)
+                            .onTapGesture {
+                                ingredientsExpand.toggle()
+                            }
+                        !ingredientsExpand ? nil : GridRow {
+                            ForEach(nutrition) { food in
+                                GeometryReader(content: { geometry in
+                                    ScrollView {
+                                        Text(food.ingredients)
+                                            .font(.system(size: 12))
+                                            .lineLimit(nil)
+                                            .multilineTextAlignment(.center)
+                                            .frame(width: geometry.size.width)
+                                    }.frame(height: 150)
+                                }).frame(height: 160)
+                            }
                         }
-                    }
-                }.padding()
-            }.frame(width: 360, alignment: .top).background(RoundedRectangle(cornerRadius: 20).fill(.textField)).offset(y: 40)
-                .onAppear(perform: {
-                    getNutDetails()
-                })
-        }
-    }
-    
-    
-    func getNutDetails() {
-
-        DispatchQueue(label: "nutrition.serial.queue").async {
-            let queryResult1 = DatabaseQueries.getNutrientData(fdicID: self.foods[0].fdicID, databasePointer: databasePointer)
-            let queryResult2 = DatabaseQueries.getNutrientData(fdicID: self.foods[1].fdicID, databasePointer: databasePointer)
-            
-            // Update UI on main queue
-            DispatchQueue.main.async {
-                self.nutrition = [queryResult1,queryResult2]
+                    }.padding()
+                }.frame(width: 360, alignment: .top).background(RoundedRectangle(cornerRadius: 20).fill(.textField))
+            }
+            .onChange(of: customServing) {
+                adjustedNutrition = []
+                
+                guard !customServing.isEmpty else {
+                    return
+                }
+                
+                adjustedNutrition.append(customServingCalculator(actualServingSize: foods[0].servingSize, customServing: customServing, nutrientData: nutrition[0]))
+                adjustedNutrition.append(customServingCalculator(actualServingSize: foods[1].servingSize, customServing: customServing, nutrientData: nutrition[1]))
+            }
+            .onTapGesture {
+                hideKeyBoard()
             }
         }
-
     }
+    
 }
 
 #Preview {
-    ComparisonScreen()
+    ComparisonScreen(nutrition: .constant([NutrientData(id: UUID(), carbs: "25", fiber: "2", netCarbs: "23", totalSugars: "12.5", totalStarches: "10.5", totalSugarAlcohols: "0", protein: "0", totalFat: "0", sodium: "0", ingredients: "Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples"),NutrientData(id: UUID(), carbs: "25", fiber: "2", netCarbs: "23", totalSugars: "12.5", totalStarches: "10.5", totalSugarAlcohols: "0", protein: "0", totalFat: "0", sodium: "0", ingredients: "Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples,Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Water, Milk, Xantham Gum, Apples,Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples, Water, Milk, Xantham Gum, Apples,Sugar, Tapioca Starch, Water, Milk, Xantham Gum, Apples")]))
 }

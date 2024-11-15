@@ -24,6 +24,7 @@ struct FoodDetailsScreen: View {
                     Text(food.description)
                         .font(.title3)
                         .fontWeight(.semibold)
+                        .foregroundStyle(.white)
                         .lineLimit(5)
                         .minimumScaleFactor(0.7)
                         .frame(width: 320, height: 80, alignment: .bottomLeading)
@@ -35,7 +36,7 @@ struct FoodDetailsScreen: View {
                 }
                 Text(food.brandedFoodCategory)
                     .font(.system(size: 12))
-                    .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                    .foregroundStyle(.white.opacity(0.6))
                     .frame(width: 358, alignment: .leading)
                 ZStack (alignment: .center) {
                     RoundedRectangle(cornerRadius: 10)
@@ -45,16 +46,20 @@ struct FoodDetailsScreen: View {
                     VStack (alignment: .leading, spacing: 6) {
                         HStack {
                             Text("Brand Owner:")
+                                .foregroundStyle(.white)
                                 .font(.system(size: 12, weight: .semibold))
                                 .padding(.leading, 10)
                             Text(food.brandOwner ?? "")
+                                .foregroundStyle(.white)
                                 .font(.system(size: 12))
                         }
                         HStack {
                             Text("Brand Name:")
+                                .foregroundStyle(.white)
                                 .font(.system(size: 12, weight: .semibold))
                                 .padding(.leading, 10)
                             Text(food.brandName ?? "")
+                                .foregroundStyle(.white)
                                 .font(.system(size: 12))
                         }
                     }
@@ -67,13 +72,16 @@ struct FoodDetailsScreen: View {
                             .fill(.textField)
                         HStack (alignment: .center) {
                             Text("Serving Size:")
+                                .foregroundStyle(.white)
                                 .font(.system(size: 14, weight: .semibold))
                                 .padding(.leading, 10)
                             Text("\(food.servingSize)\(food.servingSizeUnit)")
+                                .foregroundStyle(.white)
                                 .font(.system(size: 14))
                         }
                     }.frame(width: 230, height: 50)
                     TextField("Custom Serving", text: $customServing)
+                        .foregroundStyle(.white)
                         .font(.system(size: 14, weight: .semibold))
                         .lineLimit(2)
                         .multilineTextAlignment(.center)
@@ -87,6 +95,7 @@ struct FoodDetailsScreen: View {
                 .frame(width: 365, height: 50, alignment: .leading)
                 .offset(y: 5)
                 Text(nutData?.carbs ?? "")
+                    .foregroundStyle(.white)
             }.padding()
                 .onAppear(perform: {
                     getNutDetails()

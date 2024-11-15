@@ -15,7 +15,7 @@ struct SearchResultsView: View {
     @State var searchResults: [FoodDetails] = []
     @State var selectedSort: String
     
-    var savedFoods: [Int] = [378617,398152,423680]
+    var savedFoods: [Int] = []
     
     var body: some View {
         ScrollView {

@@ -43,6 +43,10 @@ enum SearchFilter: Identifiable, CaseIterable {
 
 struct HomeScreen: View {
     
+    init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+    }
+    
     @FocusState private var isFocused: Bool
     @StateObject private var viewModel = ViewModel()
     @State private var opacityAnimation: CGFloat = 0.3
@@ -55,6 +59,7 @@ struct HomeScreen: View {
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
     
+    
     var body: some View {
         
         NavigationStack {
@@ -63,43 +68,13 @@ struct HomeScreen: View {
                     .navigationTitle("CSIDAssist")
                 VStack (spacing: 0) {
                     HStack (spacing: 10) {
-                        ZStack (alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(.textField)
-                                .frame(width: 300, height: 40)
-                            HStack {
-                                Image(systemName:  search != .isNotFocused ? "arrow.left" :  "magnifyingglass")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundStyle(Color(UIColor.label).opacity(0.6))
-                                    .onTapGesture {
-                                        if search != .isNotFocused {
-                                            resetSearch()
-                                        }
-                                    }
-                                ZStack (alignment: .leading) {
-                                    searchText.count > 0 ? nil : SearchCarouselView()
-                                    TextField("", text: $searchText)
-                                        .foregroundColor(Color(UIColor.label))
-                                        .frame(width: 245, height: 35)
-                                        .focused($isFocused)
-                                        .onChange(of: isFocused, {
-                                            if isFocused == true {
-                                                search = .isFocused
-                                            }
-                                        })
-                                        .onSubmit {
-                                            searchFoods()
-                                        }
-                                }
-                            }.padding(.leading)
-                        }
+                        SearchBarView(searchText: $searchText, isFocused: $isFocused, searchState: $search, resetSearch: resetSearch, searchFoods: searchFoods)
                         SortResultsView(selectedSort: $selectedSort)
                             .onChange(of: selectedSort) {
                                 search == .isFocused ? searchFoods() : nil
                             }
                     }
-                    .padding(.top, 10)
-                    
+                .padding(.top, 10)
                     switch search {
                     case .isNotFocused:
                         List {
@@ -112,17 +87,17 @@ struct HomeScreen: View {
                                     } else if section == .meals {
                                         MealTypeSectionView()
                                     } else {
-                                        ListsSectionView()
+                                        SavedListsView()
                                     }
                                 } header: {
                                     Text(section.label)
                                         .font(.system(size: 30, weight: .semibold))
-                                        .foregroundStyle(Color(UIColor.label))
+                                        .foregroundStyle(.white)
                                 }
                             }
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 0, trailing: 15))
+                            .listRowInsets(EdgeInsets(top: 7, leading: 18, bottom: 0, trailing: 15))
                         }
                         .listStyle(.plain)
                     case .isFocused:
@@ -130,52 +105,89 @@ struct HomeScreen: View {
                         
                         SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: searchResults, selectedSort: selectedSort)
                         
-                        searchResults.isEmpty ? nil : Text(viewModel.compareQueue.count != 2 ? "\(searchResults.count) foods found" : "Compare Foods")
-                            .font(.system(size: viewModel.compareQueue.count != 2 ? 14 : 18, weight: .semibold))
-                            .foregroundStyle(viewModel.compareQueue.count != 2 ? Color(UIColor.label) : .iconTeal)
-                            .frame(height: 25)
-                            .offset(y: 12)
-                            .onTapGesture {
+                        searchResults.isEmpty ? nil :
+                        HStack (spacing: 10) {
+                            viewModel.compareQueue.count == 2 ? nil :
+                            Text("\(searchResults.count) foods found")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(.white)
+
+                            viewModel.compareQueue.count != 2 ? nil :
+                            Button(action: {
+                                viewModel.compareQueue = []
+                            }, label: {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .stroke(.iconOrange)
+                                        .frame(width: 120, height: 30)
+                                    Text("Clear Foods")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundStyle(.iconOrange)
+                                }
+                            })
+                            
+                            viewModel.compareQueue.count != 2 ? nil :
+                            Button(action: {
                                 if viewModel.compareQueue.count == 2 {
                                     viewModel.compareFoodsSheetPresenting = true
                                 }
-                            }
+                            }, label: {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .stroke(.iconTeal)
+                                        .frame(width: 120, height: 30)
+                                    Text("Compare Foods")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundStyle(.iconTeal)
+                                }
+                            })
+                        }.frame(height: 30).offset(y: 8)
 
                     case .searchInProgress:
-                        VStack {
-                            Image("csidAssistLogo")
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundStyle(Color(UIColor.label).opacity(0.5))
-                                .frame(width: 160, height: 160)
-                        }.offset(y: 150)
+                        progressIndicator
                     }
                 }
             }
         }
         .overlay(alignment: .topLeading, content: {
-            Image("csidAssistLogo")
-                .resizable()
-                .frame(width: 70, height: 70)
-                .safeAreaPadding(.top)
-                .padding(.leading)
-                .padding(.top, 20)
+            topLeadingLogo
         })
         .ignoresSafeArea()
         .sheet(isPresented: $viewModel.compareFoodsSheetPresenting, onDismiss: {
             viewModel.compareFoodsSheetPresenting = false
         }) {
-            ComparisonScreen(foods: viewModel.compareQueue)
+            ComparisonScreen(foods: viewModel.compareQueue, nutrition: $viewModel.comparisonNutData)
         }
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
             FoodDetailsScreen(food: viewModel.selectedFood)
         }
-        .onAppear(perform: {
-            if databasePointer == nil {databasePointer = CA_DatabaseHelper.getDatabasePointer(databaseName: "CSIDAssistPlusFoodDatabase.db")
+        .onAppear(perform: initializeDatabase)
+        .onChange(of: viewModel.compareQueue) {
+            if viewModel.compareQueue.count == 2 {
+                getComparisonNutDetails()
             }
-        })
+        }
+    }
+    
+    private var topLeadingLogo: some View {
+        Image("csidAssistLogo")
+            .resizable()
+            .frame(width: 70, height: 70)
+            .safeAreaPadding(.top)
+            .padding(.leading)
+            .padding(.top, 20)
+    }
+    
+    private var progressIndicator: some View {
+        VStack {
+            Image("csidAssistLogo")
+                .resizable()
+                .renderingMode(.template)
+                .foregroundStyle(.white.opacity(0.5))
+                .frame(width: 160, height: 160)
+        }.offset(y: 150)
     }
     
     func resetSearch() {
@@ -188,64 +200,56 @@ struct HomeScreen: View {
         viewModel.compareQueue = []
     }
     
-    func searchFoods() {
-        searchResults = []
+    private func searchFoods() {
         search = .searchInProgress
-        // Prepare search components
-        let searchComponents = searchText.lowercased()
-            .components(separatedBy: " ")
-            .filter { !$0.isEmpty }
-        
-        // Configure whole food filter
-        let wF = selectedFilter == .wholeFoods ? "USDAFoodSearchTable.wholeFood='yes' AND" :
-                 selectedFilter == .brandedFoods ? "USDAFoodSearchTable.wholeFood='no' AND" : ""
-        
-        // Construct search terms
-        let searchTerms = searchComponents
-            .map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }
-            .joined(separator: " AND ")
-        
-        var fullSearchTerms = "\(wF) \(searchTerms)"
-        
-        // Set sorting filter based on label
-        let sortFilter: String
-        switch selectedSort {
-        case "Relevance":
-            sortFilter = "wholeFood DESC, length(description)"
-        case "Sugars (Low to High)":
-            fullSearchTerms += " AND USDAFoodSearchTable.totalSugars IS NOT NULL"
-            sortFilter = "CAST(totalSugars AS REAL)"
-        case "Sugars (High to Low)":
-            fullSearchTerms += " AND USDAFoodSearchTable.totalSugars IS NOT NULL"
-            sortFilter = "CAST(totalSugars AS REAL) DESC"
-        case "Starches (Low to High)":
-            fullSearchTerms += " AND USDAFoodSearchTable.totalStarches IS NOT NULL"
-            sortFilter = "CAST(totalStarches AS REAL)"
-        case "Starches (High to Low)":
-            fullSearchTerms += " AND USDAFoodSearchTable.totalStarches IS NOT NULL"
-            sortFilter = "CAST(totalStarches AS REAL) DESC"
-        case "Carbs (Low to High)":
-            fullSearchTerms += " AND USDAFoodSearchTable.carbs IS NOT NULL"
-            sortFilter = "CAST(carbs AS REAL)"
-        case "Carbs (High to Low)":
-            fullSearchTerms += " AND USDAFoodSearchTable.carbs IS NOT NULL"
-            sortFilter = "CAST(carbs AS REAL) DESC"
-        default:
-            sortFilter = "wholeFood DESC, length(description)"
-        }
-        // Perform database query on a background queue
         DispatchQueue(label: "search.serial.queue").async {
             let queryResult = DatabaseQueries.databaseSearch(
-                searchTerms: fullSearchTerms,
+                searchTerms: buildSearchTerms(),
                 databasePointer: databasePointer,
-                sortFilter: sortFilter
+                sortFilter: getSortFilter()
             )
-            
-            // Update UI on main queue
             DispatchQueue.main.async {
                 self.searchResults = queryResult
                 search = .isFocused
             }
+        }
+    }
+    
+    private func buildSearchTerms() -> String {
+        let searchComponents = searchText.lowercased().components(separatedBy: " ").filter { !$0.isEmpty }
+        let filterClause = selectedFilter == .wholeFoods ? "USDAFoodSearchTable.wholeFood='yes' AND" :
+                           selectedFilter == .brandedFoods ? "USDAFoodSearchTable.wholeFood='no' AND" : ""
+        
+        return "\(filterClause) \(searchComponents.map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }.joined(separator: " AND "))"
+    }
+    
+    private func getSortFilter() -> String {
+        switch selectedSort {
+        case "Relevance": return "wholeFood DESC, length(description)"
+        case "Sugars (Low to High)": return "CAST(totalSugars AS REAL)"
+        case "Sugars (High to Low)": return "CAST(totalSugars AS REAL) DESC"
+        case "Starches (Low to High)": return "CAST(totalStarches AS REAL)"
+        case "Starches (High to Low)": return "CAST(totalStarches AS REAL) DESC"
+        case "Carbs (Low to High)": return "CAST(carbs AS REAL)"
+        case "Carbs (High to Low)": return "CAST(carbs AS REAL) DESC"
+        default: return "wholeFood DESC, length(description)"
+        }
+    }
+    
+    private func getComparisonNutDetails() {
+        DispatchQueue(label: "nutrition.serial.queue").async {
+            let queryResult1 = DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[0].fdicID, databasePointer: databasePointer)
+            let queryResult2 = DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[1].fdicID, databasePointer: databasePointer)
+            
+            DispatchQueue.main.async {
+                viewModel.comparisonNutData = [queryResult1, queryResult2]
+            }
+        }
+    }
+    
+    private func initializeDatabase() {
+        if databasePointer == nil {
+            databasePointer = CA_DatabaseHelper.getDatabasePointer(databaseName: "CSIDAssistPlusFoodDatabase.db")
         }
     }
 
@@ -253,40 +257,4 @@ struct HomeScreen: View {
 
 #Preview {
     HomeScreen()
-}
-
-struct ListsSectionView: View {
-    
-    private var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 15)
-                .fill(.textField)
-                .frame(width: 350, height: 175)
-            List(savedListMockData, id: \.self) {list in
-                Section {
-                    if savedListMockData.firstIndex(of: list) == 0 {
-                        HStack {
-                            Group {
-                                Image(systemName: "plus")
-                                    .foregroundStyle(.iconTeal)
-                            }
-                            Text("Create New List")
-                                .font(.system(size: 16))
-                                .foregroundStyle(.iconTeal)
-                        }
-                    }
-                    HStack {
-                        Image(systemName: "bookmark")
-                        Text(list)
-                            .font(.system(size: 16))
-                    }
-                }
-                .listRowBackground(Color.clear)
-            }
-            .scrollIndicators(.hidden)
-            .padding(.trailing)
-        }
-    }
 }

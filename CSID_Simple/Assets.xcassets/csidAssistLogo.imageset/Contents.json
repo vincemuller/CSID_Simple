@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "csidAssistLogoBlack.png",
+      "filename" : "csidAssistLogoWhite.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +12,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "csidAssistLogoWhite.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

@@ -19,9 +19,9 @@ struct SearchCarouselView: View {
         
         HStack (spacing: 0) {
             Text("Search ")
-                .foregroundStyle(Color(UIColor.label))
+                .foregroundStyle(.white)
             Text(hints[index]).transition(textTransition)
-                .foregroundStyle(Color(UIColor.label))
+                .foregroundStyle(.white)
                 .id(id)
         }
         .onReceive(timer, perform: { _ in

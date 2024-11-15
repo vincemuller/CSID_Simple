@@ -13,7 +13,7 @@ enum nutritionalLabel: CaseIterable {
     var label: String {
         switch self {
         case .relevance:
-            return "Net Carbs"
+            return "Total Carbs"
         case .sugars:
             return "Sugars"
         case .starches:
@@ -24,12 +24,11 @@ enum nutritionalLabel: CaseIterable {
 
 struct SearchResultCellView: View {
     
-//    @State var isPresenting: Bool = false
-    
-    @State private var deepDive: Bool = false
     @Binding var isPresenting: Bool
     @Binding var selectedFood: FoodDetails
     @Binding var compareQueue: [FoodDetails]
+    
+    @State private var deepDive: Bool = false
     @State var result: FoodDetails
     @State var isFavorite: Bool
     @State var selectedSort: String = "Relevance"
@@ -57,24 +56,26 @@ struct SearchResultCellView: View {
         }
     }
     
+    
     var body: some View {
         
         let brand = result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
+        let deepDiveNutData: [[String]] = [["Total Carbs", result.carbs], ["Total Sugars", result.totalSugars], ["Total Starches", result.totalStarches]]
         
         ZStack (alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 8)
                 .fill(compareQueue.contains(where: {$0.fdicID == result.fdicID}) ? .green.opacity(0.3) : .textField)
-                .stroke(deepDive ? Color(UIColor.label) : .clear)
+                .stroke(deepDive ? .white : .clear)
             switch deepDive {
             case false:
                 HStack (alignment: .top, spacing: 0) {
                     VStack (spacing: 3) {
                         Text("\(nutritionalData[0])g")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label))
+                            .foregroundStyle(.white)
                         Text(nutritionalData[1])
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                            .foregroundStyle(.white.opacity(0.6))
                     }.frame(width: 70, height: 80, alignment: .top).offset(y: 20)
                     Rectangle()
                         .fill(.iconTeal)
@@ -89,7 +90,7 @@ struct SearchResultCellView: View {
                             .offset(y: 1)
                         Text(result.description)
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label))
+                            .foregroundStyle(.white)
                             .lineLimit(3)
                             .minimumScaleFactor(0.75)
                             .frame(width: 245, height: 45, alignment: .topLeading)
@@ -100,26 +101,15 @@ struct SearchResultCellView: View {
             case true:
                 HStack (alignment: .top, spacing: 0) {
                     VStack (spacing: 0) {
-                        Text("\(result.carbs)g")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label))
-                        Text("Total Carbs")
-                            .font(.system(size: 8, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
-                            .padding(.bottom, 7)
-                        Text("\(result.totalSugars)g")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label))
-                        Text("Total Sugars")
-                            .font(.system(size: 8, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
-                            .padding(.bottom, 7)
-                        Text("\(result.totalStarches)g")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label))
-                        Text("Total Starches")
-                            .font(.system(size: 8, weight: .semibold))
-                            .foregroundStyle(Color(UIColor.label).opacity(0.6))
+                        ForEach(deepDiveNutData, id: \.self) { nutrition in
+                            Text("\(nutrition[1])g")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(.white)
+                            Text(nutrition[0])
+                                .font(.system(size: 8, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.6))
+                                .padding(.bottom, 7)
+                        }
                     }.frame(width: 70, height: 80, alignment: .top).offset(y: 20)
                     Rectangle()
                         .fill(.iconTeal)
@@ -135,7 +125,7 @@ struct SearchResultCellView: View {
                                 .offset(y: 1)
                             Text(result.description)
                                 .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(Color(UIColor.label))
+                                .foregroundStyle(.white)
                                 .lineLimit(deepDive ? 5 : 3)
                                 .minimumScaleFactor(0.75)
                                 .frame(width: 245, alignment: .topLeading)
@@ -158,16 +148,11 @@ struct SearchResultCellView: View {
             isPresenting = true
         }
         .frame(width: 360, height: deepDive ? 140 : 80)
-//        .overlay(alignment: .topTrailing) {
-//            Image(systemName: !isFavorite ? "bookmark" : "bookmark.fill")
-//                .font(.system(size: 20))
-//                .foregroundStyle(.iconTeal)
-//                .padding(.horizontal, 5)
-//                .padding(.top, 7)
-//        }
         .overlay(alignment: .bottomTrailing, content: {
             Button(action: {
-                deepDive.toggle()
+                withAnimation(.linear.speed(2)) {
+                    deepDive.toggle()
+                }
             }, label: {
                 Image(systemName: deepDive ? "chevron.up" : "chevron.down")
                     .font(.system(size: 16))
@@ -178,18 +163,18 @@ struct SearchResultCellView: View {
         .overlay(alignment: .topTrailing) {
             Menu {
                 Button(action: {
-                    if !compareQueue.contains(where: {$0.fdicID == result.fdicID}) {
+                    
+                    if let index = compareQueue.firstIndex(where: { $0.fdicID == result.fdicID }) {
+                        compareQueue.remove(at: index)
+                    } else {
+                        guard compareQueue.count != 2 else {
+                            return
+                        }
                         compareQueue.append(result)
-                    } else {
-                        compareQueue.removeAll(where: {$0.fdicID == result.fdicID})
                     }
-                }, label: {
-                    if !compareQueue.contains(where: {$0.fdicID == result.fdicID}) {
-                        Text("Select Food to Compare")
-                    } else {
-                        Text("Deselect Food to Compare")
-                    }
-                })
+                }) {
+                    Text(compareQueue.contains(where: { $0.fdicID == result.fdicID }) ? "Deselect Food to Compare" : "Select Food to Compare")
+                }
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.system(size: 16))

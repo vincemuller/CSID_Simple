@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14EF2CDC3D670023BACE /* ViewModel.swift */; };
 		EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */; };
+		EB9E14F82CE32A7D0023BACE /* SavedListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */; };
+		EB9E14FC2CE411770023BACE /* HomeScreenAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14FB2CE411770023BACE /* HomeScreenAI.swift */; };
+		EB9E14FE2CE4159A0023BACE /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14FD2CE4159A0023BACE /* SearchBarView.swift */; };
+		EB9E15002CE668470023BACE /* CustomServingCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14FF2CE668470023BACE /* CustomServingCalculator.swift */; };
 		EBC290642CD1FF9D00500D84 /* CSID_SimpleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */; };
 		EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290652CD1FF9D00500D84 /* HomeScreen.swift */; };
 		EBC290682CD1FF9F00500D84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBC290672CD1FF9F00500D84 /* Assets.xcassets */; };
@@ -32,6 +36,10 @@
 /* Begin PBXFileReference section */
 		EB9E14EF2CDC3D670023BACE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
+		EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListsView.swift; sourceTree = "<group>"; };
+		EB9E14FB2CE411770023BACE /* HomeScreenAI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenAI.swift; sourceTree = "<group>"; };
+		EB9E14FD2CE4159A0023BACE /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
+		EB9E14FF2CE668470023BACE /* CustomServingCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomServingCalculator.swift; sourceTree = "<group>"; };
 		EBC290602CD1FF9D00500D84 /* CSID_Simple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CSID_Simple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSID_SimpleApp.swift; sourceTree = "<group>"; };
 		EBC290652CD1FF9D00500D84 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -93,6 +101,7 @@
 				EBC290792CD6CE8500500D84 /* Models.swift */,
 				EBC2907F2CD71C3500500D84 /* Singletons.swift */,
 				EB9E14EF2CDC3D670023BACE /* ViewModel.swift */,
+				EB9E14FF2CE668470023BACE /* CustomServingCalculator.swift */,
 			);
 			path = CSID_Simple;
 			sourceTree = "<group>";
@@ -115,6 +124,8 @@
 				EBC290872CD8416E00500D84 /* BackgroundView.swift */,
 				EBC2908B2CD84F5200500D84 /* SortResultsView.swift */,
 				EBC2908D2CD850F600500D84 /* MealTypeSectionView.swift */,
+				EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */,
+				EB9E14FD2CE4159A0023BACE /* SearchBarView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -125,6 +136,7 @@
 				EBC290652CD1FF9D00500D84 /* HomeScreen.swift */,
 				EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */,
 				EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */,
+				EB9E14FB2CE411770023BACE /* HomeScreenAI.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -210,14 +222,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB9E14FE2CE4159A0023BACE /* SearchBarView.swift in Sources */,
 				EBC2908E2CD850F600500D84 /* MealTypeSectionView.swift in Sources */,
 				EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */,
 				EBC290722CD20F2200500D84 /* SearchCarouselView.swift in Sources */,
 				EBC290972CDC263A00500D84 /* FoodDetailsScreen.swift in Sources */,
+				EB9E14F82CE32A7D0023BACE /* SavedListsView.swift in Sources */,
 				EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */,
 				EBC290762CD59B6F00500D84 /* SearchResultCellView.swift in Sources */,
 				EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */,
 				EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */,
+				EB9E15002CE668470023BACE /* CustomServingCalculator.swift in Sources */,
 				EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */,
 				EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */,
 				EBC2908C2CD84F5200500D84 /* SortResultsView.swift in Sources */,
@@ -226,6 +241,7 @@
 				EBC290842CD83E6B00500D84 /* SearchResultsView.swift in Sources */,
 				EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */,
 				EBC290642CD1FF9D00500D84 /* CSID_SimpleApp.swift in Sources */,
+				EB9E14FC2CE411770023BACE /* HomeScreenAI.swift in Sources */,
 				EBC290862CD83F3600500D84 /* SearchFiltersView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

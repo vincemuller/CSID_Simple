@@ -23,13 +23,13 @@ struct SearchFiltersView: View {
                 Button(action: {selectedFilter = filter; searchText.isEmpty ? nil : searchFoods()}, label: {
                     Text(filter.selected)
                         .font(.system(size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold))
-                        .foregroundStyle( selectedFilter.selected == filter.selected ? Color(UIColor.label) :
-                                            Color(UIColor.label).opacity(0.3))
+                        .foregroundStyle( selectedFilter.selected == filter.selected ? .white :
+                                            .white.opacity(0.3))
                 })
                 .background(
                     RoundedRectangle(cornerRadius: 7)
                         .fill(.clear)
-                        .stroke(selectedFilter.selected == filter.selected ? Color(UIColor.label) : Color(UIColor.label).opacity(0.3), lineWidth: selectedFilter.selected == filter.selected ? 2 : 1)
+                        .stroke(selectedFilter.selected == filter.selected ? .white : .white.opacity(0.3), lineWidth: selectedFilter.selected == filter.selected ? 2 : 1)
                         .frame(width: 105, height: 30))
             }
         }.padding(.horizontal, 25).padding(.vertical, 20)
