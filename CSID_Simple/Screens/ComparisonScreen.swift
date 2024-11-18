@@ -17,6 +17,8 @@ struct ComparisonScreen: View {
     @State private var customServingExpand = false
     @State private var customServing: String = ""
     
+    var helper = Helpers()
+    
     var body: some View {
         let brand = [foods[0].brandName?.brandFormater(brandOwner: foods[0].brandOwner ?? ""), foods[1].brandName?.brandFormater(brandOwner: foods[1].brandOwner ?? "")]
         
@@ -153,8 +155,8 @@ struct ComparisonScreen: View {
                     return
                 }
                 
-                adjustedNutrition.append(customServingCalculator(actualServingSize: foods[0].servingSize, customServing: customServing, nutrientData: nutrition[0]))
-                adjustedNutrition.append(customServingCalculator(actualServingSize: foods[1].servingSize, customServing: customServing, nutrientData: nutrition[1]))
+                adjustedNutrition.append(helper.customServingCalculator(actualServingSize: foods[0].servingSize, customServing: customServing, nutrientData: nutrition[0]))
+                adjustedNutrition.append(helper.customServingCalculator(actualServingSize: foods[1].servingSize, customServing: customServing, nutrientData: nutrition[1]))
             }
             .onTapGesture {
                 hideKeyBoard()

@@ -171,7 +171,7 @@ struct HomeScreen: View {
         }
     }
     
-    private var topLeadingLogo: some View {
+    private var topLeadingLogo: some View {//.
         Image("csidAssistLogo")
             .resizable()
             .frame(width: 70, height: 70)
