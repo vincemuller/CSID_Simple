@@ -9,18 +9,14 @@ import SwiftUI
 
 
 enum Ingredients: Identifiable, CaseIterable {
-    case completeIngredientList, sucroseIngredients, naturalSucroseIngredients, allergenIngredients
+    case sucroseIngredients, completeIngredientList
     var id: Self { self }
     var label: String {
         switch self {
-        case .completeIngredientList:
-            return "Complete"
         case .sucroseIngredients:
             return "Sucrose"
-        case .naturalSucroseIngredients:
-            return "Natural Sucrose"
-        case .allergenIngredients:
-            return "Allergen"
+        case .completeIngredientList:
+            return "Complete"
         }
     }
 }
@@ -32,8 +28,8 @@ struct FoodDetailsScreen: View {
     @State private var isLoaded: Bool = false
     @State private var isFavorite: Bool = false
     @State private var customServing: String = ""
-    @State private var selectedIngredientList: Ingredients = .completeIngredientList
-    @State private var sucroseIngredients: [[String]] = []
+    @State private var selectedIngredientList: Ingredients = .sucroseIngredients
+    @State private var sucroseAndStarchIngredients: [[String]] = [[],[]]
     
     @State var food: FoodDetails
     
@@ -190,35 +186,25 @@ struct FoodDetailsScreen: View {
                                         .padding(.vertical, 5)
                                 })
                                 .background(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .fill(selectedIngredientList == ingredients ? .iconTeal : .textField)
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .fill(selectedIngredientList == ingredients ? .iconTeal : .textField)
                                 )
                                 
                             }
                         }.frame(height: 40).padding(.horizontal, 5)
                     }
-                ZStack {
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(.textField)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(.textField)
                         switch selectedIngredientList {
-                        case .completeIngredientList:
-                            GeometryReader(content: { geometry in
-                                ScrollView {
-                                    Text(nutData?.ingredients ?? "")
-                                        .font(.system(size: 12))
-                                        .lineLimit(nil)
-                                        .frame(width: geometry.size.width - 30, alignment: .center)
-                                        .padding()
-                                }.frame(height: geometry.size.height - 10)
-                            })
                         case .sucroseIngredients:
                             HStack {
                                 VStack (alignment: .leading, spacing: 5) {
                                     Text("Sucrose detected in:")
                                         .font(.system(size: 13, weight: .semibold))
                                         .foregroundStyle(.iconTeal)
-                                    List(sucroseIngredients[0], id: \.self) { ingredient in
-                                        Text(ingredient.capitalized)
+                                    List(sucroseAndStarchIngredients[0], id: \.self) { ingredient in
+                                        Text(ingredient.trimmingCharacters(in: .whitespacesAndNewlines).capitalized)
                                             .font(.system(size: 12))
                                             .foregroundStyle(.white)
                                             .listRowBackground(Color.clear)
@@ -232,8 +218,8 @@ struct FoodDetailsScreen: View {
                                     Text("Other sugars detected in:")
                                         .font(.system(size: 13, weight: .semibold))
                                         .foregroundStyle(.iconTeal)
-                                    List(sucroseIngredients[1], id: \.self) { ingredient in
-                                        Text(ingredient.capitalized)
+                                    List(sucroseAndStarchIngredients[1], id: \.self) { ingredient in
+                                        Text(ingredient.trimmingCharacters(in: .whitespacesAndNewlines).capitalized)
                                             .font(.system(size: 12))
                                             .foregroundStyle(.white)
                                             .listRowBackground(Color.clear)
@@ -243,23 +229,16 @@ struct FoodDetailsScreen: View {
                                         .environment(\.defaultMinListRowHeight, 20)
                                 }.padding(.top, 10)
                             }.frame(width: 340)
-                        case .naturalSucroseIngredients:
-                            VStack (alignment: .leading, spacing: 5) {
-                                Text("Naturally occurring sucrose may be in:")
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(.iconTeal)
-                                List(sucroseIngredients[2], id: \.self) { ingredient in
-                                    Text(ingredient.capitalized)
+                        case .completeIngredientList:
+                            GeometryReader(content: { geometry in
+                                ScrollView {
+                                    Text(nutData?.ingredients ?? "")
                                         .font(.system(size: 12))
-                                        .foregroundStyle(.white)
-                                        .listRowBackground(Color.clear)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                        .listRowSpacing(0)
-                                }.listStyle(.plain)
-                                    .environment(\.defaultMinListRowHeight, 20)
-                            }.frame(width: 340).padding(.top, 10)
-                        case .allergenIngredients:
-                            Text("")
+                                        .lineLimit(nil)
+                                        .frame(width: geometry.size.width - 30, alignment: .center)
+                                        .padding()
+                                }.frame(height: geometry.size.height - 10)
+                            })
                         }
                     }
                 }
@@ -296,7 +275,7 @@ struct FoodDetailsScreen: View {
             DispatchQueue.main.async {
                 self.nutData = queryResult
                 self.isLoaded = true
-                self.sucroseIngredients = helper.findSucroseIngredients(in: nutData?.ingredients ?? "")
+                self.sucroseAndStarchIngredients = helper.findSucroseIngredients(in: nutData?.ingredients ?? "")
             }
         }
 

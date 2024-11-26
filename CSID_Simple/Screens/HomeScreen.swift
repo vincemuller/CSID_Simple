@@ -42,6 +42,7 @@ enum SearchFilter: Identifiable, CaseIterable {
 }
 
 struct HomeScreen: View {
+    @EnvironmentObject var sessionViewModel: SessionViewModel
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]

@@ -37,4 +37,3 @@ struct NutrientData: Codable, Identifiable {
     var ingredients:            String
 }
 
-

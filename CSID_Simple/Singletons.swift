@@ -8,3 +8,5 @@
 import Foundation
 
 nonisolated(unsafe) public var databasePointer: OpaquePointer!
+
+var user: String = ""
