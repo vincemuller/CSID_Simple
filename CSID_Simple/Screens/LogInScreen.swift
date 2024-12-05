@@ -12,6 +12,7 @@ struct LogInScreen: View {
     
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var inProgress: Bool = false
     
     var body: some View {
         ZStack (alignment: .top) {
@@ -57,8 +58,8 @@ struct LogInScreen: View {
                             .frame(width: 300, height: 1)
                             .padding(.top, 3)
                         VStack (spacing: 10) {
-                            Button(action: {sessionViewModel.signIn(username: email, password: password)}, label: {
-                                Text("Sign In")
+                            Button(action: {sessionViewModel.signIn(username: email, password: password);inProgress = true}, label: {
+                                Text(inProgress ? "• • •" : "Sign In")
                                     .font(.system(size: 18))
                                     .frame(width: 200, height: 40)
                                     .foregroundStyle(.black)
@@ -89,10 +90,14 @@ struct LogInScreen: View {
         } message: {
             Text(sessionViewModel.errMessage)
         }
+        .onDisappear(perform: {
+            inProgress = false
+        })
         .ignoresSafeArea(.keyboard)
     }
 }
 
 #Preview {
     LogInScreen()
+        .environmentObject(SessionViewModel())
 }

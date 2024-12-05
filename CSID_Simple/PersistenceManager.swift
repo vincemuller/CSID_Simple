@@ -23,6 +23,7 @@ enum PersistenceManager {
     
     static func retrieveUserSession(completed: @escaping (Result<String, Error>) -> Void) {
         guard let sessionData = defaults.object(forKey: Keys.userSession) as? Data else {
+            completed(.success("n/a"))
             return
         }
         
@@ -36,7 +37,6 @@ enum PersistenceManager {
         }
     }
     
-
     static func logIn(userID: String) -> Error? {
         do {
             let encoder = JSONEncoder()
@@ -51,6 +51,7 @@ enum PersistenceManager {
     
     static func logOut() {
         defaults.removeObject(forKey: Keys.userSession)
+        user = ""
         print("Log Out successful")
     }
 

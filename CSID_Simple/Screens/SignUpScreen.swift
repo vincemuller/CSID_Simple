@@ -103,4 +103,5 @@ struct SignUpScreen: View {
 
 #Preview {
     SignUpScreen()
+        .environmentObject(SessionViewModel())
 }

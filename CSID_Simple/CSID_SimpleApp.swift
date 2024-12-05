@@ -38,7 +38,7 @@ struct CSID_SimpleApp: App {
             case .resetPassword(let username):
                 LogInResetPasswordScreen(email: username)
                     .environmentObject(sessionViewModel)
-            case .session(let user):
+            case .session:
                 HomeScreen()
                     .environmentObject(sessionViewModel)
             }
@@ -49,23 +49,30 @@ struct CSID_SimpleApp: App {
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.configure()
-            if let u = Amplify.Auth.getCurrentUser() {
-                user = u.userId
-                sessionViewModel.authState = .session(user: u.userId)
+            
+            if let awsUserData = Amplify.Auth.getCurrentUser() {
+                PersistenceManager.retrieveUserSession { [self] result in
+                    switch result {
+                    case .success(let persistedUserData):
+                        if persistedUserData == awsUserData.userId {
+                            user = awsUserData.userId
+                            sessionViewModel.authState = .session
+                        } else {
+                            sessionViewModel.authState = .login
+                            let _ = Amplify.Auth.signOut()
+                            PersistenceManager.logOut()
+                        }
+                    case .failure(let failure):
+                        sessionViewModel.authState = .login
+                        let _ = Amplify.Auth.signOut()
+                        PersistenceManager.logOut()
+                        print(failure.localizedDescription)
+                    }
+                }
+            } else {
+                let _ = Amplify.Auth.signOut()
+                PersistenceManager.logOut()
             }
-//            if let currentUser = Amplify.Auth.getCurrentUser() {
-//                print(currentUser.userId)
-//                PersistenceManager.logOut()
-//                PersistenceManager.logIn(userID: currentUser.userId)
-//                PersistenceManager.retrieveUserSession { result in
-//                    switch result {
-//                    case .success(let success):
-//                        print(success)
-//                    case .failure(let failure):
-//                        print("failure!")
-//                    }
-//                }
-//            }
             print("Successfully configured Amplify!")
         } catch {
             print("Failed to configure Amplify", error)

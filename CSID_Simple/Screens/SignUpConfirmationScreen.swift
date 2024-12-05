@@ -90,4 +90,5 @@ struct SignUpConfirmationScreen: View {
 
 #Preview {
     SignUpConfirmationScreen(email: "vmuller2529@gmail.com")
+        .environmentObject(SessionViewModel())
 }

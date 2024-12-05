@@ -13,4 +13,5 @@ final class ViewModel: ObservableObject {
     @Published var compareQueue: [FoodDetails] = []
     @Published var comparisonNutData: [NutrientData] = []
     @Published var foodDetalsPresenting: Bool = false
+    @Published var createListScreenPresenting: Bool = false
 }

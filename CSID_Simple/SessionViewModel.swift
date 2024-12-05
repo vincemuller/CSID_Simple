@@ -13,7 +13,7 @@ enum AuthState {
     case login
     case confirmCode(email: String)
     case resetPassword(email: String)
-    case session(user: String)
+    case session
 }
 
 final class SessionViewModel: ObservableObject {
@@ -24,11 +24,12 @@ final class SessionViewModel: ObservableObject {
     
     func getCurrentUser() {
         if let u = Amplify.Auth.getCurrentUser() {
-            authState = .session(user: u.userId)
+            authState = .session
             PersistenceManager.logIn(userID: u.userId)
             user = u.userId
-            print(u.userId)
         } else {
+            PersistenceManager.logOut()
+            user = ""
             authState = .login
         }
     }
@@ -46,7 +47,7 @@ final class SessionViewModel: ObservableObject {
     }
     
     func showDashboard(authUser: AuthUser) {
-        authState = .session(user: authUser.userId)
+        authState = .session
         user = authUser.userId
     }
     

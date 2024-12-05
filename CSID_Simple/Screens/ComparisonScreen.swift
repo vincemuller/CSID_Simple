@@ -20,12 +20,14 @@ struct ComparisonScreen: View {
     var helper = Helpers()
     
     var body: some View {
-        let brand = [foods[0].brandName?.brandFormater(brandOwner: foods[0].brandOwner ?? ""), foods[1].brandName?.brandFormater(brandOwner: foods[1].brandOwner ?? "")]
+        let brand = [foods[0].wholeFood == "yes" ? "Whole Food" : foods[0].brandName?.brandFormater(brandOwner: foods[0].brandOwner ?? ""),
+                     foods[1].wholeFood == "yes" ? "Whole Food" : foods[1].brandName?.brandFormater(brandOwner: foods[1].brandOwner ?? "")]
         
         ZStack (alignment: .top) {
             BackgroundView()
             VStack (spacing: 15) {
                     Text("Nutritional Comparison")
+                        .foregroundStyle(.white)
                         .font(.title)
                         .padding(.top, 10)
                 VStack {
@@ -53,6 +55,7 @@ struct ComparisonScreen: View {
                                 GeometryReader(content: { geometry in
                                     ScrollView {
                                         Text(food.description)
+                                            .foregroundStyle(.white)
                                             .font(.system(size: 12))
                                             .lineLimit(nil)
                                             .multilineTextAlignment(.center)
@@ -66,50 +69,62 @@ struct ComparisonScreen: View {
                         }
                         Divider()
                         Text("Total Carbs")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         GridRow {
                             ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
                                 Text("\(food.carbs)g")
+                                    .foregroundStyle(.white)
                             }
                         }
                         Divider()
                         Text("Fiber")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         GridRow {
                             ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
                                 Text("\(food.fiber)g")
+                                    .foregroundStyle(.white)
                             }
                         }
                         Divider()
                         Text("Net Carbs")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         GridRow {
                             ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
                                 Text("\(food.carbs)g")
+                                    .foregroundStyle(.white)
                             }
                         }
                         Divider()
                         Text("Total Sugars")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         GridRow {
                             ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
                                 Text("\(food.totalSugars)g")
+                                    .foregroundStyle(.white)
                             }
                         }
                         Divider()
                         Text("Total Starches")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         GridRow {
                             ForEach(adjustedNutrition.isEmpty ? nutrition : adjustedNutrition) { food in
                                 Text("\(food.totalStarches)g")
+                                    .foregroundStyle(.white)
                             }
                         }
                         Divider()
                         Text("Serving Size")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         GridRow {
                             ForEach(foods) { food in
                                 Text("\(food.servingSize.formatted())\(food.servingSizeUnit)")
+                                    .foregroundStyle(.white)
                             }
                         }
                             TextField("Custom Serving", text: $customServing)
@@ -126,8 +141,10 @@ struct ComparisonScreen: View {
                                 .offset(y: -10)
                         Divider()
                         Text("Ingredients")
+                            .foregroundStyle(.white)
                             .font(.system(size: 12))
                         Image(systemName: ingredientsExpand ? "chevron.up" : "chevron.down")
+                            .foregroundStyle(.white)
                             .padding(.top, 5)
                             .onTapGesture {
                                 ingredientsExpand.toggle()
@@ -137,6 +154,7 @@ struct ComparisonScreen: View {
                                 GeometryReader(content: { geometry in
                                     ScrollView {
                                         Text(food.ingredients)
+                                            .foregroundStyle(.white)
                                             .font(.system(size: 12))
                                             .lineLimit(nil)
                                             .multilineTextAlignment(.center)

@@ -9,7 +9,9 @@ import SwiftUI
 
 struct SavedListsView: View {
     
-    private var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
+    var savedListMockData = ["Safe Foods","Unsafe Foods","Favorite Snacks","Favorite Treats"]
+    
+    @Binding var createListScreenPresenting: Bool
     
     var body: some View {
         ZStack {
@@ -26,6 +28,8 @@ struct SavedListsView: View {
                             Text("Create New List")
                                 .font(.system(size: 16))
                                 .foregroundStyle(.iconTeal)
+                        }.onTapGesture {
+                            createListScreenPresenting = true
                         }
                     }
                     
@@ -45,5 +49,5 @@ struct SavedListsView: View {
 }
 
 #Preview {
-    SavedListsView()
+    SavedListsView(createListScreenPresenting: .constant(false))
 }

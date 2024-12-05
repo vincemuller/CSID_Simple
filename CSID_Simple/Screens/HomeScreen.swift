@@ -88,7 +88,7 @@ struct HomeScreen: View {
                                     } else if section == .meals {
                                         MealTypeSectionView()
                                     } else {
-                                        SavedListsView()
+                                        SavedListsView(createListScreenPresenting: $viewModel.createListScreenPresenting)
                                     }
                                 } header: {
                                     Text(section.label)
@@ -164,6 +164,11 @@ struct HomeScreen: View {
         }) {
             FoodDetailsScreen(food: viewModel.selectedFood)
         }
+        .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
+            viewModel.createListScreenPresenting = false
+        }) {
+            CreateListScreen()
+        }
         .onAppear(perform: initializeDatabase)
         .onChange(of: viewModel.compareQueue) {
             if viewModel.compareQueue.count == 2 {
@@ -221,7 +226,20 @@ struct HomeScreen: View {
         let filterClause = selectedFilter == .wholeFoods ? "USDAFoodSearchTable.wholeFood='yes' AND" :
                            selectedFilter == .brandedFoods ? "USDAFoodSearchTable.wholeFood='no' AND" : ""
         
-        return "\(filterClause) \(searchComponents.map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }.joined(separator: " AND "))"
+        let removeNullValues: String = {
+            switch selectedSort {
+            case "Relevance": return ""
+            case "Sugars (Low to High)": return "USDAFoodSearchTable.totalSugars IS NOT NULL AND"
+            case "Sugars (High to Low)": return "USDAFoodSearchTable.totalSugars IS NOT NULL AND"
+            case "Starches (Low to High)": return "USDAFoodSearchTable.totalStarches IS NOT NULL AND"
+            case "Starches (High to Low)": return "USDAFoodSearchTable.totalStarches IS NOT NULL AND"
+            case "Carbs (Low to High)": return "USDAFoodSearchTable.carbs IS NOT NULL AND"
+            case "Carbs (High to Low)": return "USDAFoodSearchTable.carbs IS NOT NULL AND"
+            default: return ""
+            }
+        }()
+        
+        return "\(filterClause) \(removeNullValues) \(searchComponents.map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }.joined(separator: " AND "))"
     }
     
     private func getSortFilter() -> String {
@@ -258,4 +276,5 @@ struct HomeScreen: View {
 
 #Preview {
     HomeScreen()
+        .environmentObject(SessionViewModel())
 }

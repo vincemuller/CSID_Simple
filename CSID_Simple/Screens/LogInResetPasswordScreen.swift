@@ -123,4 +123,5 @@ struct LogInResetPasswordScreen: View {
 
 #Preview {
     LogInResetPasswordScreen(email: "vmuller2529@gmail.com")
+        .environmentObject(SessionViewModel())
 }
