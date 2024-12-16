@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-struct SavedList: Identifiable {
-    var id = UUID()
-    var name: String
-    var description: String
-    var user: String
-    var timestamp: Date
-}
 
 struct CreateListScreen: View {
     
@@ -69,7 +62,9 @@ struct CreateListScreen: View {
                 .offset(y: 30)
                 Spacer()
                 VStack {
-                    Button(action: {print(SavedList(name: listName, description: description, user: user, timestamp: Date.now))}, label: {
+                    Button(action: {
+                        print("create list function here")
+                           }, label: {
                         Text("Save")
                             .font(.system(size: 18))
                             .frame(width: 300, height: 40)
@@ -97,3 +92,4 @@ struct CreateListScreen: View {
 #Preview {
     CreateListScreen()
 }
+

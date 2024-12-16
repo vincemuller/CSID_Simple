@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct SignUpScreen: View {
-    @EnvironmentObject var sessionViewModel: SessionViewModel
-    
+
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirmPassword: String = ""
@@ -71,7 +70,7 @@ struct SignUpScreen: View {
                             .frame(width: 300, height: 1)
                             .padding(.top, 3)
                         VStack (spacing: 10) {
-                            Button(action: {sessionViewModel.signUp(username: email, email: email, password: password)}, label: {
+                            Button(action: {print("sign up function here")}, label: {
                                 Text("Create Account")
                                     .font(.system(size: 18))
                                     .frame(width: 200, height: 40)
@@ -80,7 +79,7 @@ struct SignUpScreen: View {
                                         RoundedRectangle(cornerRadius: 10)
                                             .fill(.iconTeal))
                             })
-                            Button(action: {sessionViewModel.showLogin()}, label: {
+                            Button(action: {print("navigate user back to log in screen")}, label: {
                                 Text("Already have an account?")
                                     .font(.system(size: 14))
                                     .foregroundStyle(.white.opacity(0.6))
@@ -90,18 +89,10 @@ struct SignUpScreen: View {
                 }.frame(width: 360, height: 320).offset(y: 50)
             }
         }
-        .alert(sessionViewModel.errTitle, isPresented: $sessionViewModel.isShowing) {
-            Button("Ok") {
-                sessionViewModel.isShowing = false
-            }
-        } message: {
-            Text(sessionViewModel.errMessage)
-        }
         .ignoresSafeArea(.keyboard)
     }
 }
 
 #Preview {
     SignUpScreen()
-        .environmentObject(SessionViewModel())
 }

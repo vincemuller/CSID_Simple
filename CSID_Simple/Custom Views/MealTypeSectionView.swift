@@ -34,7 +34,9 @@ struct MealTypeSectionView: View {
                             .foregroundStyle(.white)
                     }
                     .onTapGesture {
-                        Amplify.Auth.signOut()
+                        Task {
+                            await Amplify.Auth.signOut()
+                        }
                         PersistenceManager.logOut()
                     }
                 }

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LogInScreen: View {
-    @EnvironmentObject var sessionViewModel: SessionViewModel
     
     @State private var email: String = ""
     @State private var password: String = ""
@@ -58,7 +57,7 @@ struct LogInScreen: View {
                             .frame(width: 300, height: 1)
                             .padding(.top, 3)
                         VStack (spacing: 10) {
-                            Button(action: {sessionViewModel.signIn(username: email, password: password);inProgress = true}, label: {
+                            Button(action: {print("log in function here")}, label: {
                                 Text(inProgress ? "• • •" : "Sign In")
                                     .font(.system(size: 18))
                                     .frame(width: 200, height: 40)
@@ -67,7 +66,7 @@ struct LogInScreen: View {
                                         RoundedRectangle(cornerRadius: 10)
                                             .fill(.white))
                             })
-                            Button(action: {sessionViewModel.resetPassword(email: email)}, label: {
+                            Button(action: {print("navigate user to reset password here")}, label: {
                                 Text("Forgot Password?")
                                     .font(.system(size: 14))
                                     .foregroundStyle(.white.opacity(0.6))
@@ -76,28 +75,17 @@ struct LogInScreen: View {
                     }.offset(y: 50)
                 }.frame(width: 360, height: 260).offset(y: 50)
                 Spacer()
-                Button(action: {sessionViewModel.showSignUp()}, label: {
+                Button(action: {print("navigate user to sign up here")}, label: {
                     Text("Don't have an account? Click Here")
                         .font(.system(size: 14))
                         .foregroundStyle(.iconTeal)
                 })
             }
         }
-        .alert(sessionViewModel.errTitle, isPresented: $sessionViewModel.isShowing) {
-            Button("Ok") {
-                sessionViewModel.isShowing = false
-            }
-        } message: {
-            Text(sessionViewModel.errMessage)
-        }
-        .onDisappear(perform: {
-            inProgress = false
-        })
         .ignoresSafeArea(.keyboard)
     }
 }
 
 #Preview {
     LogInScreen()
-        .environmentObject(SessionViewModel())
 }

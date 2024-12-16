@@ -6,11 +6,6 @@
 
 
 import Foundation
-import Amplify
-
-//enum LogInActionType {
-//    case logIn, logOut
-//}
 
 
 enum PersistenceManager {

@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0071144FAB109A303317AF3F /* Pods_CSID_Simple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3C8A540BFE4248D4F2572BC /* Pods_CSID_Simple.framework */; };
-		8A4E5957A7AF614A8C5160A2 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 459BE669505091571AEB1848 /* awsconfiguration.json */; };
-		9B3ADA1723053DFD7BA7DC8B /* amplifyconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */; };
 		EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14EF2CDC3D670023BACE /* ViewModel.swift */; };
 		EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */; };
 		EB9E14F82CE32A7D0023BACE /* SavedListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */; };
@@ -18,8 +15,6 @@
 		EB9E15002CE668470023BACE /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14FF2CE668470023BACE /* Helpers.swift */; };
 		EB9E15022CEDA31B0023BACE /* LogInScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E15012CEDA31B0023BACE /* LogInScreen.swift */; };
 		EB9E15042CEE67170023BACE /* SignUpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E15032CEE67170023BACE /* SignUpScreen.swift */; };
-		EB9E15062CEE69C20023BACE /* SignUpConfirmationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E15052CEE69C20023BACE /* SignUpConfirmationScreen.swift */; };
-		EB9E15082CEE7A370023BACE /* LogInResetPasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E15072CEE7A370023BACE /* LogInResetPasswordScreen.swift */; };
 		EBC290642CD1FF9D00500D84 /* CSID_SimpleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */; };
 		EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290652CD1FF9D00500D84 /* HomeScreen.swift */; };
 		EBC290682CD1FF9F00500D84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBC290672CD1FF9F00500D84 /* Assets.xcassets */; };
@@ -40,16 +35,10 @@
 		EBC290972CDC263A00500D84 /* FoodDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */; };
 		EBC58F892CF286B4004E2F73 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */; };
 		EBC7AE552D02036C00F46964 /* CreateListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC7AE542D02036C00F46964 /* CreateListScreen.swift */; };
-		EBDA885F2CEE9BA1001C53D5 /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDA885E2CEE9BA1001C53D5 /* SessionViewModel.swift */; };
 		EBDA88612CEE9DEE001C53D5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		07B3241C7729E728256DCFDA /* Pods-CSID_Simple.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CSID_Simple.debug.xcconfig"; path = "Target Support Files/Pods-CSID_Simple/Pods-CSID_Simple.debug.xcconfig"; sourceTree = "<group>"; };
-		459BE669505091571AEB1848 /* awsconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
-		7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
-		D0AB894B7BD492348C44595F /* Pods-CSID_Simple.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CSID_Simple.release.xcconfig"; path = "Target Support Files/Pods-CSID_Simple/Pods-CSID_Simple.release.xcconfig"; sourceTree = "<group>"; };
-		E3C8A540BFE4248D4F2572BC /* Pods_CSID_Simple.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CSID_Simple.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB9E14EF2CDC3D670023BACE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
 		EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListsView.swift; sourceTree = "<group>"; };
@@ -58,8 +47,6 @@
 		EB9E14FF2CE668470023BACE /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		EB9E15012CEDA31B0023BACE /* LogInScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInScreen.swift; sourceTree = "<group>"; };
 		EB9E15032CEE67170023BACE /* SignUpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScreen.swift; sourceTree = "<group>"; };
-		EB9E15052CEE69C20023BACE /* SignUpConfirmationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConfirmationScreen.swift; sourceTree = "<group>"; };
-		EB9E15072CEE7A370023BACE /* LogInResetPasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInResetPasswordScreen.swift; sourceTree = "<group>"; };
 		EBC290602CD1FF9D00500D84 /* CSID_Simple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CSID_Simple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSID_SimpleApp.swift; sourceTree = "<group>"; };
 		EBC290652CD1FF9D00500D84 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -81,7 +68,6 @@
 		EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailsScreen.swift; sourceTree = "<group>"; };
 		EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		EBC7AE542D02036C00F46964 /* CreateListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListScreen.swift; sourceTree = "<group>"; };
-		EBDA885E2CEE9BA1001C53D5 /* SessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewModel.swift; sourceTree = "<group>"; };
 		EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,47 +76,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0071144FAB109A303317AF3F /* Pods_CSID_Simple.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1EADC49A7B8862C7538D0F6B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				07B3241C7729E728256DCFDA /* Pods-CSID_Simple.debug.xcconfig */,
-				D0AB894B7BD492348C44595F /* Pods-CSID_Simple.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		741AB25A852E1FD54725BB15 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				E3C8A540BFE4248D4F2572BC /* Pods_CSID_Simple.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		E3D37E1CA1C41DFA0A8B54D5 /* AmplifyConfig */ = {
-			isa = PBXGroup;
-			children = (
-				459BE669505091571AEB1848 /* awsconfiguration.json */,
-				7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */,
-			);
-			name = AmplifyConfig;
-			sourceTree = "<group>";
-		};
 		EBC290572CD1FF9C00500D84 = {
 			isa = PBXGroup;
 			children = (
 				EBC290622CD1FF9D00500D84 /* CSID_Simple */,
 				EBC290612CD1FF9D00500D84 /* Products */,
-				E3D37E1CA1C41DFA0A8B54D5 /* AmplifyConfig */,
-				1EADC49A7B8862C7538D0F6B /* Pods */,
-				741AB25A852E1FD54725BB15 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -149,7 +105,6 @@
 				EBC290902CD9709800500D84 /* Screens */,
 				EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */,
 				EBC290672CD1FF9F00500D84 /* Assets.xcassets */,
-				EBDA885E2CEE9BA1001C53D5 /* SessionViewModel.swift */,
 				EBC290692CD1FF9F00500D84 /* Preview Content */,
 				EBC2908F2CD872B600500D84 /* Custom Views */,
 				EBC290772CD59BBD00500D84 /* Extensions.swift */,
@@ -196,8 +151,6 @@
 				EB9E14FB2CE411770023BACE /* HomeScreenAI.swift */,
 				EB9E15012CEDA31B0023BACE /* LogInScreen.swift */,
 				EB9E15032CEE67170023BACE /* SignUpScreen.swift */,
-				EB9E15052CEE69C20023BACE /* SignUpConfirmationScreen.swift */,
-				EB9E15072CEE7A370023BACE /* LogInResetPasswordScreen.swift */,
 				EBC7AE542D02036C00F46964 /* CreateListScreen.swift */,
 			);
 			path = Screens;
@@ -220,11 +173,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EBC2906E2CD1FF9F00500D84 /* Build configuration list for PBXNativeTarget "CSID_Simple" */;
 			buildPhases = (
-				A4AD3A69C5468F2C7CA92FBB /* [CP] Check Pods Manifest.lock */,
 				EBC2905C2CD1FF9D00500D84 /* Sources */,
 				EBC2905D2CD1FF9D00500D84 /* Frameworks */,
 				EBC2905E2CD1FF9D00500D84 /* Resources */,
-				E16BFBB429E0E09CE9AFD3CB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -259,6 +210,8 @@
 				Base,
 			);
 			mainGroup = EBC290572CD1FF9C00500D84;
+			packageReferences = (
+			);
 			productRefGroup = EBC290612CD1FF9D00500D84 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -276,61 +229,16 @@
 				EBC2906B2CD1FF9F00500D84 /* Preview Assets.xcassets in Resources */,
 				EBC290682CD1FF9F00500D84 /* Assets.xcassets in Resources */,
 				EBC290952CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db in Resources */,
-				8A4E5957A7AF614A8C5160A2 /* awsconfiguration.json in Resources */,
-				9B3ADA1723053DFD7BA7DC8B /* amplifyconfiguration.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		A4AD3A69C5468F2C7CA92FBB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CSID_Simple-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E16BFBB429E0E09CE9AFD3CB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CSID_Simple/Pods-CSID_Simple-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CSID_Simple/Pods-CSID_Simple-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CSID_Simple/Pods-CSID_Simple-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EBC2905C2CD1FF9D00500D84 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB9E15062CEE69C20023BACE /* SignUpConfirmationScreen.swift in Sources */,
 				EB9E14FE2CE4159A0023BACE /* SearchBarView.swift in Sources */,
 				EBC2908E2CD850F600500D84 /* MealTypeSectionView.swift in Sources */,
 				EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */,
@@ -353,12 +261,10 @@
 				EBC290802CD71C3500500D84 /* Singletons.swift in Sources */,
 				EBC290842CD83E6B00500D84 /* SearchResultsView.swift in Sources */,
 				EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */,
-				EBDA885F2CEE9BA1001C53D5 /* SessionViewModel.swift in Sources */,
 				EBC290642CD1FF9D00500D84 /* CSID_SimpleApp.swift in Sources */,
 				EB9E14FC2CE411770023BACE /* HomeScreenAI.swift in Sources */,
 				EBC290862CD83F3600500D84 /* SearchFiltersView.swift in Sources */,
 				EBC7AE552D02036C00F46964 /* CreateListScreen.swift in Sources */,
-				EB9E15082CEE7A370023BACE /* LogInResetPasswordScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,7 +392,6 @@
 		};
 		EBC2906F2CD1FF9F00500D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07B3241C7729E728256DCFDA /* Pods-CSID_Simple.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -516,7 +421,6 @@
 		};
 		EBC290702CD1FF9F00500D84 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D0AB894B7BD492348C44595F /* Pods-CSID_Simple.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
