@@ -46,7 +46,6 @@ enum PersistenceManager {
     
     static func logOut() {
         defaults.removeObject(forKey: Keys.userSession)
-        user = ""
         print("Log Out successful")
     }
 

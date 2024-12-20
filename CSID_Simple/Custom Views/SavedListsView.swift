@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SavedListsView: View {
     
-    @State var savedListMockData = userLists
+    @State var savedListMockData = ["Safe Foods", "Favorite Desserts", "Unsafe Foods"]
     
     @Binding var createListScreenPresenting: Bool
     

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Amplify
+
 
 struct MealTypeSectionView: View {
     
@@ -32,12 +32,6 @@ struct MealTypeSectionView: View {
                         Text(meal)
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(.white)
-                    }
-                    .onTapGesture {
-                        Task {
-                            await Amplify.Auth.signOut()
-                        }
-                        PersistenceManager.logOut()
                     }
                 }
             }).frame(width: 300, alignment: .center)
