@@ -1,8 +1,0 @@
-type SavedList @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  name: String
-  description: String
-  user: String
-  timestamp: String
-}
- 

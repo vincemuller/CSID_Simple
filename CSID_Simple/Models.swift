@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Charts
 
 struct FoodDetails: Codable, Hashable, Identifiable {
     var id = UUID()
@@ -36,4 +37,21 @@ struct NutrientData: Codable, Identifiable {
     var sodium:                 String
     var ingredients:            String
 }
+
+struct TolerationRating: Identifiable {
+    var id = UUID()
+    var fdicID: Int
+    var rating: Float
+    var comment: String
+    var userID: String
+    var timestamp: Date
+}
+
+struct TolerationChunks: Identifiable {
+    var id = UUID()
+    var notTolerable: [TolerationRating]
+    var somewhatTolerable: [TolerationRating]
+    var tolerable: [TolerationRating]
+}
+
 
