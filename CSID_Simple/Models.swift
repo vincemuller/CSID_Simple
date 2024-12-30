@@ -38,7 +38,7 @@ struct NutrientData: Codable, Identifiable {
     var ingredients:            String
 }
 
-struct TolerationRating: Identifiable {
+struct TolerationRating_Local: Identifiable {
     var id = UUID()
     var fdicID: Int
     var rating: Float

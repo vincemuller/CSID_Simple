@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-csidsimple-dev-0e052-authRole",
+      "UnauthRoleArn": "arn:aws:iam::050682269423:role/amplify-csidsimple-dev-0e052-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::050682269423:role/amplify-csidsimple-dev-0e052-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-csidsimple-dev-0e052-deployment",
+      "UnauthRoleName": "amplify-csidsimple-dev-0e052-unauthRole",
+      "StackName": "amplify-csidsimple-dev-0e052",
+      "StackId": "arn:aws:cloudformation:us-west-2:050682269423:stack/amplify-csidsimple-dev-0e052/30f36a90-c610-11ef-b431-0ac2a00d0037",
+      "AmplifyAppId": "d198n96nkdvxwg"
+    }
+  }
+}

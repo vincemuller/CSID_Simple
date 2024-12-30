@@ -1,0 +1,7 @@
+type TolerationRating @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  fdicID: Int
+  comment: String
+  userID: String
+  rating: String
+}
