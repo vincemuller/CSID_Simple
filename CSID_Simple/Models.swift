@@ -49,9 +49,9 @@ struct TolerationRating_Local: Identifiable {
 
 struct TolerationChunks: Identifiable {
     var id = UUID()
-    var notTolerable: [TolerationRating]
-    var somewhatTolerable: [TolerationRating]
-    var tolerable: [TolerationRating]
+    var canNotTolerate: [TolerationRating]
+    var tolerateWithStipulations: [TolerationRating]
+    var canTolerate: [TolerationRating]
 }
 
 

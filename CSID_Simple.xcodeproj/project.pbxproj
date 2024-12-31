@@ -44,14 +44,16 @@
 		EBCBF6A02D21C3F70059AA3D /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = EBCBF69F2D21C3F70059AA3D /* AWSAPIPlugin */; };
 		EBCBF6A22D21C3F70059AA3D /* AWSCloudWatchLoggingPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = EBCBF6A12D21C3F70059AA3D /* AWSCloudWatchLoggingPlugin */; };
 		EBCBF6A42D21C3F70059AA3D /* AWSDataStorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = EBCBF6A32D21C3F70059AA3D /* AWSDataStorePlugin */; };
+		EBCBF6A62D2457FE0059AA3D /* RatingsPieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */; };
+		EBCBF6A82D2461DF0059AA3D /* RatingsAndReviewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6A72D2461DF0059AA3D /* RatingsAndReviewsScreen.swift */; };
 		EBDA88612CEE9DEE001C53D5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = "TolerationRating+Schema.swift"; path = "amplify/generated/models/TolerationRating+Schema.swift"; sourceTree = "<group>"; };
-		459BE669505091571AEB1848 /* awsconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; lastKnownFileType = text.json; name = awsconfiguration.json; path = awsconfiguration.json; sourceTree = "<group>"; };
-		7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; lastKnownFileType = text.json; name = amplifyconfiguration.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
-		9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = "<group>"; };
+		18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "TolerationRating+Schema.swift"; path = "amplify/generated/models/TolerationRating+Schema.swift"; sourceTree = "<group>"; };
+		459BE669505091571AEB1848 /* awsconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
+		7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
+		9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = "<group>"; };
 		EB9E14EF2CDC3D670023BACE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
 		EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListsView.swift; sourceTree = "<group>"; };
@@ -82,8 +84,10 @@
 		EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		EBC7AE542D02036C00F46964 /* CreateListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListScreen.swift; sourceTree = "<group>"; };
 		EBCBBAAA2D2086940059AA3D /* TolerationRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TolerationRatingView.swift; sourceTree = "<group>"; };
+		EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsPieChartView.swift; sourceTree = "<group>"; };
+		EBCBF6A72D2461DF0059AA3D /* RatingsAndReviewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsAndReviewsScreen.swift; sourceTree = "<group>"; };
 		EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F236E38855056E69F1ED0E4D /* TolerationRating.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = TolerationRating.swift; path = amplify/generated/models/TolerationRating.swift; sourceTree = "<group>"; };
+		F236E38855056E69F1ED0E4D /* TolerationRating.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = TolerationRating.swift; path = amplify/generated/models/TolerationRating.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +182,7 @@
 				EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */,
 				EB9E14FD2CE4159A0023BACE /* SearchBarView.swift */,
 				EBCBBAAA2D2086940059AA3D /* TolerationRatingView.swift */,
+				EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -192,6 +197,7 @@
 				EB9E15012CEDA31B0023BACE /* LogInScreen.swift */,
 				EB9E15032CEE67170023BACE /* SignUpScreen.swift */,
 				EBC7AE542D02036C00F46964 /* CreateListScreen.swift */,
+				EBCBF6A72D2461DF0059AA3D /* RatingsAndReviewsScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -290,6 +296,7 @@
 				EB9E15042CEE67170023BACE /* SignUpScreen.swift in Sources */,
 				EB9E14F82CE32A7D0023BACE /* SavedListsView.swift in Sources */,
 				EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */,
+				EBCBF6A82D2461DF0059AA3D /* RatingsAndReviewsScreen.swift in Sources */,
 				EBCBBAAB2D2086940059AA3D /* TolerationRatingView.swift in Sources */,
 				EBC290762CD59B6F00500D84 /* SearchResultCellView.swift in Sources */,
 				EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */,
@@ -302,6 +309,7 @@
 				EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */,
 				EBC2908C2CD84F5200500D84 /* SortResultsView.swift in Sources */,
 				EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */,
+				EBCBF6A62D2457FE0059AA3D /* RatingsPieChartView.swift in Sources */,
 				EBC290802CD71C3500500D84 /* Singletons.swift in Sources */,
 				EBC290842CD83E6B00500D84 /* SearchResultsView.swift in Sources */,
 				EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */,
