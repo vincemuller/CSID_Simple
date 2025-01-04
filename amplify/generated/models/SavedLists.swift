@@ -2,40 +2,35 @@
 import Amplify
 import Foundation
 
-public struct TolerationRating: Model {
+public struct SavedLists: Model {
   public let id: String
-  public var fdicID: Int?
-  public var comment: String?
+  public var name: String?
+  public var description: String?
   public var userID: String?
-  public var rating: String?
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
   public init(id: String = UUID().uuidString,
-      fdicID: Int? = nil,
-      comment: String? = nil,
-      userID: String? = nil,
-      rating: String? = nil) {
+      name: String? = nil,
+      description: String? = nil,
+      userID: String? = nil) {
     self.init(id: id,
-      fdicID: fdicID,
-      comment: comment,
+      name: name,
+      description: description,
       userID: userID,
-      rating: rating,
       createdAt: nil,
       updatedAt: nil)
   }
   internal init(id: String = UUID().uuidString,
-      fdicID: Int? = nil,
-      comment: String? = nil,
+      name: String? = nil,
+      description: String? = nil,
       userID: String? = nil,
-      rating: String? = nil,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
-      self.fdicID = fdicID
-      self.comment = comment
+      self.name = name
+      self.description = description
       self.userID = userID
-      self.rating = rating
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }

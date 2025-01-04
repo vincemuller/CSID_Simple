@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+    
 struct RatingsPieChartView: View {
     @State var tolerationChunks = TolerationChunks(canNotTolerate: [], tolerateWithStipulations: [], canTolerate: [])
     @State var tolerationRatingCount: Int = 0

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 enum HomeScreenSections: Identifiable, CaseIterable {
     case activity, meals, lists
     var id: Self { self }
@@ -87,7 +88,7 @@ struct HomeScreen: View {
                                     } else if section == .meals {
                                         MealTypeSectionView()
                                     } else {
-                                        SavedListsView(createListScreenPresenting: $viewModel.createListScreenPresenting)
+                                        SavedListsView(savedLists: $viewModel.savedLists, createListScreenPresenting: $viewModel.createListScreenPresenting)
                                     }
                                 } header: {
                                     Text(section.label)
@@ -161,14 +162,19 @@ struct HomeScreen: View {
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: viewModel.selectedFood)
+            FoodDetailsScreen(food: viewModel.selectedFood, savedLists: viewModel.savedLists)
         }
         .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
             viewModel.createListScreenPresenting = false
         }) {
-            CreateListScreen()
+            CreateListScreen(updatedSavedListsFunc: viewModel.getSavedLists)
         }
         .onAppear(perform: initializeDatabase)
+        .onAppear(perform: {
+            Task {
+                await viewModel.getSavedLists()
+            }
+        })
         .onChange(of: viewModel.compareQueue) {
             if viewModel.compareQueue.count == 2 {
                 getComparisonNutDetails()

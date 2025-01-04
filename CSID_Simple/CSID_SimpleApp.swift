@@ -50,27 +50,4 @@ struct CSID_SimpleApp: App {
         }
     }
     
-    private func getTolerationRating() async {
-        do {
-            let result = try await Amplify.API.query(
-                request: .get(TolerationRating.self,
-                byId: "d5d61ae8-f62a-49f2-8c95-11fee6b73827")
-            )
-            switch result {
-            case .success(let model):
-                guard let model = model else {
-                    print("Could not find model")
-                    return
-                }
-                print("Successfully retrieved model: \(model)")
-            case .failure(let error):
-                print("Got failed result with \(error)")
-            }
-        } catch let error as APIError {
-            print("Failed to query TolerationRating - \(error)")
-        } catch {
-            print("Unexpected error: \(error)")
-        }
-    }
-    
 }

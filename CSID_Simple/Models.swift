@@ -38,15 +38,6 @@ struct NutrientData: Codable, Identifiable {
     var ingredients:            String
 }
 
-struct TolerationRating_Local: Identifiable {
-    var id = UUID()
-    var fdicID: Int
-    var rating: Float
-    var comment: String
-    var userID: String
-    var timestamp: Date
-}
-
 struct TolerationChunks: Identifiable {
     var id = UUID()
     var canNotTolerate: [TolerationRating]

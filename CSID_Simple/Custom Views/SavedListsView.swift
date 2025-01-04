@@ -9,17 +9,17 @@ import SwiftUI
 
 struct SavedListsView: View {
     
-    @State var savedListMockData = ["Safe Foods", "Favorite Desserts", "Unsafe Foods"]
-    
+    @Binding var savedLists: [SavedLists]
     @Binding var createListScreenPresenting: Bool
+    
     
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
                 .fill(.textField)
-            List(savedListMockData, id: \.self) {list in
+            List(savedLists, id: \.id) {list in
                 Section {
-                    if savedListMockData.firstIndex(of: list) == 0 {
+                    if savedLists.firstIndex(of: list) == 0 {
                         HStack {
                             Group {
                                 Image(systemName: "plus")
@@ -36,7 +36,7 @@ struct SavedListsView: View {
                     HStack {
                         Image(systemName: "bookmark")
                             .foregroundStyle(.white)
-                        Text(list)
+                        Text(list.name ?? "")
                             .foregroundStyle(.white)
                             .font(.system(size: 16))
                     }
@@ -49,5 +49,5 @@ struct SavedListsView: View {
 }
 
 #Preview {
-    SavedListsView(createListScreenPresenting: .constant(false))
+    SavedListsView(savedLists: .constant([]), createListScreenPresenting: .constant(false))
 }

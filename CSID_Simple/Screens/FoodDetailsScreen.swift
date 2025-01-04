@@ -49,6 +49,7 @@ struct FoodDetailsScreen: View {
     @State private var adjustedNutrition: NutrientData?
     @State private var isLoaded: Bool = false
     @State private var isFavorite: Bool = false
+    @State private var selectedList: String = ""
     @State private var customServing: String = ""
     @State private var selectedIngredientList: Ingredients = .sucroseIngredients
     @State private var sucroseAndStarchIngredients: [[String]] = [[],[]]
@@ -59,8 +60,10 @@ struct FoodDetailsScreen: View {
     @State private var selectedToleration: Toleration?
     @State private var errorAlert: Bool = false
     @State private var errorComment: String = "An error has occurred, please close application and try again."
+    @State private var savedListScreenPresenting: Bool = false
     
     @State var food: FoodDetails
+    @State var savedLists: [SavedLists]
     
     var helper = Helpers()
     
@@ -78,7 +81,7 @@ struct FoodDetailsScreen: View {
                                 .lineLimit(5)
                                 .minimumScaleFactor(0.7)
                                 .frame(width: 320, height: 80, alignment: .bottomLeading)
-                            Button(action: {isFavorite.toggle()}, label: {
+                            Button(action: {isFavorite.toggle();savedListScreenPresenting = true}, label: {
                                 Image(systemName: isFavorite ? "bookmark.fill" : "bookmark")
                                     .font(.system(size: 25))
                                     .foregroundStyle(.iconTeal)
@@ -311,7 +314,7 @@ struct FoodDetailsScreen: View {
                                                 .frame(height: 1)
                                                 .padding(.bottom, 15)
                                                 .padding(.horizontal, 10)
-                                            Button(action: {print("navigate user to write review")}, label: {
+                                            NavigationLink(destination: CreateRatingAndReviewScreen(fdicID: food.fdicID)) {
                                                 Text("Write Review")
                                                     .font(.system(size: 18))
                                                     .frame(width: 200, height: 40)
@@ -319,7 +322,7 @@ struct FoodDetailsScreen: View {
                                                     .background(
                                                         RoundedRectangle(cornerRadius: 10)
                                                             .fill(.white))
-                                            })
+                                            }.buttonStyle(PlainButtonStyle())
                                         }
                                         .overlay(alignment: .topTrailing) {
                                             NavigationLink(destination: RatingsAndReviewsScreen(ratings: tolerationRatings)) {
@@ -355,6 +358,11 @@ struct FoodDetailsScreen: View {
                         }
                         
                         adjustedNutrition = helper.customServingCalculator(actualServingSize: food.servingSize, customServing: customServing, nutrientData: nD)
+                    }
+                    .sheet(isPresented: $savedListScreenPresenting, onDismiss: {
+                        savedListScreenPresenting = false
+                    }) {
+                        Text("Saved Lists")
                     }
                     .alert("Error", isPresented: $errorAlert) {
                         Button("Ok") {
@@ -393,11 +401,15 @@ struct FoodDetailsScreen: View {
             switch result {
             case .success(let ratings):
                 print("Successfully retrieved list of todos: \(ratings.count)")
+                tolerationRatings = []
+                tolerationChunks.canNotTolerate.removeAll()
+                tolerationChunks.tolerateWithStipulations.removeAll()
+                tolerationChunks.canTolerate.removeAll()
                 for r in ratings {
                     tolerationRatings.append(r)
-                    if r.rating == "0.0" {
+                    if r.rating == "0" {
                         tolerationChunks.canNotTolerate.append(r)
-                    } else if r.rating == "1.5" {
+                    } else if r.rating == "1" {
                         tolerationChunks.tolerateWithStipulations.append(r)
                     } else {
                         tolerationChunks.canTolerate.append(r)
@@ -435,5 +447,5 @@ struct FoodDetailsScreen: View {
 }
 
 #Preview {
-    FoodDetailsScreen(food: FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no"))
+    FoodDetailsScreen(food: FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no"), savedLists: [SavedLists()])
 }

@@ -16,7 +16,6 @@ struct RatingsAndReviewsScreen: View {
                 LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                     ForEach(ratings, id: \.id) {rating in
                         TolerationRatingView(rating: rating)
-                            .frame(width: 350, alignment: .leading)
                             .padding(.bottom, 20)
                     }
                 }

@@ -6,14 +6,20 @@
 //
 
 import SwiftUI
+import Amplify
+import AWSPluginsCore
 
 
 struct CreateListScreen: View {
+    
+    @Environment(\.presentationMode) var presentationMode
     
     @FocusState private var isFocused: Bool
     
     @State private var listName: String = ""
     @State private var description: String = ""
+    
+    var updatedSavedListsFunc: () async -> ()
     
     var body: some View {
         ZStack (alignment: .topLeading) {
@@ -63,7 +69,9 @@ struct CreateListScreen: View {
                 Spacer()
                 VStack {
                     Button(action: {
-                        print("create list function here")
+                        Task {
+                            await createSavedList()
+                        }
                            }, label: {
                         Text("Save")
                             .font(.system(size: 18))
@@ -87,9 +95,32 @@ struct CreateListScreen: View {
             isFocused = true
         }
     }
+    
+    private func createSavedList() async {
+        let model = SavedLists(name: listName,
+                               description: description,
+                               userID: "vmuller2529")
+        do {
+            let result = try await Amplify.API.mutate(request: .create(model))
+            switch result {
+            case .success(let model):
+                print("Successfully created TolerationRating: \(model)")
+                Task {
+                    await updatedSavedListsFunc()
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            case .failure(let graphQLError):
+                print("Failed to create graphql \(graphQLError)")
+            }
+        } catch let error as APIError {
+            print("Failed to create TolerationRating - \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
 }
 
 #Preview {
-    CreateListScreen()
+    CreateListScreen(updatedSavedListsFunc: {print("Update saved list function here")})
 }
 
