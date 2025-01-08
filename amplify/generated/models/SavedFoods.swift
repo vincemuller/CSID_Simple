@@ -2,35 +2,35 @@
 import Amplify
 import Foundation
 
-public struct SavedLists: Model, Equatable {
+public struct SavedFoods: Model {
   public let id: String
-  public var name: String?
-  public var description: String?
+  public var savedListsID: String?
   public var userID: String?
+  public var fdicID: Int?
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
   public init(id: String = UUID().uuidString,
-      name: String? = nil,
-      description: String? = nil,
-      userID: String? = nil) {
+      savedListsID: String? = nil,
+      userID: String? = nil,
+      fdicID: Int? = nil) {
     self.init(id: id,
-      name: name,
-      description: description,
+      savedListsID: savedListsID,
       userID: userID,
+      fdicID: fdicID,
       createdAt: nil,
       updatedAt: nil)
   }
   internal init(id: String = UUID().uuidString,
-      name: String? = nil,
-      description: String? = nil,
+      savedListsID: String? = nil,
       userID: String? = nil,
+      fdicID: Int? = nil,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
-      self.name = name
-      self.description = description
+      self.savedListsID = savedListsID
       self.userID = userID
+      self.fdicID = fdicID
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }

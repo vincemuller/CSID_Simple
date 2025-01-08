@@ -9,18 +9,18 @@
 /* Begin PBXBuildFile section */
 		15EC060DF2AC762DD508B63A /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
 		2708A7B8A7568931981F5732 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
-		2F5C7B43C226759635061D85 /* SavedLists+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */; };
 		30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
-		329B9924F6E47BE2F010F178 /* SavedListItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC048737F18532A33AC24F5 /* SavedListItems.swift */; };
 		36FBB4224B22F265C284B427 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
+		52543A438EA1C29F541631D5 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
 		638212BE0B18934C57C75DC5 /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
 		8A4E5957A7AF614A8C5160A2 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 459BE669505091571AEB1848 /* awsconfiguration.json */; };
 		9B3ADA1723053DFD7BA7DC8B /* amplifyconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */; };
+		9D3B0A8AC689AE1A29F92526 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
+		A3098C6284FA7D8C7BEBF02D /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
 		B4216C123FD9DBF992F72BEF /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
-		BC2595C20274B93FDE9E5498 /* SavedLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */; };
 		C820C042D0B01AD1D88D1C54 /* AmplifyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */; };
-		CE910D0F0A81DB3D2FD9044E /* SavedListItems+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B06275D71D70350C203CB7 /* SavedListItems+Schema.swift */; };
 		D4F121FB0142879D08D5A142 /* SavedLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */; };
+		E45244A52CF291441192122A /* SavedFoods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58956060743BD47705B837A6 /* SavedFoods.swift */; };
 		EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14EF2CDC3D670023BACE /* ViewModel.swift */; };
 		EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */; };
 		EB9E14F82CE32A7D0023BACE /* SavedListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */; };
@@ -56,18 +56,21 @@
 		EBCBF6A62D2457FE0059AA3D /* RatingsPieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */; };
 		EBCBF6A82D2461DF0059AA3D /* RatingsAndReviewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6A72D2461DF0059AA3D /* RatingsAndReviewsScreen.swift */; };
 		EBCBF6AA2D248AE40059AA3D /* CreateRatingAndReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6A92D248AE40059AA3D /* CreateRatingAndReviewScreen.swift */; };
+		EBCBF6AE2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6AD2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift */; };
 		EBDA88612CEE9DEE001C53D5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */; };
 		F451B15A34CBF8E2C986425A /* SavedLists+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */; };
+		F55A4118B0914FC020D11486 /* SavedFoods+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */; };
+		FC9EFFBC64B16358DE55462A /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "TolerationRating+Schema.swift"; path = "amplify/generated/models/TolerationRating+Schema.swift"; sourceTree = "<group>"; };
 		352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = "SavedLists+Schema.swift"; path = "amplify/generated/models/SavedLists+Schema.swift"; sourceTree = "<group>"; };
-		3AC048737F18532A33AC24F5 /* SavedListItems.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = SavedListItems.swift; path = amplify/generated/models/SavedListItems.swift; sourceTree = "<group>"; };
 		459BE669505091571AEB1848 /* awsconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
+		52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "SavedFoods+Schema.swift"; path = "amplify/generated/models/SavedFoods+Schema.swift"; sourceTree = "<group>"; };
+		58956060743BD47705B837A6 /* SavedFoods.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = SavedFoods.swift; path = amplify/generated/models/SavedFoods.swift; sourceTree = "<group>"; };
 		7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
 		830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = SavedLists.swift; path = amplify/generated/models/SavedLists.swift; sourceTree = "<group>"; };
-		93B06275D71D70350C203CB7 /* SavedListItems+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = "SavedListItems+Schema.swift"; path = "amplify/generated/models/SavedListItems+Schema.swift"; sourceTree = "<group>"; };
 		9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = "<group>"; };
 		EB9E14EF2CDC3D670023BACE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
@@ -102,6 +105,7 @@
 		EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsPieChartView.swift; sourceTree = "<group>"; };
 		EBCBF6A72D2461DF0059AA3D /* RatingsAndReviewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsAndReviewsScreen.swift; sourceTree = "<group>"; };
 		EBCBF6A92D248AE40059AA3D /* CreateRatingAndReviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRatingAndReviewScreen.swift; sourceTree = "<group>"; };
+		EBCBF6AD2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailsSavedListScreen.swift; sourceTree = "<group>"; };
 		EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F236E38855056E69F1ED0E4D /* TolerationRating.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = TolerationRating.swift; path = amplify/generated/models/TolerationRating.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,10 +130,10 @@
 				9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */,
 				18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */,
 				F236E38855056E69F1ED0E4D /* TolerationRating.swift */,
+				52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */,
+				58956060743BD47705B837A6 /* SavedFoods.swift */,
 				352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */,
 				830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */,
-				93B06275D71D70350C203CB7 /* SavedListItems+Schema.swift */,
-				3AC048737F18532A33AC24F5 /* SavedListItems.swift */,
 			);
 			name = AmplifyModels;
 			sourceTree = "<group>";
@@ -219,6 +223,7 @@
 				EBC7AE542D02036C00F46964 /* CreateListScreen.swift */,
 				EBCBF6A72D2461DF0059AA3D /* RatingsAndReviewsScreen.swift */,
 				EBCBF6A92D248AE40059AA3D /* CreateRatingAndReviewScreen.swift */,
+				EBCBF6AD2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -325,6 +330,7 @@
 				EB9E15022CEDA31B0023BACE /* LogInScreen.swift in Sources */,
 				EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */,
 				EB9E15002CE668470023BACE /* Helpers.swift in Sources */,
+				EBCBF6AE2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift in Sources */,
 				EBC58F892CF286B4004E2F73 /* PersistenceManager.swift in Sources */,
 				EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */,
 				EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */,
@@ -342,16 +348,18 @@
 				C820C042D0B01AD1D88D1C54 /* AmplifyModels.swift in Sources */,
 				638212BE0B18934C57C75DC5 /* TolerationRating+Schema.swift in Sources */,
 				2708A7B8A7568931981F5732 /* TolerationRating.swift in Sources */,
-				F451B15A34CBF8E2C986425A /* SavedLists+Schema.swift in Sources */,
-				D4F121FB0142879D08D5A142 /* SavedLists.swift in Sources */,
 				30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */,
 				B4216C123FD9DBF992F72BEF /* TolerationRating.swift in Sources */,
-				CE910D0F0A81DB3D2FD9044E /* SavedListItems+Schema.swift in Sources */,
-				329B9924F6E47BE2F010F178 /* SavedListItems.swift in Sources */,
-				2F5C7B43C226759635061D85 /* SavedLists+Schema.swift in Sources */,
-				BC2595C20274B93FDE9E5498 /* SavedLists.swift in Sources */,
 				15EC060DF2AC762DD508B63A /* TolerationRating+Schema.swift in Sources */,
 				36FBB4224B22F265C284B427 /* TolerationRating.swift in Sources */,
+				F55A4118B0914FC020D11486 /* SavedFoods+Schema.swift in Sources */,
+				E45244A52CF291441192122A /* SavedFoods.swift in Sources */,
+				FC9EFFBC64B16358DE55462A /* TolerationRating+Schema.swift in Sources */,
+				9D3B0A8AC689AE1A29F92526 /* TolerationRating.swift in Sources */,
+				F451B15A34CBF8E2C986425A /* SavedLists+Schema.swift in Sources */,
+				D4F121FB0142879D08D5A142 /* SavedLists.swift in Sources */,
+				A3098C6284FA7D8C7BEBF02D /* TolerationRating+Schema.swift in Sources */,
+				52543A438EA1C29F541631D5 /* TolerationRating.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

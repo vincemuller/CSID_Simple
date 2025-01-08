@@ -59,6 +59,7 @@ struct HomeScreen: View {
     @State private var selectedFilter: SearchFilter = .allFoods
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
+    @State private var user = User.shared
     
     
     var body: some View {
@@ -88,7 +89,7 @@ struct HomeScreen: View {
                                     } else if section == .meals {
                                         MealTypeSectionView()
                                     } else {
-                                        SavedListsView(savedLists: $viewModel.savedLists, createListScreenPresenting: $viewModel.createListScreenPresenting)
+                                        SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
                                     }
                                 } header: {
                                     Text(section.label)
@@ -162,7 +163,7 @@ struct HomeScreen: View {
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: viewModel.selectedFood, savedLists: viewModel.savedLists)
+            FoodDetailsScreen(food: viewModel.selectedFood)
         }
         .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
             viewModel.createListScreenPresenting = false
@@ -173,6 +174,7 @@ struct HomeScreen: View {
         .onAppear(perform: {
             Task {
                 await viewModel.getSavedLists()
+                await viewModel.getSavedFoods()
             }
         })
         .onChange(of: viewModel.compareQueue) {

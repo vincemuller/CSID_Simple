@@ -44,11 +44,10 @@ enum Toleration: Identifiable, CaseIterable {
 }
 
 struct FoodDetailsScreen: View {
-    
+
     @State private var nutData: NutrientData?
     @State private var adjustedNutrition: NutrientData?
     @State private var isLoaded: Bool = false
-    @State private var isFavorite: Bool = false
     @State private var selectedList: String = ""
     @State private var customServing: String = ""
     @State private var selectedIngredientList: Ingredients = .sucroseIngredients
@@ -63,7 +62,15 @@ struct FoodDetailsScreen: View {
     @State private var savedListScreenPresenting: Bool = false
     
     @State var food: FoodDetails
-    @State var savedLists: [SavedLists]
+    @State private var user = User.shared
+    
+    private var isFavorite: Bool {
+        if user.userSavedFoods.contains(where: {$0.fdicID == food.fdicID}) {
+            return true
+        } else {
+            return false
+        }
+    }
     
     var helper = Helpers()
     
@@ -81,7 +88,7 @@ struct FoodDetailsScreen: View {
                                 .lineLimit(5)
                                 .minimumScaleFactor(0.7)
                                 .frame(width: 320, height: 80, alignment: .bottomLeading)
-                            Button(action: {isFavorite.toggle();savedListScreenPresenting = true}, label: {
+                            Button(action: {savedListScreenPresenting = true}, label: {
                                 Image(systemName: isFavorite ? "bookmark.fill" : "bookmark")
                                     .font(.system(size: 25))
                                     .foregroundStyle(.iconTeal)
@@ -362,7 +369,9 @@ struct FoodDetailsScreen: View {
                     .sheet(isPresented: $savedListScreenPresenting, onDismiss: {
                         savedListScreenPresenting = false
                     }) {
-                        Text("Saved Lists")
+                        FoodDetailsSavedListScreen(user: $user, fdicID: food.fdicID)
+                            .presentationDetents([.height(300)])
+                            .presentationDragIndicator(.automatic)
                     }
                     .alert("Error", isPresented: $errorAlert) {
                         Button("Ok") {
@@ -447,5 +456,5 @@ struct FoodDetailsScreen: View {
 }
 
 #Preview {
-    FoodDetailsScreen(food: FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no"), savedLists: [SavedLists()])
+    FoodDetailsScreen(food: FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no"))
 }

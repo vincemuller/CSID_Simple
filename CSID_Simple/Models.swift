@@ -45,4 +45,3 @@ struct TolerationChunks: Identifiable {
     var canTolerate: [TolerationRating]
 }
 
-

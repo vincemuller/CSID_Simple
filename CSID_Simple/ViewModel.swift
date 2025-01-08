@@ -17,23 +17,23 @@ final class ViewModel: ObservableObject {
     @Published var comparisonNutData: [NutrientData] = []
     @Published var foodDetalsPresenting: Bool = false
     @Published var createListScreenPresenting: Bool = false
-    @Published var savedLists: [SavedLists] = []
+    
     
     func getSavedLists() async {
         let lists = SavedLists.keys
-        let predicate = lists.userID == "vmuller2529"
+        let predicate = lists.userID == User.shared.userID
         let request = GraphQLRequest<SavedLists>.list(SavedLists.self, where: predicate)
         do {
             let result = try await Amplify.API.query(request: request)
             switch result {
             case .success(let lists):
-                print("Successfully retrieved list of todos: \(lists.count)")
+                print("Successfully retrieved saved lists: \(lists.count)")
                 DispatchQueue.main.async {
-                    self.savedLists.removeAll()
+                    User.shared.userSavedLists.removeAll()
                 }
                 for l in lists {
                     DispatchQueue.main.async {
-                        self.savedLists.append(l)
+                        User.shared.userSavedLists.append(l)
                     }
                 }
             case .failure(let error):
@@ -42,7 +42,40 @@ final class ViewModel: ObservableObject {
 //                errorComment = error.errorDescription
             }
         } catch let error as APIError {
-            print("Failed to query list of todos: ", error)
+            print("Failed to query saved lists: ", error)
+//            errorAlert = true
+//            errorComment = error.errorDescription
+        } catch {
+            print("Unexpected error: \(error)")
+//            errorAlert = true
+//            errorComment = error.localizedDescription
+        }
+    }
+    
+    func getSavedFoods() async {
+        let foods = SavedFoods.keys
+        let predicate = foods.userID == User.shared.userID
+        let request = GraphQLRequest<SavedFoods>.list(SavedFoods.self, where: predicate)
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let foods):
+                print("Successfully retrieved saved foods: \(foods.count)")
+                DispatchQueue.main.async {
+                    User.shared.userSavedFoods.removeAll()
+                }
+                for l in foods {
+                    DispatchQueue.main.async {
+                        User.shared.userSavedFoods.append(l)
+                    }
+                }
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+//                errorAlert = true
+//                errorComment = error.errorDescription
+            }
+        } catch let error as APIError {
+            print("Failed to query saved foods: ", error)
 //            errorAlert = true
 //            errorComment = error.errorDescription
         } catch {
