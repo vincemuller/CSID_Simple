@@ -26,17 +26,21 @@ struct CSID_SimpleApp: App {
     
     var body: some Scene {
         WindowGroup {
-            switch authState {
-            case .signUp:
-                SignUpScreen()
-            case .logIn:
-                LogInScreen()
-            case .authenticated:
-                HomeScreen()
-                    .onAppear {
-                        configureAmplify()
-                    }
-            }
+            HomeScreen()
+                .onAppear {
+                    configureAmplify()
+                }
+//            switch authState {
+//            case .signUp:
+//                SignUpScreen()
+//            case .logIn:
+//                LogInScreen()
+//            case .authenticated:
+//                HomeScreen()
+//                    .onAppear {
+//                        configureAmplify()
+//                    }
+//            }
         }
     }
     

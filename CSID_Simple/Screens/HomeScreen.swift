@@ -105,7 +105,7 @@ struct HomeScreen: View {
                     case .isFocused:
                         SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
                         
-                        SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: searchResults, selectedSort: selectedSort)
+                        SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: $searchResults, selectedSort: selectedSort)
                         
                         searchResults.isEmpty ? nil :
                         HStack (spacing: 10) {
@@ -150,10 +150,10 @@ struct HomeScreen: View {
                     }
                 }
             }
+            .overlay(alignment: .topLeading, content: {
+                topLeadingLogo
+            })
         }
-        .overlay(alignment: .topLeading, content: {
-            topLeadingLogo
-        })
         .ignoresSafeArea()
         .sheet(isPresented: $viewModel.compareFoodsSheetPresenting, onDismiss: {
             viewModel.compareFoodsSheetPresenting = false
@@ -188,9 +188,9 @@ struct HomeScreen: View {
         Image("csidAssistLogo")
             .resizable()
             .frame(width: 70, height: 70)
-            .safeAreaPadding(.top)
-            .padding(.leading)
-            .padding(.top, 20)
+            .padding(.leading, 10)
+            .padding(.top, 35)
+            .ignoresSafeArea()
     }
     
     private var progressIndicator: some View {

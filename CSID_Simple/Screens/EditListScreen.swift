@@ -1,5 +1,5 @@
 //
-//  SavedListsScreen.swift
+//  EditListsScreen.swift
 //  CSID_Simple
 //
 //  Created by Vince Muller on 12/5/24.
@@ -10,7 +10,7 @@ import Amplify
 import AWSPluginsCore
 
 
-struct CreateListScreen: View {
+struct EditListScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -19,13 +19,13 @@ struct CreateListScreen: View {
     @State private var listName: String = ""
     @State private var description: String = ""
     
-    var updatedSavedListsFunc: () async -> ()
+    @State var list: SavedLists
     
     var body: some View {
         ZStack (alignment: .topLeading) {
             BackgroundView()
             VStack (alignment: .leading, spacing: 10) {
-                Text("Create a list")
+                Text("Edit list")
                     .font(.system(size: 30, weight: .semibold))
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
@@ -69,11 +69,13 @@ struct CreateListScreen: View {
                 Spacer()
                 VStack {
                     Button(action: {
+                        list.name = listName
+                        list.description = description
                         Task {
-                            await createSavedList()
+                            await updateSavedLists(updatedModel: list)
                         }
                            }, label: {
-                        Text("Save List")
+                        Text("Update List")
                             .font(.system(size: 18))
                             .frame(width: 300, height: 40)
                             .foregroundStyle(.white)
@@ -93,27 +95,23 @@ struct CreateListScreen: View {
         }
         .onAppear {
             isFocused = true
+            listName = list.name ?? ""
+            description = list.description ?? ""
         }
     }
     
-    private func createSavedList() async {
-        let model = SavedLists(name: listName,
-                               description: description,
-                               userID: "vmuller2529")
+    private func updateSavedLists(updatedModel: SavedLists) async {
         do {
-            let result = try await Amplify.API.mutate(request: .create(model))
+            let result = try await Amplify.API.mutate(request: .update(updatedModel))
             switch result {
             case .success(let model):
-                print("Successfully created TolerationRating: \(model)")
-                Task {
-                    await updatedSavedListsFunc()
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            case .failure(let graphQLError):
-                print("Failed to create graphql \(graphQLError)")
+                print("Successfully updated SavedLists: \(model)")
+                self.presentationMode.wrappedValue.dismiss()
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
         } catch let error as APIError {
-            print("Failed to create TolerationRating - \(error)")
+            print("Failed to update SavedLists - \(error)")
         } catch {
             print("Unexpected error: \(error)")
         }
@@ -121,6 +119,6 @@ struct CreateListScreen: View {
 }
 
 #Preview {
-    CreateListScreen(updatedSavedListsFunc: {print("Update saved list function here")})
+    EditListScreen(list: SavedLists())
 }
 

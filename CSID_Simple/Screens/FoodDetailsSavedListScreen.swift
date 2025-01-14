@@ -100,7 +100,6 @@ struct FoodDetailsSavedListScreen: View {
         
         guard !user.userSavedFoods.isEmpty else {
             toDelete.removeAll()
-            print(toDelete)
             return
         }
         
@@ -114,6 +113,8 @@ struct FoodDetailsSavedListScreen: View {
                 userItem.fdicID == deleteItem.fdicID && userItem.savedListsID == deleteItem.savedListsID
             }
         }
+        
+        print("to delete: \(toDelete.count)")
         
         for i in toDelete {
             var model = SavedFoods(
@@ -145,12 +146,12 @@ struct FoodDetailsSavedListScreen: View {
 }
 
 struct CheckboxToggleStyle: View {
-    @State private var isOn: Bool = false
     @Binding var toSave: [SavedFoods]
     @Binding var toDelete:[ SavedFoods]
     
     var list: SavedLists
     var fdicID: Int
+    @State private var isOn: Bool = false
     
     var body: some View {
         HStack {
@@ -177,6 +178,11 @@ struct CheckboxToggleStyle: View {
                         toDelete.append(SavedFoods(id: UUID().uuidString, savedListsID: list.id, fdicID: fdicID))
                     }
                 }
+        }
+        .onAppear {
+            if User.shared.userSavedFoods.contains(where: {$0.fdicID == fdicID && $0.savedListsID == list.id}) {
+                isOn = true
+            }
         }
     }
 }

@@ -69,6 +69,36 @@ class DatabaseQueries {
         return results
     }
     
+    static func databaseSavedFoodsSearch(searchTerms: String, databasePointer: OpaquePointer?) -> [FoodDetails] {
+        let query = """
+            SELECT searchKeyWords, fdicID, brandOwner, brandName, brandedFoodCategory, description, servingSize, servingSizeUnit, carbs, totalSugars, totalStarches, wholeFood
+            FROM USDAFoodSearchTable
+            WHERE \(searchTerms);
+        """
+        print(query)
+        var results: [FoodDetails] = []
+        executeQuery(databasePointer: databasePointer, query: query) { statement in
+            results.append(
+                FoodDetails(
+                    searchKeyWords: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 0)),
+                    fdicID: Int(sqlite3_column_int(statement, 1)),
+                    brandOwner: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 2)),
+                    brandName: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 3)),
+                    brandedFoodCategory: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 4)),
+                    description: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 5)),
+                    servingSize: Float(sqlite3_column_double(statement, 6)),
+                    servingSizeUnit: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 7)),
+                    carbs: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 8)).dataFormater(),
+                    totalSugars: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 9)).dataFormater(),
+                    totalStarches: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 10)).dataFormater(),
+                    wholeFood: sqlColumnProcessing(queryStatement: sqlite3_column_text(statement, 11))
+                )
+            )
+        }
+        
+        return results
+    }
+    
     static func getNutrientData(fdicID: Int, databasePointer: OpaquePointer?) -> NutrientData {
         
         var queryStatement:     OpaquePointer?

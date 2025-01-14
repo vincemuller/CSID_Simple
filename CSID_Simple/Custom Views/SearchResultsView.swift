@@ -12,7 +12,7 @@ struct SearchResultsView: View {
     @Binding var isPresenting: Bool
     @Binding var selectedFood: FoodDetails
     @Binding var compareQueue: [FoodDetails]
-    @State var searchResults: [FoodDetails] = []
+    @Binding var searchResults: [FoodDetails]
     @State var selectedSort: String
     
     var savedFoods: [Int] = []
@@ -30,5 +30,5 @@ struct SearchResultsView: View {
 }
 
 #Preview {
-    SearchResultsView(isPresenting: .constant(false), selectedFood: .constant(FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")), compareQueue: .constant([]), selectedSort: "Relevance")
+    SearchResultsView(isPresenting: .constant(false), selectedFood: .constant(FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")), compareQueue: .constant([]), searchResults: .constant([]), selectedSort: "Relevance")
 }

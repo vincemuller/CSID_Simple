@@ -14,37 +14,47 @@ struct SavedListsView: View {
     
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 15)
-                .fill(.textField)
-            List(savedLists, id: \.id) {list in
-                Section {
-                    if savedLists.firstIndex(of: list) == 0 {
-                        HStack {
-                            Group {
-                                Image(systemName: "plus")
-                                    .foregroundStyle(.iconTeal)
+        NavigationStack {
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(.textField)
+                    .frame(width: 350)
+                ScrollView {
+                    VStack (alignment: .leading, spacing: 10) {
+                        ForEach(savedLists, id: \.id) { list in
+                            if savedLists.firstIndex(of: list) == 0 {
+                                HStack {
+                                    Group {
+                                        Image(systemName: "plus")
+                                            .foregroundStyle(.iconTeal)
+                                    }
+                                    Text("Create New List")
+                                        .font(.system(size: 16))
+                                        .foregroundStyle(.iconTeal)
+                                }.onTapGesture {
+                                    createListScreenPresenting = true
+                                }
+                                Divider()
+                                    .padding(.leading, 25)
                             }
-                            Text("Create New List")
-                                .font(.system(size: 16))
-                                .foregroundStyle(.iconTeal)
-                        }.onTapGesture {
-                            createListScreenPresenting = true
+                            NavigationLink(destination: SavedListSearchScreen(list: list ?? SavedLists())) {
+                                HStack {
+                                    Image(systemName: "bookmark")
+                                        .foregroundStyle(.white)
+                                    Text(list.name ?? "")
+                                        .foregroundStyle(.white)
+                                        .font(.system(size: 16))
+                                }
+                            }
+                            Divider()
+                                .padding(.leading, 25)
                         }
                     }
-                    
-                    HStack {
-                        Image(systemName: "bookmark")
-                            .foregroundStyle(.white)
-                        Text(list.name ?? "")
-                            .foregroundStyle(.white)
-                            .font(.system(size: 16))
-                    }
-                }.listRowBackground(Color.clear)
+                    .padding()
+                }
+                .frame(width: 350, height: 175, alignment: .leading)
             }
-            .scrollIndicators(.hidden)
-            .padding(.trailing)
-        }.frame(width: 350, height: 175)
+        }
     }
 }
 
