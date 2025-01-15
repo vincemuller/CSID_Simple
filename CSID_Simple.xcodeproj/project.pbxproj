@@ -7,20 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15EC060DF2AC762DD508B63A /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
-		2708A7B8A7568931981F5732 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
+		2F5C7B43C226759635061D85 /* SavedLists+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */; };
 		30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
-		36FBB4224B22F265C284B427 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
-		52543A438EA1C29F541631D5 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
-		638212BE0B18934C57C75DC5 /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
+		335F5FEA924ACE1612AEF0FC /* SavedFoods+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */; };
+		3A4313FE76EDDAFFFAB28108 /* Meals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7304DB97BE4C20C440B19BBD /* Meals.swift */; };
 		8A4E5957A7AF614A8C5160A2 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 459BE669505091571AEB1848 /* awsconfiguration.json */; };
 		9B3ADA1723053DFD7BA7DC8B /* amplifyconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */; };
-		9D3B0A8AC689AE1A29F92526 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
-		A3098C6284FA7D8C7BEBF02D /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
 		B4216C123FD9DBF992F72BEF /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
+		BC2595C20274B93FDE9E5498 /* SavedLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */; };
 		C820C042D0B01AD1D88D1C54 /* AmplifyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */; };
-		D4F121FB0142879D08D5A142 /* SavedLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */; };
-		E45244A52CF291441192122A /* SavedFoods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58956060743BD47705B837A6 /* SavedFoods.swift */; };
 		EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14EF2CDC3D670023BACE /* ViewModel.swift */; };
 		EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */; };
 		EB9E14F82CE32A7D0023BACE /* SavedListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */; };
@@ -60,9 +55,8 @@
 		EBCBF6AE2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6AD2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift */; };
 		EBCBF6D02D2F42DB0059AA3D /* SavedListSearchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBF6CF2D2F42DB0059AA3D /* SavedListSearchScreen.swift */; };
 		EBDA88612CEE9DEE001C53D5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */; };
-		F451B15A34CBF8E2C986425A /* SavedLists+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */; };
-		F55A4118B0914FC020D11486 /* SavedFoods+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */; };
-		FC9EFFBC64B16358DE55462A /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
+		F9A25254700C0F800AF8611C /* SavedFoods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58956060743BD47705B837A6 /* SavedFoods.swift */; };
+		FDB18725159601338722BDE2 /* Meals+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84690D2D4A19FFB1DFCE82B4 /* Meals+Schema.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,8 +65,10 @@
 		459BE669505091571AEB1848 /* awsconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
 		52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "SavedFoods+Schema.swift"; path = "amplify/generated/models/SavedFoods+Schema.swift"; sourceTree = "<group>"; };
 		58956060743BD47705B837A6 /* SavedFoods.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = SavedFoods.swift; path = amplify/generated/models/SavedFoods.swift; sourceTree = "<group>"; };
+		7304DB97BE4C20C440B19BBD /* Meals.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Meals.swift; path = amplify/generated/models/Meals.swift; sourceTree = "<group>"; };
 		7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
 		830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = SavedLists.swift; path = amplify/generated/models/SavedLists.swift; sourceTree = "<group>"; };
+		84690D2D4A19FFB1DFCE82B4 /* Meals+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "Meals+Schema.swift"; path = "amplify/generated/models/Meals+Schema.swift"; sourceTree = "<group>"; };
 		9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = "<group>"; };
 		EB9E14EF2CDC3D670023BACE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
@@ -138,6 +134,8 @@
 				58956060743BD47705B837A6 /* SavedFoods.swift */,
 				352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */,
 				830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */,
+				84690D2D4A19FFB1DFCE82B4 /* Meals+Schema.swift */,
+				7304DB97BE4C20C440B19BBD /* Meals.swift */,
 			);
 			name = AmplifyModels;
 			sourceTree = "<group>";
@@ -272,7 +270,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					EBC2905F2CD1FF9D00500D84 = {
 						CreatedOnToolsVersion = 15.4;
@@ -353,21 +351,15 @@
 				EBC290862CD83F3600500D84 /* SearchFiltersView.swift in Sources */,
 				EBC7AE552D02036C00F46964 /* CreateListScreen.swift in Sources */,
 				C820C042D0B01AD1D88D1C54 /* AmplifyModels.swift in Sources */,
-				638212BE0B18934C57C75DC5 /* TolerationRating+Schema.swift in Sources */,
-				2708A7B8A7568931981F5732 /* TolerationRating.swift in Sources */,
+				EBC214552D33311E00BD52EB /* EditListScreen.swift in Sources */,
+				FDB18725159601338722BDE2 /* Meals+Schema.swift in Sources */,
+				3A4313FE76EDDAFFFAB28108 /* Meals.swift in Sources */,
+				335F5FEA924ACE1612AEF0FC /* SavedFoods+Schema.swift in Sources */,
+				F9A25254700C0F800AF8611C /* SavedFoods.swift in Sources */,
+				2F5C7B43C226759635061D85 /* SavedLists+Schema.swift in Sources */,
+				BC2595C20274B93FDE9E5498 /* SavedLists.swift in Sources */,
 				30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */,
 				B4216C123FD9DBF992F72BEF /* TolerationRating.swift in Sources */,
-				EBC214552D33311E00BD52EB /* EditListScreen.swift in Sources */,
-				15EC060DF2AC762DD508B63A /* TolerationRating+Schema.swift in Sources */,
-				36FBB4224B22F265C284B427 /* TolerationRating.swift in Sources */,
-				F55A4118B0914FC020D11486 /* SavedFoods+Schema.swift in Sources */,
-				E45244A52CF291441192122A /* SavedFoods.swift in Sources */,
-				FC9EFFBC64B16358DE55462A /* TolerationRating+Schema.swift in Sources */,
-				9D3B0A8AC689AE1A29F92526 /* TolerationRating.swift in Sources */,
-				F451B15A34CBF8E2C986425A /* SavedLists+Schema.swift in Sources */,
-				D4F121FB0142879D08D5A142 /* SavedLists.swift in Sources */,
-				A3098C6284FA7D8C7BEBF02D /* TolerationRating+Schema.swift in Sources */,
-				52543A438EA1C29F541631D5 /* TolerationRating.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +500,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -537,6 +530,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -19,7 +19,6 @@ struct CreateListScreen: View {
     @State private var listName: String = ""
     @State private var description: String = ""
     
-    var updatedSavedListsFunc: () async -> ()
     
     var body: some View {
         ZStack (alignment: .topLeading) {
@@ -106,7 +105,7 @@ struct CreateListScreen: View {
             case .success(let model):
                 print("Successfully created TolerationRating: \(model)")
                 Task {
-                    await updatedSavedListsFunc()
+                    await User.shared.getSavedLists()
                     self.presentationMode.wrappedValue.dismiss()
                 }
             case .failure(let graphQLError):
@@ -121,6 +120,6 @@ struct CreateListScreen: View {
 }
 
 #Preview {
-    CreateListScreen(updatedSavedListsFunc: {print("Update saved list function here")})
+    CreateListScreen()
 }
 

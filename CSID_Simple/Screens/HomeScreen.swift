@@ -168,13 +168,14 @@ struct HomeScreen: View {
         .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
             viewModel.createListScreenPresenting = false
         }) {
-            CreateListScreen(updatedSavedListsFunc: viewModel.getSavedLists)
+            CreateListScreen()
         }
         .onAppear(perform: initializeDatabase)
         .onAppear(perform: {
             Task {
                 await viewModel.getSavedLists()
                 await viewModel.getSavedFoods()
+                await User.shared.testMealLogging()
             }
         })
         .onChange(of: viewModel.compareQueue) {

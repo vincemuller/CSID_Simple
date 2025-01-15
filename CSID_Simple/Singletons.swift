@@ -26,6 +26,31 @@ class User {
         self.userSavedFoods = userSavedFoods
     }
     
+
+    func testMealLogging(meal: Meal = Meal(foods: [MealFood(fdicID: 1001, customServingPercentage: 0.86),MealFood(fdicID: 1005, customServingPercentage: 0.50),MealFood(fdicID: 1009, customServingPercentage: 1.12)])) async {
+        let model = Meals(
+            userID: self.userID,
+            mealType: "Breakfast",
+            foods:  meal.getMealJSON(),
+            additionalNotes: "This meal hurt my belly",
+            tolerationRating: "0")
+        
+        do {
+            let result = try await Amplify.API.mutate(request: .create(model))
+            switch result {
+            case .success(let model):
+                print("Successfully created Meals: \(model)")
+            case .failure(let graphQLError):
+                print("Failed to create graphql \(graphQLError)")
+            }
+        } catch let error as APIError {
+            print("Failed to create Meals - \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+    }
+    
     func getSavedLists() async {
         let lists = SavedLists.keys
         let predicate = lists.userID == User.shared.userID

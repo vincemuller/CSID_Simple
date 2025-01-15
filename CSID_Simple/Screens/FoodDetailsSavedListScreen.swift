@@ -76,7 +76,7 @@ struct FoodDetailsSavedListScreen: View {
             }
         }
         for i in toSave {
-            var model = SavedFoods(
+            let model = SavedFoods(
                 savedListsID: i.savedListsID,
                 userID: user.userID,
                 fdicID: fdicID)
@@ -117,7 +117,7 @@ struct FoodDetailsSavedListScreen: View {
         print("to delete: \(toDelete.count)")
         
         for i in toDelete {
-            var model = SavedFoods(
+            let model = SavedFoods(
                 id: i.id,
                 savedListsID: i.savedListsID,
                 userID: user.userID,

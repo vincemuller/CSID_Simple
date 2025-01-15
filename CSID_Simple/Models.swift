@@ -45,3 +45,28 @@ struct TolerationChunks: Identifiable {
     var canTolerate: [TolerationRating]
 }
 
+struct Meal: Codable {
+    var foods: [MealFood]
+    
+    func getMealJSON() -> String {
+        var encodeStringMeal: String = ""
+        
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        do {
+            let encodeMeal = try jsonEncoder.encode(self.foods)
+            encodeStringMeal = String(data: encodeMeal, encoding: .utf8)!
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return encodeStringMeal
+    }
+}
+
+struct MealFood: Codable {
+    var fdicID: Int
+    var customServingPercentage: Float
+}
+

@@ -107,6 +107,9 @@ struct EditListScreen: View {
             case .success(let model):
                 print("Successfully updated SavedLists: \(model)")
                 self.presentationMode.wrappedValue.dismiss()
+                Task {
+                    await User.shared.getSavedLists()
+                }
             case .failure(let error):
                 print("Got failed result with \(error.errorDescription)")
             }

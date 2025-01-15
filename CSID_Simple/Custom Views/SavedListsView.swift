@@ -37,7 +37,7 @@ struct SavedListsView: View {
                                 Divider()
                                     .padding(.leading, 25)
                             }
-                            NavigationLink(destination: SavedListSearchScreen(list: list ?? SavedLists())) {
+                            NavigationLink(destination: SavedListSearchScreen(list: list)) {
                                 HStack {
                                     Image(systemName: "bookmark")
                                         .foregroundStyle(.white)
