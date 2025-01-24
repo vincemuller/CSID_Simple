@@ -278,8 +278,8 @@ struct HomeScreen: View {
         .onAppear(perform: initializeDatabase)
         .onAppear(perform: {
             Task {
-                await viewModel.getSavedLists()
-                await viewModel.getSavedFoods()
+//                await viewModel.getSavedLists()
+//                await viewModel.getSavedFoods()
 //                await User.shared.testMealLogging()
             }
         })

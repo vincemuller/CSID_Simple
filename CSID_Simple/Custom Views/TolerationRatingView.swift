@@ -59,7 +59,6 @@ struct TolerationRatingView: View {
                             .font(.system(size: 12))
                             .foregroundStyle(.iconRed)
                     }
-
                 }
             }.padding(10)
         }
