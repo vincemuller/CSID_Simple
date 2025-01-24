@@ -26,7 +26,7 @@
 		EB9E15042CEE67170023BACE /* SignUpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E15032CEE67170023BACE /* SignUpScreen.swift */; };
 		EBC214552D33311E00BD52EB /* EditListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC214542D33311E00BD52EB /* EditListScreen.swift */; };
 		EBC214792D3B66A400BD52EB /* ConsumptionCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC214782D3B66A400BD52EB /* ConsumptionCircle.swift */; };
-		EBC2147B2D3C4EED00BD52EB /* MealLogScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2147A2D3C4EED00BD52EB /* MealLogScreen.swift */; };
+		EBC2147B2D3C4EED00BD52EB /* LogNewMealScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2147A2D3C4EED00BD52EB /* LogNewMealScreen.swift */; };
 		EBC290642CD1FF9D00500D84 /* CSID_SimpleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */; };
 		EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290652CD1FF9D00500D84 /* HomeScreen.swift */; };
 		EBC290682CD1FF9F00500D84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBC290672CD1FF9F00500D84 /* Assets.xcassets */; };
@@ -46,6 +46,8 @@
 		EBC290952CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db in Resources */ = {isa = PBXBuildFile; fileRef = EBC290942CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db */; };
 		EBC290972CDC263A00500D84 /* FoodDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */; };
 		EBC58F892CF286B4004E2F73 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */; };
+		EBC5F6432D44031A004D5B87 /* LoggedMealsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC5F6422D44031A004D5B87 /* LoggedMealsScreen.swift */; };
+		EBC5F6452D4407B2004D5B87 /* LoggedMealCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC5F6442D4407B2004D5B87 /* LoggedMealCellView.swift */; };
 		EBC7AE552D02036C00F46964 /* CreateListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC7AE542D02036C00F46964 /* CreateListScreen.swift */; };
 		EBCBBAAB2D2086940059AA3D /* TolerationRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCBBAAA2D2086940059AA3D /* TolerationRatingView.swift */; };
 		EBCBF6A02D21C3F70059AA3D /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = EBCBF69F2D21C3F70059AA3D /* AWSAPIPlugin */; };
@@ -82,7 +84,7 @@
 		EB9E15032CEE67170023BACE /* SignUpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScreen.swift; sourceTree = "<group>"; };
 		EBC214542D33311E00BD52EB /* EditListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListScreen.swift; sourceTree = "<group>"; };
 		EBC214782D3B66A400BD52EB /* ConsumptionCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumptionCircle.swift; sourceTree = "<group>"; };
-		EBC2147A2D3C4EED00BD52EB /* MealLogScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealLogScreen.swift; sourceTree = "<group>"; };
+		EBC2147A2D3C4EED00BD52EB /* LogNewMealScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogNewMealScreen.swift; sourceTree = "<group>"; };
 		EBC290602CD1FF9D00500D84 /* CSID_Simple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CSID_Simple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC290632CD1FF9D00500D84 /* CSID_SimpleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSID_SimpleApp.swift; sourceTree = "<group>"; };
 		EBC290652CD1FF9D00500D84 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -103,6 +105,8 @@
 		EBC290942CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = CSIDAssistPlusFoodDatabase.db; sourceTree = "<group>"; };
 		EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailsScreen.swift; sourceTree = "<group>"; };
 		EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		EBC5F6422D44031A004D5B87 /* LoggedMealsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedMealsScreen.swift; sourceTree = "<group>"; };
+		EBC5F6442D4407B2004D5B87 /* LoggedMealCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedMealCellView.swift; sourceTree = "<group>"; };
 		EBC7AE542D02036C00F46964 /* CreateListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListScreen.swift; sourceTree = "<group>"; };
 		EBCBBAAA2D2086940059AA3D /* TolerationRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TolerationRatingView.swift; sourceTree = "<group>"; };
 		EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsPieChartView.swift; sourceTree = "<group>"; };
@@ -214,6 +218,7 @@
 				EBCBBAAA2D2086940059AA3D /* TolerationRatingView.swift */,
 				EBCBF6A52D2457FE0059AA3D /* RatingsPieChartView.swift */,
 				EBC214782D3B66A400BD52EB /* ConsumptionCircle.swift */,
+				EBC5F6442D4407B2004D5B87 /* LoggedMealCellView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -233,7 +238,8 @@
 				EBCBF6A92D248AE40059AA3D /* CreateRatingAndReviewScreen.swift */,
 				EBCBF6AD2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift */,
 				EBCBF6CF2D2F42DB0059AA3D /* SavedListSearchScreen.swift */,
-				EBC2147A2D3C4EED00BD52EB /* MealLogScreen.swift */,
+				EBC2147A2D3C4EED00BD52EB /* LogNewMealScreen.swift */,
+				EBC5F6422D44031A004D5B87 /* LoggedMealsScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -339,6 +345,7 @@
 				EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */,
 				EBDA88612CEE9DEE001C53D5 /* SceneDelegate.swift in Sources */,
 				EB9E15022CEDA31B0023BACE /* LogInScreen.swift in Sources */,
+				EBC5F6432D44031A004D5B87 /* LoggedMealsScreen.swift in Sources */,
 				EB9E14F02CDC3D670023BACE /* ViewModel.swift in Sources */,
 				EB9E15002CE668470023BACE /* Helpers.swift in Sources */,
 				EBCBF6AE2D298FFB0059AA3D /* FoodDetailsSavedListScreen.swift in Sources */,
@@ -347,7 +354,7 @@
 				EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */,
 				EBC2908C2CD84F5200500D84 /* SortResultsView.swift in Sources */,
 				EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */,
-				EBC2147B2D3C4EED00BD52EB /* MealLogScreen.swift in Sources */,
+				EBC2147B2D3C4EED00BD52EB /* LogNewMealScreen.swift in Sources */,
 				EBCBF6A62D2457FE0059AA3D /* RatingsPieChartView.swift in Sources */,
 				EBC290802CD71C3500500D84 /* Singletons.swift in Sources */,
 				EBC214792D3B66A400BD52EB /* ConsumptionCircle.swift in Sources */,
@@ -364,6 +371,7 @@
 				3A4313FE76EDDAFFFAB28108 /* Meals.swift in Sources */,
 				335F5FEA924ACE1612AEF0FC /* SavedFoods+Schema.swift in Sources */,
 				F9A25254700C0F800AF8611C /* SavedFoods.swift in Sources */,
+				EBC5F6452D4407B2004D5B87 /* LoggedMealCellView.swift in Sources */,
 				2F5C7B43C226759635061D85 /* SavedLists+Schema.swift in Sources */,
 				BC2595C20274B93FDE9E5498 /* SavedLists.swift in Sources */,
 				30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */,

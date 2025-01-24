@@ -162,7 +162,7 @@ struct FoodDetailsScreen: View {
                                     VStack (spacing: 10) {
                                         ZStack {
                                             Circle()
-                                                .stroke(.iconTeal, lineWidth: 3)
+                                                .stroke(.iconRed, lineWidth: 3)
                                                 .frame(width: 70)
                                             Text((adjustedNutrition == nil ? nutData?.totalSugars : adjustedNutrition?.totalSugars) ?? "")
                                                 .font(.system(size: 18, weight: .semibold))

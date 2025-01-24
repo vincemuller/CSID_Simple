@@ -45,7 +45,7 @@ enum MealType: Identifiable, CaseIterable {
 }
 
 
-struct MealLogScreen: View {
+struct LogNewMealScreen: View {
     @FocusState var isFocused: Bool
     @State private var mealName: String = ""
     @State private var mealFoods: [FoodDetails] = []
@@ -158,5 +158,5 @@ struct MealLogScreen: View {
 }
 
 #Preview {
-    MealLogScreen(mealType: MealType.afternoonSnack)
+    LogNewMealScreen(mealType: MealType.afternoonSnack)
 }
