@@ -92,121 +92,124 @@ struct HomeScreen: View {
                 .padding(.top, 5)
                     switch search {
                     case .isNotFocused:
-                        List {
-                            ForEach(HomeScreenSections.allCases) {section in
-                                Section {
-                                    if section == .activity {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .fill(.textField)
-                                            VStack {
-                                                HStack {
-                                                    LazyVGrid(columns: columns) {
-                                                        Image(systemName: "chevron.left")
-                                                            .foregroundStyle(.white)
-                                                            .font(.system(size: 14, weight: .semibold))
-                                                            .onTapGesture {
-                                                                dashboardWeek = Calendar.current.date(byAdding: .day, value: -7, to: dashboardWeek)!
-                                                                selectedDay = Calendar.current.date(byAdding: .day, value: -4, to: dashboardWeek)!
-                                                            }
-                                                            .padding(.leading, 10)
-                                                        ForEach((1...7), id: \.self) {day in
-                                                            let d = Calendar.current.date(byAdding: .day, value: day-4, to: dashboardWeek)!
-                                                            let weekDay = d.formatted(.dateTime.weekday())
-                                                            let calendarDay = d.formatted(.dateTime.day(.twoDigits))
-                                                            let sD = selectedDay.formatted(.dateTime.weekday()) == weekDay
-                                                            
-                                                            ZStack {
-                                                                sD ?
-                                                                RoundedRectangle(cornerRadius: 10)
-                                                                    .stroke(.white, lineWidth: 1.5)
-                                                                    .frame(width: 40, height: 45)
-                                                                : nil
-                                                                VStack {
-                                                                    Text(calendarDay)
-                                                                        .font(.system(size: 12, weight: .medium, design: .default))
-                                                                        .foregroundStyle(.white)
-                                                                    Text(weekDay.uppercased())
-                                                                        .font(.system(size: 12, weight: .medium, design: .default))
-                                                                        .foregroundStyle(.iconTeal)
-                                                                }
-                                                                .onTapGesture {
-                                                                    selectedDay = d
-                                                                    print(selectedDay.formatted())
-                                                                }
-                                                            }
+                        ForEach(HomeScreenSections.allCases) {section in
+                            if section == .activity {
+                                Text(section.label)
+                                    .font(.system(size: 25, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 350, alignment: .leading)
+                                    .padding(.vertical, 10)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(.textField)
+                                    VStack {
+                                        HStack {
+                                            LazyVGrid(columns: columns) {
+                                                Image(systemName: "chevron.left")
+                                                    .foregroundStyle(.white)
+                                                    .font(.system(size: 14, weight: .semibold))
+                                                    .onTapGesture {
+                                                        dashboardWeek = Calendar.current.date(byAdding: .day, value: -7, to: dashboardWeek)!
+                                                        selectedDay = Calendar.current.date(byAdding: .day, value: -4, to: dashboardWeek)!
+                                                    }
+                                                    .padding(.leading, 10)
+                                                ForEach((1...7), id: \.self) {day in
+                                                    let d = Calendar.current.date(byAdding: .day, value: day-4, to: dashboardWeek)!
+                                                    let weekDay = d.formatted(.dateTime.weekday())
+                                                    let calendarDay = d.formatted(.dateTime.day(.twoDigits))
+                                                    let sD = selectedDay.formatted(.dateTime.weekday()) == weekDay
+                                                    
+                                                    ZStack {
+                                                        sD ?
+                                                        RoundedRectangle(cornerRadius: 10)
+                                                            .stroke(.white, lineWidth: 1.5)
+                                                            .frame(width: 40, height: 45)
+                                                        : nil
+                                                        VStack {
+                                                            Text(calendarDay)
+                                                                .font(.system(size: 12, weight: .medium, design: .default))
+                                                                .foregroundStyle(.white)
+                                                            Text(weekDay.uppercased())
+                                                                .font(.system(size: 12, weight: .medium, design: .default))
+                                                                .foregroundStyle(.iconTeal)
                                                         }
-                                                        Image(systemName: "chevron.right")
-                                                            .foregroundStyle(.white)
-                                                            .font(.system(size: 14, weight: .semibold))
-                                                            .onTapGesture {
-                                                                dashboardWeek = Calendar.current.date(byAdding: .day, value: 7, to: dashboardWeek)!
-                                                                selectedDay = Calendar.current.date(byAdding: .day, value: 4, to: dashboardWeek)!
-                                                            }
-                                                            .padding(.trailing, 10)
+                                                        .onTapGesture {
+                                                            selectedDay = d
+                                                            print(selectedDay.formatted())
+                                                        }
                                                     }
                                                 }
-                                                .padding(.top, 10)
-                                                HStack (spacing: 0) {
-                                                    VStack (spacing: 0) {
-                                                        ZStack {
-                                                            ConsumptionCircle(ringWidth: 40, percent: 115, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
-                                                                .padding(10)
-                                                            Text("50g")
-                                                                .font(.system(size: 18))
-                                                                .foregroundStyle(.white)
-                                                        }
-                                                        Text("Sugars")
-                                                            .font(.system(size: 14))
-                                                            .foregroundStyle(.white)
+                                                Image(systemName: "chevron.right")
+                                                    .foregroundStyle(.white)
+                                                    .font(.system(size: 14, weight: .semibold))
+                                                    .onTapGesture {
+                                                        dashboardWeek = Calendar.current.date(byAdding: .day, value: 7, to: dashboardWeek)!
+                                                        selectedDay = Calendar.current.date(byAdding: .day, value: 4, to: dashboardWeek)!
                                                     }
-                                                    VStack (spacing: 0) {
-                                                        ZStack {
-                                                            ConsumptionCircle(ringWidth: 40, percent: 75, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
-                                                                .padding(10)
-                                                            Text("110g")
-                                                                .font(.system(size: 18))
-                                                                .foregroundStyle(.white)
-                                                        }
-                                                        Text("Carbs")
-                                                            .font(.system(size: 14))
-                                                            .foregroundStyle(.white)
-                                                    }
-                                                    VStack (spacing: 0) {
-                                                        ZStack {
-                                                            ConsumptionCircle(ringWidth: 40, percent: 50, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
-                                                                .padding(10)
-                                                            Text("60g")
-                                                                .font(.system(size: 18))
-                                                                .foregroundStyle(.white)
-                                                        }
-                                                        Text("Starches")
-                                                            .font(.system(size: 14))
-                                                            .foregroundStyle(.white)
-                                                    }
-                                                }.padding(.bottom)
+                                                    .padding(.trailing, 10)
                                             }
                                         }
-                                        .frame(width: 350, height: 200)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
-                                    } else if section == .meals {
-                                        MealTypeSectionView()
-                                            .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
-                                    } else {
-                                        SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
-                                            .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
+                                        .padding(.top, 10)
+                                        HStack (spacing: 0) {
+                                            VStack (spacing: 0) {
+                                                ZStack {
+                                                    ConsumptionCircle(ringWidth: 40, percent: 115, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
+                                                        .padding(10)
+                                                    Text("50g")
+                                                        .font(.system(size: 18))
+                                                        .foregroundStyle(.white)
+                                                }
+                                                Text("Sugars")
+                                                    .font(.system(size: 14))
+                                                    .foregroundStyle(.white)
+                                            }
+                                            VStack (spacing: 0) {
+                                                ZStack {
+                                                    ConsumptionCircle(ringWidth: 40, percent: 75, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
+                                                        .padding(10)
+                                                    Text("110g")
+                                                        .font(.system(size: 18))
+                                                        .foregroundStyle(.white)
+                                                }
+                                                Text("Carbs")
+                                                    .font(.system(size: 14))
+                                                    .foregroundStyle(.white)
+                                            }
+                                            VStack (spacing: 0) {
+                                                ZStack {
+                                                    ConsumptionCircle(ringWidth: 40, percent: 50, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
+                                                        .padding(10)
+                                                    Text("60g")
+                                                        .font(.system(size: 18))
+                                                        .foregroundStyle(.white)
+                                                }
+                                                Text("Starches")
+                                                    .font(.system(size: 14))
+                                                    .foregroundStyle(.white)
+                                            }
+                                        }.padding(.bottom)
                                     }
-                                } header: {
-                                    Text(section.label)
-                                        .font(.system(size: 25, weight: .semibold))
-                                        .foregroundStyle(.white)
-                                        .listRowInsets(EdgeInsets(top: -10, leading: 18, bottom: 5, trailing: 15))
                                 }
+                                .frame(width: 350, height: 200)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
+                            } else if section == .meals {
+                                Text(section.label)
+                                    .font(.system(size: 25, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 350, alignment: .leading)
+                                    .padding(.vertical, 10)
+                                MealTypeSectionView()
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
+                            } else {
+                                Text(section.label)
+                                    .font(.system(size: 25, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 350, alignment: .leading)
+                                    .padding(.vertical, 10)
+                                SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
                             }
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
                         }
-                        .listStyle(.plain)
                     case .isFocused:
                         SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
                         

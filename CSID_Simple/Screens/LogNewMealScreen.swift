@@ -8,38 +8,30 @@
 import SwiftUI
 
 enum MealType: Identifiable, CaseIterable {
-    case breakfast, morningSnack, lunch, afternoonSnack, dinner, eveningSnack
+    case breakfast, lunch, dinner, snack
     var id: Self { self }
     var label: String {
         switch self {
         case .breakfast:
             return "Breakfast"
-        case .morningSnack:
-            return "Morning Snack"
         case .lunch:
             return "Lunch"
-        case .afternoonSnack:
-            return "Afternoon Snack"
         case .dinner:
             return "Dinner"
-        case .eveningSnack:
-            return "Evening Snack"
+        case .snack:
+            return "Snack"
         }
     }
     var order: Int {
         switch self {
         case .breakfast:
             return 1
-        case .morningSnack:
-            return 2
         case .lunch:
-            return 3
-        case .afternoonSnack:
-            return 4
+            return 2
         case .dinner:
-            return 5
-        case .eveningSnack:
-            return 6
+            return 3
+        case .snack:
+            return 4
         }
     }
 }
@@ -158,5 +150,5 @@ struct LogNewMealScreen: View {
 }
 
 #Preview {
-    LogNewMealScreen(mealType: MealType.afternoonSnack)
+    LogNewMealScreen(mealType: MealType.snack)
 }

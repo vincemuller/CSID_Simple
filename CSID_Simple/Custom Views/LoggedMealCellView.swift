@@ -100,5 +100,5 @@ struct LoggedMealCellView: View {
 #Preview {
     let foods = Meal(foods: [MealFood(fdicID: 2700005, customServingPercentage: 0.5),MealFood(fdicID: 1457369, customServingPercentage: 0.5)])
     
-    LoggedMealCellView(meal: Meals(id: UUID().uuidString, userID: "vmuller2529", mealType: MealType.afternoonSnack.label, mealName: "Apples and Chips Apples and Chips Apples and Chips Apples and Chips ", foods: foods.getMealJSON(), additionalNotes: "This snack hurt my stomach and gave me gas", tolerationRating: "0", createdAt: Temporal.DateTime.now(), updatedAt: Temporal.DateTime.now()))
+    LoggedMealCellView(meal: Meals(id: UUID().uuidString, userID: "vmuller2529", mealType: MealType.snack.label, mealName: "Apples and Chips Apples and Chips Apples and Chips Apples and Chips ", foods: foods.getMealJSON(), additionalNotes: "This snack hurt my stomach and gave me gas", tolerationRating: "0", createdAt: Temporal.DateTime.now(), updatedAt: Temporal.DateTime.now()))
 }
