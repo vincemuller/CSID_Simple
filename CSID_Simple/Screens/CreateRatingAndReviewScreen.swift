@@ -156,6 +156,11 @@ struct CreateRatingAndReviewScreen: View {
     }
     
     private func createTolerationRating() async {
+        guard !safeTextScan() else {
+            print("failed safe text scan")
+            return
+        }
+        
         let model = TolerationRating(
             fdicID: fdicID,
             comment: comment,
@@ -174,6 +179,12 @@ struct CreateRatingAndReviewScreen: View {
         } catch {
             print("Unexpected error: \(error)")
         }
+    }
+    
+    private func safeTextScan() -> Bool {
+        let unsafeWords: [String] = ["fuck","shit","ass","dick","asshole","arse","bitch","butthole"]
+        
+        return unsafeWords.contains(where: comment.lowercased().contains)
     }
     
 }

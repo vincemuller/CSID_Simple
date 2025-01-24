@@ -52,7 +52,7 @@ struct SavedListsView: View {
                     }
                     .padding()
                 }
-                .frame(width: 350, height: 175, alignment: .leading)
+                .frame(width: 350, height: 165, alignment: .leading)
             }
         }
     }

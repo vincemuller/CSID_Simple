@@ -8,8 +8,8 @@
 import SwiftUI
     
 struct RatingsPieChartView: View {
-    @State var tolerationChunks = TolerationChunks(canNotTolerate: [], tolerateWithStipulations: [], canTolerate: [])
-    @State var tolerationRatingCount: Int = 0
+    @Binding var tolerationChunks: TolerationChunks
+    @State var tolerationRatingCount: Int
     @State var majorityLabel: String = ""
     
     var width: CGFloat?
@@ -45,5 +45,5 @@ struct RatingsPieChartView: View {
 }
 
 #Preview {
-    RatingsPieChartView()
+    RatingsPieChartView(tolerationChunks: .constant(TolerationChunks(canNotTolerate: [], tolerateWithStipulations: [], canTolerate: [])), tolerationRatingCount: 0)
 }

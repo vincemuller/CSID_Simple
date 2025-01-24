@@ -284,7 +284,8 @@ struct FoodDetailsScreen: View {
                                     case .tolerationRatings:
                                         VStack {
                                             HStack {
-                                                RatingsPieChartView(tolerationChunks: tolerationChunks, tolerationRatingCount: tolerationRatings.count, majorityLabel: tolerationRating.label, width: geometry.size.width * 0.33)
+                                                RatingsPieChartView(tolerationChunks: $tolerationChunks, tolerationRatingCount:
+                                                                        tolerationRatings.count, majorityLabel: tolerationRating.label, width: geometry.size.width * 0.33)
                                                     .padding(.top, 10)
                                                 VStack (alignment: .leading) {
                                                     HStack {
@@ -336,7 +337,10 @@ struct FoodDetailsScreen: View {
                                                 Text("See All")
                                                     .font(.system(size: 16, weight: .semibold))
                                                     .foregroundStyle(.iconTeal)
-                                            }.buttonStyle(PlainButtonStyle()).padding(.trailing, 15)
+                                            }
+                                            .buttonStyle(PlainButtonStyle())
+                                            .padding(.trailing, 15)
+                                            .disabled(tolerationRatings.isEmpty ? true : false)
                                         }
                                     }
                                 }
