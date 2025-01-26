@@ -191,7 +191,6 @@ struct HomeScreen: View {
                                     }
                                 }
                                 .frame(width: 350, height: 200)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
                             } else if section == .meals {
                                 Text(section.label)
                                     .font(.system(size: 25, weight: .semibold))
@@ -199,7 +198,6 @@ struct HomeScreen: View {
                                     .frame(width: 350, alignment: .leading)
                                     .padding(.vertical, 10)
                                 MealTypeSectionView()
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
                             } else {
                                 Text(section.label)
                                     .font(.system(size: 25, weight: .semibold))
@@ -207,7 +205,6 @@ struct HomeScreen: View {
                                     .frame(width: 350, alignment: .leading)
                                     .padding(.vertical, 10)
                                 SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 15))
                             }
                         }
                     case .isFocused:
