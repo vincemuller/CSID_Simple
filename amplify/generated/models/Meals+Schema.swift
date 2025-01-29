@@ -8,10 +8,10 @@ extension Meals {
     case id
     case userID
     case mealType
-    case mealName
-    case foods
     case additionalNotes
     case tolerationRating
+    case foods
+    case savedMeals
     case createdAt
     case updatedAt
   }
@@ -37,10 +37,10 @@ extension Meals {
       .field(meals.id, is: .required, ofType: .string),
       .field(meals.userID, is: .optional, ofType: .string),
       .field(meals.mealType, is: .optional, ofType: .string),
-      .field(meals.mealName, is: .optional, ofType: .string),
-      .field(meals.foods, is: .optional, ofType: .string),
       .field(meals.additionalNotes, is: .optional, ofType: .string),
       .field(meals.tolerationRating, is: .optional, ofType: .string),
+      .field(meals.foods, is: .optional, ofType: .string),
+      .field(meals.savedMeals, is: .optional, ofType: .string),
       .field(meals.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(meals.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )

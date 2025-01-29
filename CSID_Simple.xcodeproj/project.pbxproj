@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2708A7B8A7568931981F5732 /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
 		2F5C7B43C226759635061D85 /* SavedLists+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C823DCCBF66FE10536036 /* SavedLists+Schema.swift */; };
 		30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
 		335F5FEA924ACE1612AEF0FC /* SavedFoods+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */; };
+		342E776BF3037E0303C064A6 /* SavedMeals+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA47ADC1CC1E3F3D3C450F3 /* SavedMeals+Schema.swift */; };
 		3A4313FE76EDDAFFFAB28108 /* Meals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7304DB97BE4C20C440B19BBD /* Meals.swift */; };
+		638212BE0B18934C57C75DC5 /* TolerationRating+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A4290F1D71FBEA3D48450B /* TolerationRating+Schema.swift */; };
+		7F05D352C0F05FEAC5CCF744 /* SavedMeals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF8592F07614EABA1B5D142 /* SavedMeals.swift */; };
 		8A4E5957A7AF614A8C5160A2 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 459BE669505091571AEB1848 /* awsconfiguration.json */; };
 		9B3ADA1723053DFD7BA7DC8B /* amplifyconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */; };
 		B4216C123FD9DBF992F72BEF /* TolerationRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = F236E38855056E69F1ED0E4D /* TolerationRating.swift */; };
@@ -67,11 +71,13 @@
 		459BE669505091571AEB1848 /* awsconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
 		52A4D73B5CEA0CF33590626D /* SavedFoods+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "SavedFoods+Schema.swift"; path = "amplify/generated/models/SavedFoods+Schema.swift"; sourceTree = "<group>"; };
 		58956060743BD47705B837A6 /* SavedFoods.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = SavedFoods.swift; path = amplify/generated/models/SavedFoods.swift; sourceTree = "<group>"; };
+		6FF8592F07614EABA1B5D142 /* SavedMeals.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = SavedMeals.swift; path = amplify/generated/models/SavedMeals.swift; sourceTree = "<group>"; };
 		7304DB97BE4C20C440B19BBD /* Meals.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Meals.swift; path = amplify/generated/models/Meals.swift; sourceTree = "<group>"; };
 		7DD3193ADB16B83D01F036B6 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
 		830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = SavedLists.swift; path = amplify/generated/models/SavedLists.swift; sourceTree = "<group>"; };
 		84690D2D4A19FFB1DFCE82B4 /* Meals+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "Meals+Schema.swift"; path = "amplify/generated/models/Meals+Schema.swift"; sourceTree = "<group>"; };
 		9E2AF34F5A938D2CF890B785 /* AmplifyModels.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = "<group>"; };
+		DDA47ADC1CC1E3F3D3C450F3 /* SavedMeals+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = "SavedMeals+Schema.swift"; path = "amplify/generated/models/SavedMeals+Schema.swift"; sourceTree = "<group>"; };
 		EB9E14EF2CDC3D670023BACE /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
 		EB9E14F72CE32A7D0023BACE /* SavedListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListsView.swift; sourceTree = "<group>"; };
@@ -140,6 +146,8 @@
 				830F5F8F39C7D8D88A53D4F8 /* SavedLists.swift */,
 				84690D2D4A19FFB1DFCE82B4 /* Meals+Schema.swift */,
 				7304DB97BE4C20C440B19BBD /* Meals.swift */,
+				DDA47ADC1CC1E3F3D3C450F3 /* SavedMeals+Schema.swift */,
+				6FF8592F07614EABA1B5D142 /* SavedMeals.swift */,
 			);
 			name = AmplifyModels;
 			sourceTree = "<group>";
@@ -368,6 +376,10 @@
 				BC2595C20274B93FDE9E5498 /* SavedLists.swift in Sources */,
 				30D6BB996D0FA7D9C55ED310 /* TolerationRating+Schema.swift in Sources */,
 				B4216C123FD9DBF992F72BEF /* TolerationRating.swift in Sources */,
+				342E776BF3037E0303C064A6 /* SavedMeals+Schema.swift in Sources */,
+				7F05D352C0F05FEAC5CCF744 /* SavedMeals.swift in Sources */,
+				638212BE0B18934C57C75DC5 /* TolerationRating+Schema.swift in Sources */,
+				2708A7B8A7568931981F5732 /* TolerationRating.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
