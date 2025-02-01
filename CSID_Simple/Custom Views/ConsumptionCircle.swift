@@ -8,14 +8,6 @@
 import SwiftUI
 
 
-extension Double {
-    func toRadians() -> Double {
-        return self * Double.pi / 180
-    }
-    func toCGFloat() -> CGFloat {
-        return CGFloat(self)
-    }
-}
 
 struct RingShape: Shape {
     // Helper function to convert percent values to angles in degrees
@@ -158,18 +150,3 @@ struct ConsumptionCircle: View {
 #Preview {
     ConsumptionCircle(ringWidth: 50, percent: 10, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal, Color(UIColor.systemGreen)])
 }
-
-//struct PreviewView: View {
-//    var body: some View {
-//        Group {
-//            ConsumptionCircle(
-//                ringWidth: 50, percent: 5 ,
-//                backgroundColor: Color.green.opacity(0.2),
-//                foregroundColors: [.green, .blue]
-//            )
-//            .frame(width: 300, height: 300)
-//            .previewLayout(.sizeThatFits)
-//        }
-//    }
-//}
-

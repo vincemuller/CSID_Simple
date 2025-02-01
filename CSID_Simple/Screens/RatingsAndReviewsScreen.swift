@@ -8,24 +8,6 @@
 import SwiftUI
 import Amplify
 
-enum RatingsSorter: Identifiable, CaseIterable {
-    case mostRecent, notTolerated, toleratedWithStipulations, tolerated
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .mostRecent:
-            return "Most Recent"
-        case .tolerated:
-            return "Could Tolerate"
-        case .toleratedWithStipulations:
-            return "Tolerated with Stipulations"
-        case .notTolerated:
-            return "Could Not Tolerate"
-        }
-    }
-}
-
-
 
 struct RatingsAndReviewsScreen: View {
 

@@ -7,20 +7,7 @@
 
 import SwiftUI
 
-enum nutritionalLabel: CaseIterable {
-    case relevance, sugars, starches
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .relevance:
-            return "Total Carbs"
-        case .sugars:
-            return "Sugars"
-        case .starches:
-            return "Starches"
-        }
-    }
-}
+
 
 struct SearchResultCellView: View {
     
@@ -30,7 +17,6 @@ struct SearchResultCellView: View {
     
     @State private var deepDive: Bool = false
     @State var result: FoodDetails
-    @State var isFavorite: Bool
     @State var selectedSort: String = "Relevance"
     @State var selectedCellAction: String = ""
     
@@ -340,5 +326,5 @@ struct MealLoggingSearchResultCellView: View {
 }
 
 #Preview {
-    SearchResultCellView(isPresenting: .constant(false), selectedFood: .constant(FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")), compareQueue: .constant([]), result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"), isFavorite: false, selectedSort: "Relevance")
+    SearchResultCellView(isPresenting: .constant(false), selectedFood: .constant(FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")), compareQueue: .constant([]), result: FoodDetails(searchKeyWords: "", fdicID: 0, brandOwner: "Mars Inc.", brandName: "M&M Mars", brandedFoodCategory: "Confectionary and Sweets", description: "Snickers Crunchers", servingSize: 80, servingSizeUnit: "g", carbs: "25", totalSugars: "12.5", totalStarches: "12.5", wholeFood: "no"), selectedSort: "Relevance")
 }

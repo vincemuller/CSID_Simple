@@ -21,7 +21,7 @@ struct SearchResultsView: View {
         ScrollView {
             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                 ForEach(searchResults, id: \.self) {food in
-                    SearchResultCellView(isPresenting: $isPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, isFavorite: savedFoods.contains(food.fdicID), selectedSort: selectedSort)
+                    SearchResultCellView(isPresenting: $isPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort)
                 }.padding(.bottom, 5)
             }
         }

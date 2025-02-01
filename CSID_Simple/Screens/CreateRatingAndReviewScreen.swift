@@ -9,54 +9,7 @@ import SwiftUI
 import Amplify
 import AWSPluginsCore
 
-enum SelectedToleration: Identifiable, CaseIterable {
-    case couldTolerate, tolerateWithStipulations, couldNotTolerate
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .couldTolerate:
-            return "Could Tolerate"
-        case .tolerateWithStipulations:
-            return "Tolerated With Stipulations"
-        case .couldNotTolerate:
-            return "Could Not Tolerate"
-        }
-    }
-    
-    var value: String {
-        switch self {
-        case .couldTolerate:
-            return "2"
-        case .tolerateWithStipulations:
-            return "1"
-        case .couldNotTolerate:
-            return "0"
-        }
-    }
-    
-    var definition: String {
-        switch self {
-        case .couldTolerate:
-            return "Could tolerate this food without any issues or special considerations"
-        case .tolerateWithStipulations:
-            return "Could tolerate this food, but only under specific conditions. For example: Eating it in small quantities, Combining it with other foods or enzymes, or Avoiding it in certain forms (e.g. cooked vs. raw)"
-        case .couldNotTolerate:
-            return "Could NOT tolerate this food at all. Eating this food causes significant symptoms or discomfort"
-        }
-    }
-    
-    var color: Color {
-        switch self {
-        case .couldTolerate:
-            return .iconTeal
-        case .tolerateWithStipulations:
-            return .iconYellow
-        case .couldNotTolerate:
-            return .iconRed
-        }
-    }
-    
-}
+
 struct CreateRatingAndReviewScreen: View {
     
     @Environment(\.presentationMode) var presentationMode

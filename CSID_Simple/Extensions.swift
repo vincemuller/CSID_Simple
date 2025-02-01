@@ -43,3 +43,12 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
+
+extension Double {
+    func toRadians() -> Double {
+        return self * Double.pi / 180
+    }
+    func toCGFloat() -> CGFloat {
+        return CGFloat(self)
+    }
+}

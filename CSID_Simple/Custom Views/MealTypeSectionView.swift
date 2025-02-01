@@ -7,31 +7,10 @@
 
 import SwiftUI
 
-enum MealType: Identifiable, CaseIterable {
-    case breakfast, morningSnack, lunch, afternoonSnack, dinner, eveningSnack
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .breakfast:
-            return "Breakfast"
-        case .morningSnack:
-            return "Morning Snack"
-        case .lunch:
-            return "Lunch"
-        case .afternoonSnack:
-            return "Afternoon Snack"
-        case .dinner:
-            return "Dinner"
-        case .eveningSnack:
-            return "Evening Snack"
-        }
-    }
-}
+
 
 struct MealTypeSectionView: View {
     
-    @State var opacity = 1.0
-    @State private var presentSnackType: Bool = false
     
     var body: some View {
         ZStack {

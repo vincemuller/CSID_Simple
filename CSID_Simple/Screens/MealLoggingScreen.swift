@@ -7,18 +7,7 @@
 
 import SwiftUI
 
-enum MealLoggingScreenTab: CaseIterable, Identifiable {
-    case search, savedMeals
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .search:
-            return "Search"
-        case .savedMeals:
-            return "Saved Meals"
-        }
-    }
-}
+
 
 struct MealLoggingScreen: View {
     

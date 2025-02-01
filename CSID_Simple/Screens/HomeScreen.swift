@@ -8,40 +8,6 @@
 import SwiftUI
 
 
-enum HomeScreenSections: Identifiable, CaseIterable {
-    case activity, meals, lists
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .activity:
-            return "Daily Totals"
-        case .meals:
-            return "Meals"
-        case .lists:
-            return "Lists"
-        }
-    }
-}
-
-enum Search: CaseIterable {
-    case isNotFocused, isFocused, searchInProgress
-}
-
-enum SearchFilter: Identifiable, CaseIterable {
-    case wholeFoods, allFoods, brandedFoods
-    var id: Self { self }
-    var selected: String {
-        switch self {
-        case .wholeFoods:
-            return "Whole Foods"
-        case .allFoods:
-            return "All Foods"
-        case .brandedFoods:
-            return "Branded Foods"
-        }
-    }
-}
-
 let columns: [GridItem] = [GridItem(.flexible()),
                            GridItem(.flexible()),
                            GridItem(.flexible()),
@@ -73,6 +39,8 @@ struct HomeScreen: View {
     
     @State private var dashboardWeek: Date = Date.now
     @State private var selectedDay: Date = Date.now
+    
+    private let searchFilters: [SearchFilter] = SearchFilter.allCases
 
     
     var body: some View {
@@ -83,7 +51,37 @@ struct HomeScreen: View {
                     .navigationTitle("CSIDAssist")
                 VStack (spacing: 0) {
                     HStack (spacing: 10) {
-                        SearchBarView(searchText: $searchText, isFocused: $isFocused, searchState: $search, resetSearch: resetSearch, searchFoods: searchFoods)
+//                        SearchBarView(searchText: $searchText, isFocused: $isFocused, searchState: $search, resetSearch: resetSearch, searchFoods: searchFoods)
+                        ZStack (alignment: .leading) {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.textField)
+                                .frame(width: 300, height: 40)
+                            HStack {
+                                Image(systemName:  search != .isNotFocused ? "arrow.left" :  "magnifyingglass")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.6))
+                                    .onTapGesture {
+                                        if search != .isNotFocused {
+                                            resetSearch()
+                                        }
+                                    }
+                                ZStack (alignment: .leading) {
+                                    searchText.count > 0 ? nil : SearchCarouselView()
+                                    TextField("", text: $searchText)
+                                        .foregroundColor(.white)
+                                        .frame(width: 245, height: 35)
+                                        .focused($isFocused)
+                                        .onChange(of: isFocused, {
+                                            if isFocused == true {
+                                                search = .isFocused
+                                            }
+                                        })
+                                        .onSubmit {
+                                            searchFoods()
+                                        }
+                                }
+                            }.padding(.leading)
+                        }
                         SortResultsView(selectedSort: $selectedSort)
                             .onChange(of: selectedSort) {
                                 search == .isFocused ? searchFoods() : nil
@@ -197,20 +195,130 @@ struct HomeScreen: View {
                                     .foregroundStyle(.white)
                                     .frame(width: 350, alignment: .leading)
                                     .padding(.vertical, 10)
-                                MealTypeSectionView()
+//                                MealTypeSectionView()
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(.textField)
+                                        .frame(width: 350, height: 100)
+                                    LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
+                                        ForEach(MealType.allCases, id: \.id) { meal in
+                                            if  !meal.label.contains("Snack") {
+                                                NavigationLink(destination: MealLoggingScreen(mealType: meal)) {
+                                                    VStack (spacing: 5) {
+                                                        Image(meal.label.lowercased())
+                                                            .resizable()
+                                                            .frame(width: 55, height: 55)
+                                                            .mask {
+                                                                Circle()
+                                                                    .frame(width: 50, height: 50)
+                                                            }
+                                                        Text(meal.label)
+                                                            .font(.system(size: 12, weight: .semibold))
+                                                            .foregroundStyle(.white)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Menu {
+                                            NavigationLink(destination: MealLoggingScreen(mealType: .eveningSnack)) {
+                                                Text("Evening Snack")
+                                            }
+                                            NavigationLink(destination: MealLoggingScreen(mealType: .afternoonSnack)) {
+                                                Text("Afternoon Snack")
+                                            }
+                                            NavigationLink(destination: MealLoggingScreen(mealType: .morningSnack)) {
+                                                Text("Morning Snack")
+                                            }
+                                        } label: {
+                                            VStack (spacing: 5) {
+                                                Image("snack")
+                                                    .resizable()
+                                                    .frame(width: 55, height: 55)
+                                                    .mask {
+                                                        Circle()
+                                                            .frame(width: 50, height: 50)
+                                                    }
+                                                Text("Snack")
+                                                    .font(.system(size: 12, weight: .semibold))
+                                                    .foregroundStyle(.white)
+                                            }
+                                        }
+                                    }).frame(width: 300, alignment: .center)
+                                }
                             } else {
                                 Text(section.label)
                                     .font(.system(size: 25, weight: .semibold))
                                     .foregroundStyle(.white)
                                     .frame(width: 350, alignment: .leading)
                                     .padding(.vertical, 10)
-                                SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
+//                                SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
+                                ZStack (alignment: .top) {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(.textField)
+                                        .frame(width: 350, height: 170)
+                                    ScrollView {
+                                        VStack (alignment: .leading, spacing: 10) {
+                                            ForEach(user.userSavedLists, id: \.id) { list in
+                                                if user.userSavedLists.firstIndex(of: list) == 0 {
+                                                    HStack {
+                                                        Group {
+                                                            Image(systemName: "plus")
+                                                                .foregroundStyle(.iconTeal)
+                                                        }
+                                                        Text("Create New List")
+                                                            .font(.system(size: 16))
+                                                            .foregroundStyle(.iconTeal)
+                                                    }.onTapGesture {
+                                                        viewModel.createListScreenPresenting = true
+                                                    }
+                                                    Divider()
+                                                        .padding(.leading, 25)
+                                                }
+                                                NavigationLink(destination: SavedListSearchScreen(list: list)) {
+                                                    HStack {
+                                                        Image(systemName: "bookmark")
+                                                            .foregroundStyle(.white)
+                                                        Text(list.name ?? "")
+                                                            .foregroundStyle(.white)
+                                                            .font(.system(size: 16))
+                                                    }
+                                                }
+                                                Divider()
+                                                    .padding(.leading, 25)
+                                            }
+                                        }
+                                        .padding()
+                                    }
+                                    .frame(width: 350, height: 165, alignment: .leading)
+                                }
                             }
                         }
                     case .isFocused:
-                        SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
+//                        SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
+                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
+                            ForEach(searchFilters, id: \.self) { filter in
+                                Button(action: {selectedFilter = filter; searchText.isEmpty ? nil : searchFoods()}, label: {
+                                    Text(filter.selected)
+                                        .font(.system(size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold))
+                                        .foregroundStyle( selectedFilter.selected == filter.selected ? .white :
+                                                            .white.opacity(0.3))
+                                })
+                                .background(
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .fill(.clear)
+                                        .stroke(selectedFilter.selected == filter.selected ? .white : .white.opacity(0.3), lineWidth: selectedFilter.selected == filter.selected ? 2 : 1)
+                                        .frame(width: 105, height: 30))
+                            }
+                        }.padding(.horizontal, 25).padding(.vertical, 20)
                         
-                        SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: $searchResults, selectedSort: selectedSort)
+//                        SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: $searchResults, selectedSort: selectedSort)
+                        ScrollView {
+                            LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
+                                ForEach(searchResults, id: \.self) {food in
+                                    SearchResultCellView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, result: food, selectedSort: selectedSort)
+                                }.padding(.bottom, 5)
+                            }
+                        }
                         
                         searchResults.isEmpty ? nil :
                         HStack (spacing: 10) {
