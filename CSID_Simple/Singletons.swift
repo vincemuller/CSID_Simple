@@ -31,9 +31,12 @@ class User {
         let model = Meals(
             userID: self.userID,
             mealType: "Breakfast",
-            foods:  meal.getMealJSON(),
             additionalNotes: "This meal hurt my belly",
-            tolerationRating: "0")
+            tolerationRating: "0",
+            foods:  meal.getMealJSON(),
+            savedMeals: meal.getMealJSON()
+            )
+        
         
         do {
             let result = try await Amplify.API.mutate(request: .create(model))

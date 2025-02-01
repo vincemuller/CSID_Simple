@@ -11,10 +11,9 @@ import SwiftUI
 
 struct SavedListSearchScreen: View {
     
+    @StateObject private var viewModel = ViewModel()
     @FocusState private var isFocused: Bool
     @State private var editListScreenPresenting: Bool = false
-    @State private var isPresenting: Bool = false
-    @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
     @State private var compareQueue: [FoodDetails] = []
     @State private var selectedSort: String = "Relevance"
     @State private var savedFoods: [FoodDetails] = []
@@ -41,13 +40,18 @@ struct SavedListSearchScreen: View {
                             searchSavedFoods()
                         }
                 }
-                SearchResultsView(isPresenting: $isPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, searchResults: $searchResults, selectedSort: selectedSort, savedFoods: [])
+                SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $compareQueue, searchResults: $searchResults, selectedSort: selectedSort, savedFoods: [])
             }.padding(.top, 10)
         }
         .sheet(isPresented: $editListScreenPresenting, onDismiss: {
             editListScreenPresenting = false
         }) {
             EditListScreen(list: list)
+        }
+        .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
+            viewModel.foodDetalsPresenting = false
+        }) {
+            FoodDetailsScreen(food: $viewModel.selectedFood)
         }
         .onAppear {
             getSavedListFoods()

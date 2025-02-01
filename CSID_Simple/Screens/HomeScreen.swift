@@ -14,7 +14,7 @@ enum HomeScreenSections: Identifiable, CaseIterable {
     var label: String {
         switch self {
         case .activity:
-            return "Activity"
+            return "Daily Totals"
         case .meals:
             return "Meals"
         case .lists:
@@ -42,6 +42,16 @@ enum SearchFilter: Identifiable, CaseIterable {
     }
 }
 
+let columns: [GridItem] = [GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible()),
+                           GridItem(.flexible())]
+
 struct HomeScreen: View {
     
     init() {
@@ -61,6 +71,9 @@ struct HomeScreen: View {
     @State private var activeSearch: Bool = false
     @State private var user = User.shared
     
+    @State private var dashboardWeek: Date = Date.now
+    @State private var selectedDay: Date = Date.now
+
     
     var body: some View {
         
@@ -76,32 +89,124 @@ struct HomeScreen: View {
                                 search == .isFocused ? searchFoods() : nil
                             }
                     }
-                .padding(.top, 10)
+                .padding(.top, 5)
                     switch search {
                     case .isNotFocused:
-                        List {
-                            ForEach(HomeScreenSections.allCases) {section in
-                                Section {
-                                    if section == .activity {
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .fill(.textField)
-                                            .frame(width: 350, height: 100)
-                                    } else if section == .meals {
-                                        MealTypeSectionView()
-                                    } else {
-                                        SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
+                        ForEach(HomeScreenSections.allCases) {section in
+                            if section == .activity {
+                                Text(section.label)
+                                    .font(.system(size: 25, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 350, alignment: .leading)
+                                    .padding(.vertical, 10)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(.textField)
+                                    VStack {
+                                        HStack {
+                                            LazyVGrid(columns: columns) {
+                                                Image(systemName: "chevron.left")
+                                                    .foregroundStyle(.white)
+                                                    .font(.system(size: 14, weight: .semibold))
+                                                    .onTapGesture {
+                                                        dashboardWeek = Calendar.current.date(byAdding: .day, value: -7, to: dashboardWeek)!
+                                                        selectedDay = Calendar.current.date(byAdding: .day, value: -4, to: dashboardWeek)!
+                                                    }
+                                                    .padding(.leading, 10)
+                                                ForEach((1...7), id: \.self) {day in
+                                                    let d = Calendar.current.date(byAdding: .day, value: day-4, to: dashboardWeek)!
+                                                    let weekDay = d.formatted(.dateTime.weekday())
+                                                    let calendarDay = d.formatted(.dateTime.day(.twoDigits))
+                                                    let sD = selectedDay.formatted(.dateTime.weekday()) == weekDay
+                                                    
+                                                    ZStack {
+                                                        sD ?
+                                                        RoundedRectangle(cornerRadius: 10)
+                                                            .stroke(.white, lineWidth: 1.5)
+                                                            .frame(width: 40, height: 45)
+                                                        : nil
+                                                        VStack {
+                                                            Text(calendarDay)
+                                                                .font(.system(size: 12, weight: .medium, design: .default))
+                                                                .foregroundStyle(.white)
+                                                            Text(weekDay.uppercased())
+                                                                .font(.system(size: 12, weight: .medium, design: .default))
+                                                                .foregroundStyle(.iconTeal)
+                                                        }
+                                                        .onTapGesture {
+                                                            selectedDay = d
+                                                            print(selectedDay.formatted())
+                                                        }
+                                                    }
+                                                }
+                                                Image(systemName: "chevron.right")
+                                                    .foregroundStyle(.white)
+                                                    .font(.system(size: 14, weight: .semibold))
+                                                    .onTapGesture {
+                                                        dashboardWeek = Calendar.current.date(byAdding: .day, value: 7, to: dashboardWeek)!
+                                                        selectedDay = Calendar.current.date(byAdding: .day, value: 4, to: dashboardWeek)!
+                                                    }
+                                                    .padding(.trailing, 10)
+                                            }
+                                        }
+                                        .padding(.top, 10)
+                                        HStack (spacing: 0) {
+                                            VStack (spacing: 0) {
+                                                ZStack {
+                                                    ConsumptionCircle(ringWidth: 40, percent: 115, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
+                                                        .padding(10)
+                                                    Text("50g")
+                                                        .font(.system(size: 18))
+                                                        .foregroundStyle(.white)
+                                                }
+                                                Text("Sugars")
+                                                    .font(.system(size: 14))
+                                                    .foregroundStyle(.white)
+                                            }
+                                            VStack (spacing: 0) {
+                                                ZStack {
+                                                    ConsumptionCircle(ringWidth: 40, percent: 75, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
+                                                        .padding(10)
+                                                    Text("110g")
+                                                        .font(.system(size: 18))
+                                                        .foregroundStyle(.white)
+                                                }
+                                                Text("Carbs")
+                                                    .font(.system(size: 14))
+                                                    .foregroundStyle(.white)
+                                            }
+                                            VStack (spacing: 0) {
+                                                ZStack {
+                                                    ConsumptionCircle(ringWidth: 40, percent: 50, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
+                                                        .padding(10)
+                                                    Text("60g")
+                                                        .font(.system(size: 18))
+                                                        .foregroundStyle(.white)
+                                                }
+                                                Text("Starches")
+                                                    .font(.system(size: 14))
+                                                    .foregroundStyle(.white)
+                                            }
+                                        }.padding(.bottom)
                                     }
-                                } header: {
-                                    Text(section.label)
-                                        .font(.system(size: 30, weight: .semibold))
-                                        .foregroundStyle(.white)
                                 }
+                                .frame(width: 350, height: 200)
+                            } else if section == .meals {
+                                Text(section.label)
+                                    .font(.system(size: 25, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 350, alignment: .leading)
+                                    .padding(.vertical, 10)
+                                MealTypeSectionView()
+                            } else {
+                                Text(section.label)
+                                    .font(.system(size: 25, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 350, alignment: .leading)
+                                    .padding(.vertical, 10)
+                                SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
                             }
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 7, leading: 18, bottom: 0, trailing: 15))
                         }
-                        .listStyle(.plain)
                     case .isFocused:
                         SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
                         
@@ -163,7 +268,7 @@ struct HomeScreen: View {
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: viewModel.selectedFood)
+            FoodDetailsScreen(food: $viewModel.selectedFood)
         }
         .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
             viewModel.createListScreenPresenting = false
@@ -173,9 +278,9 @@ struct HomeScreen: View {
         .onAppear(perform: initializeDatabase)
         .onAppear(perform: {
             Task {
-                await viewModel.getSavedLists()
-                await viewModel.getSavedFoods()
-                await User.shared.testMealLogging()
+//                await viewModel.getSavedLists()
+//                await viewModel.getSavedFoods()
+//                await User.shared.testMealLogging()
             }
         })
         .onChange(of: viewModel.compareQueue) {

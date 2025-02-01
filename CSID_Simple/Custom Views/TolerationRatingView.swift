@@ -47,10 +47,31 @@ struct TolerationRatingView: View {
                     .font(.system(size: 12))
                     .foregroundStyle(.white)
                     .frame(width: 320, alignment: .leading)
-                Text(rating?.createdAt?.iso8601FormattedString(format: .medium) ?? "")
-                    .font(.system(size: 10))
-                    .foregroundStyle(.white.opacity(0.5))
-            }.padding()
+                HStack {
+                    Text(rating?.createdAt?.iso8601FormattedString(format: .medium) ?? "")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.white.opacity(0.5))
+                    Spacer()
+                    Button {
+                        emailHyperlink()
+                    } label: {
+                        Text("Report")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.iconRed)
+                    }
+                }
+            }.padding(10)
+        }
+    }
+    
+    func emailHyperlink() {
+        let email = "csidassist@gmail.com"
+        if let url = URL(string: "mailto:\(email)?subject=Reported Rating and Review&body=Reference ID:\n\(rating?.id ?? "")\n\nComment:\n***Use this space to provide details on why you are reporting this review***") {
+          if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url)
+          } else {
+            UIApplication.shared.openURL(url)
+          }
         }
     }
 }

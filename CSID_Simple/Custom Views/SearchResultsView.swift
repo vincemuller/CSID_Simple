@@ -26,7 +26,27 @@ struct SearchResultsView: View {
             }
         }
     }
+}
+
+struct MealLoggingSearchResultsView: View {
     
+    @Binding var isPresenting: Bool
+    @Binding var logServingSizeSheetIsPresenting: Bool
+    @Binding var selectedFood: FoodDetails
+    @Binding var searchResults: [FoodDetails]
+    @State var selectedSort: String
+    
+    var savedFoods: [Int] = []
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
+                ForEach(searchResults, id: \.self) {food in
+                    MealLoggingSearchResultCellView(isPresenting: $isPresenting, logServingSizeSheetIsPresenting: $logServingSizeSheetIsPresenting, selectedFood: $selectedFood, result: food, isFavorite: savedFoods.contains(food.fdicID))
+                }.padding(.bottom, 5)
+            }
+        }
+    }
 }
 
 #Preview {

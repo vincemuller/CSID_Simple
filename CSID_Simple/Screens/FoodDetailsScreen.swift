@@ -61,7 +61,7 @@ struct FoodDetailsScreen: View {
     @State private var errorComment: String = "An error has occurred, please close application and try again."
     @State private var savedListScreenPresenting: Bool = false
     
-    @State var food: FoodDetails
+    @Binding var food: FoodDetails
     @State private var user = User.shared
     
     private var isFavorite: Bool {
@@ -162,7 +162,7 @@ struct FoodDetailsScreen: View {
                                     VStack (spacing: 10) {
                                         ZStack {
                                             Circle()
-                                                .stroke(.iconTeal, lineWidth: 3)
+                                                .stroke(.iconRed, lineWidth: 3)
                                                 .frame(width: 70)
                                             Text((adjustedNutrition == nil ? nutData?.totalSugars : adjustedNutrition?.totalSugars) ?? "")
                                                 .font(.system(size: 18, weight: .semibold))
@@ -284,7 +284,8 @@ struct FoodDetailsScreen: View {
                                     case .tolerationRatings:
                                         VStack {
                                             HStack {
-                                                RatingsPieChartView(tolerationChunks: tolerationChunks, tolerationRatingCount: tolerationRatings.count, majorityLabel: tolerationRating.label, width: geometry.size.width * 0.33)
+                                                RatingsPieChartView(tolerationChunks: $tolerationChunks, tolerationRatingCount:
+                                                                        tolerationRatings.count, majorityLabel: tolerationRating.label, width: geometry.size.width * 0.33)
                                                     .padding(.top, 10)
                                                 VStack (alignment: .leading) {
                                                     HStack {
@@ -336,7 +337,10 @@ struct FoodDetailsScreen: View {
                                                 Text("See All")
                                                     .font(.system(size: 16, weight: .semibold))
                                                     .foregroundStyle(.iconTeal)
-                                            }.buttonStyle(PlainButtonStyle()).padding(.trailing, 15)
+                                            }
+                                            .buttonStyle(PlainButtonStyle())
+                                            .padding(.trailing, 15)
+                                            .disabled(tolerationRatings.isEmpty ? true : false)
                                         }
                                     }
                                 }
@@ -456,5 +460,5 @@ struct FoodDetailsScreen: View {
 }
 
 #Preview {
-    FoodDetailsScreen(food: FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no"))
+    FoodDetailsScreen(food: .constant(FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no")))
 }

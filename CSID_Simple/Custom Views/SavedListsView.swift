@@ -15,10 +15,10 @@ struct SavedListsView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            ZStack (alignment: .top) {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(.textField)
-                    .frame(width: 350)
+                    .frame(width: 350, height: 170)
                 ScrollView {
                     VStack (alignment: .leading, spacing: 10) {
                         ForEach(savedLists, id: \.id) { list in
@@ -52,7 +52,7 @@ struct SavedListsView: View {
                     }
                     .padding()
                 }
-                .frame(width: 350, height: 175, alignment: .leading)
+                .frame(width: 350, height: 165, alignment: .leading)
             }
         }
     }
