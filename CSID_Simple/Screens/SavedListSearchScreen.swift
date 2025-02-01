@@ -51,7 +51,7 @@ struct SavedListSearchScreen: View {
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: viewModel.selectedFood)
+            FoodDetailsScreen(food: $viewModel.selectedFood)
         }
         .onAppear {
             getSavedListFoods()

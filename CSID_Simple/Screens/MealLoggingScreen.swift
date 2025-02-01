@@ -26,6 +26,7 @@ struct MealLoggingScreen: View {
     var mealType: MealType
     @FocusState private var isFocused: Bool
     
+    @State private var logServingSizeSheetIsPresenting: Bool = false
     @State private var selectedMealTab: MealLoggingScreenTab = .search
     @State private var searchText: String = ""
     @State private var search: Search = .isNotFocused
@@ -76,7 +77,7 @@ struct MealLoggingScreen: View {
                     case .isFocused:
                         SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
                         
-                        SearchResultsView(isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: .constant([]), searchResults: $searchResults, selectedSort: selectedSort)
+                        MealLoggingSearchResultsView(isPresenting: $foodDetalsPresenting, logServingSizeSheetIsPresenting: $logServingSizeSheetIsPresenting, selectedFood: $selectedFood, searchResults: $searchResults, selectedSort: selectedSort)
                         searchResults.isEmpty ? nil :
                         Text("\(searchResults.count) foods found")
                             .font(.system(size: 14, weight: .semibold))
@@ -88,6 +89,18 @@ struct MealLoggingScreen: View {
                     Text("Saved Meals List will go here")
                         .offset(y: 100)
                 }
+            }
+            .sheet(isPresented: $foodDetalsPresenting, onDismiss: {
+                foodDetalsPresenting = false
+            }) {
+                FoodDetailsScreen(food: $selectedFood)
+            }
+            .sheet(isPresented: $logServingSizeSheetIsPresenting, onDismiss: {
+                logServingSizeSheetIsPresenting = false
+            }) {
+                Text("servings bottom sheet")
+                    .presentationDetents([.height(300)])
+                    .presentationDragIndicator(.automatic)
             }
         }
     }

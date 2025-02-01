@@ -268,7 +268,7 @@ struct HomeScreen: View {
         .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
             viewModel.foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: viewModel.selectedFood)
+            FoodDetailsScreen(food: $viewModel.selectedFood)
         }
         .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
             viewModel.createListScreenPresenting = false

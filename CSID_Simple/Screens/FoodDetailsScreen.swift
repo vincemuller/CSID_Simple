@@ -61,7 +61,7 @@ struct FoodDetailsScreen: View {
     @State private var errorComment: String = "An error has occurred, please close application and try again."
     @State private var savedListScreenPresenting: Bool = false
     
-    @State var food: FoodDetails
+    @Binding var food: FoodDetails
     @State private var user = User.shared
     
     private var isFavorite: Bool {
@@ -460,5 +460,5 @@ struct FoodDetailsScreen: View {
 }
 
 #Preview {
-    FoodDetailsScreen(food: FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no"))
+    FoodDetailsScreen(food: .constant(FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no")))
 }
