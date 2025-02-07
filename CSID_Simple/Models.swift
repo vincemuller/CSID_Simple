@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Amplify
 import Charts
 
 struct FoodDetails: Codable, Hashable, Identifiable {
@@ -45,8 +46,12 @@ struct TolerationChunks: Identifiable {
     var canTolerate: [TolerationRating]
 }
 
-struct Meal: Codable {
+struct Meal: Codable, Identifiable {
+    var id = UUID()
+    var mealDate: Temporal.Date
+    var mealType: String
     var foods: [MealFood]
+    var additionalNotes: String
     
     func getMealJSON() -> String {
         var encodeStringMeal: String = ""
@@ -65,7 +70,8 @@ struct Meal: Codable {
     }
 }
 
-struct MealFood: Codable {
+
+struct MealFood: Codable, Hashable {
     var fdicID: Int
     var customServingPercentage: Float
 }

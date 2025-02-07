@@ -11,37 +11,6 @@ import AWSPluginsCore
 import AWSAPIPlugin
 
 
-enum Ingredients: Identifiable, CaseIterable {
-    case sucroseIngredients, completeIngredientList, tolerationRatings
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .sucroseIngredients:
-            return "Sucrose"
-        case .completeIngredientList:
-            return "Complete"
-        case .tolerationRatings:
-            return "Ratings & Reviews"
-        }
-    }
-}
-
-enum Toleration: Identifiable, CaseIterable {
-    case canTolerate, canTolerateWithStipulations, canNotTolerate, inconclusive
-    var id: Self { self }
-    var label: String {
-        switch self {
-        case .canTolerate:
-            return "Majority Can Tolerate"
-        case .canTolerateWithStipulations:
-            return "Majority Can Tolerate with Stipulations"
-        case .canNotTolerate:
-            return "Majority Can Not Tolerate"
-        case .inconclusive:
-            return "No Majority, See All Ratings"
-        }
-    }
-}
 
 struct FoodDetailsScreen: View {
 
