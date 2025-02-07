@@ -19,22 +19,25 @@ class User {
     var userID: String?
     var userSavedLists: [SavedLists]
     var userSavedFoods: [SavedFoods]
+    var dailyMeals: List<Meals>
+    
 
-    private init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = []) {
+    private init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = [], dailyMeals: List<Meals> = []) {
         self.userID = userID
         self.userSavedLists = userSavedLists
         self.userSavedFoods = userSavedFoods
+        self.dailyMeals = dailyMeals
     }
     
 
-    func testMealLogging(meal: Meal = Meal(foods: [MealFood(fdicID: 1001, customServingPercentage: 0.86),MealFood(fdicID: 1005, customServingPercentage: 0.50),MealFood(fdicID: 1009, customServingPercentage: 1.12)])) async {
+    func mealLogging(meal: Meal) async {
         let model = Meals(
             userID: self.userID,
-            mealType: "Breakfast",
-            additionalNotes: "This meal hurt my belly",
-            tolerationRating: "0",
+            mealDate: meal.mealDate,
+            mealType: meal.mealType,
             foods:  meal.getMealJSON(),
-            savedMeals: meal.getMealJSON()
+            savedMeals: meal.getMealJSON(),
+            additionalNotes: meal.additionalNotes
             )
         
         
@@ -51,7 +54,35 @@ class User {
         } catch {
             print("Unexpected error: \(error)")
         }
-        
+    }
+    
+    func getDailyMeals(selectedDay: Date) async {
+        let d = Temporal.Date.init(selectedDay.addingTimeInterval(.days(-7)), timeZone: .autoupdatingCurrent)
+        let meals = Meals.keys
+        let predicate = meals.userID == User.shared.userID && meals.mealDate > d && meals.mealDate <= Temporal.Date.init(selectedDay.addingTimeInterval(.days(6)), timeZone: .autoupdatingCurrent)
+        let request = GraphQLRequest<Meals>.list(Meals.self, where: predicate)
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let meals):
+                print("Successfully retrieved meals: \(meals.count)")
+                
+                dailyMeals = meals
+                
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+//                errorAlert = true
+//                errorComment = error.errorDescription
+            }
+        } catch let error as APIError {
+            print("Failed to query saved lists: ", error)
+//            errorAlert = true
+//            errorComment = error.errorDescription
+        } catch {
+            print("Unexpected error: \(error)")
+//            errorAlert = true
+//            errorComment = error.localizedDescription
+        }
     }
     
     func getSavedLists() async {

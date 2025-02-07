@@ -9,11 +9,11 @@ type SavedMeals @model @auth(rules: [{allow: public}]) {
 type Meals @model @auth(rules: [{allow: public}]) {
   id: ID!
   userID: String
+  mealDate: AWSDate
   mealType: String
-  additionalNotes: String
-  tolerationRating: String
   foods: AWSJSON
   savedMeals: AWSJSON
+  additionalNotes: String
 }
 
 type SavedFoods @model @auth(rules: [{allow: public}]) {

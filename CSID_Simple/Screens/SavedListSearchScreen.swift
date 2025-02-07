@@ -11,9 +11,11 @@ import SwiftUI
 
 struct SavedListSearchScreen: View {
     
-    @StateObject private var viewModel = ViewModel()
+//    @StateObject private var viewModel = ViewModel()
     @FocusState private var isFocused: Bool
     @State private var editListScreenPresenting: Bool = false
+    @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
+    @State private var foodDetalsPresenting: Bool = false
     @State private var compareQueue: [FoodDetails] = []
     @State private var selectedSort: String = "Relevance"
     @State private var savedFoods: [FoodDetails] = []
@@ -21,6 +23,13 @@ struct SavedListSearchScreen: View {
     @State private var searchText: String = ""
     @State private var search: Search = .isNotFocused
     
+    private let sortingOptions = ["Relevance",
+                                  "Carbs (Low to High)",
+                                  "Carbs (High to Low)",
+                                  "Sugars (Low to High)",
+                                  "Sugars (High to Low)",
+                                  "Starches (Low to High)",
+                                  "Starches (High to Low)"]
     
     
     var list: SavedLists
@@ -34,13 +43,66 @@ struct SavedListSearchScreen: View {
                 }))
             VStack (spacing: 15) {
                 HStack (spacing: 10) {
-                    SearchBarView(searchText: $searchText, isFocused: $isFocused, searchState: $search, resetSearch: resetSearch, searchFoods: searchSavedFoods)
-                    SortResultsView(selectedSort: $selectedSort)
-                        .onChange(of: selectedSort) {
-                            searchSavedFoods()
+                    ZStack (alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(.textField)
+                            .frame(width: 300, height: 40)
+                        HStack {
+                            Image(systemName:  search != .isNotFocused ? "arrow.left" :  "magnifyingglass")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.6))
+                                .onTapGesture {
+                                    if search != .isNotFocused {
+                                        resetSearch()
+                                    }
+                                }
+                            ZStack (alignment: .leading) {
+                                searchText.count > 0 ? nil : SearchCarouselView()
+                                TextField("", text: $searchText)
+                                    .foregroundColor(.white)
+                                    .frame(width: 245, height: 35)
+                                    .focused($isFocused)
+                                    .onChange(of: isFocused, {
+                                        if isFocused == true {
+                                            search = .isFocused
+                                        }
+                                    })
+                                    .onSubmit {
+                                        searchSavedFoods()
+                                    }
+                            }
+                        }.padding(.leading)
+                    }
+                    Menu {
+                        Picker("", selection: $selectedSort) {
+                            ForEach(sortingOptions, id: \.self){ option in
+                                Button(action: {
+                                    self.selectedSort = option
+                                }, label: {
+                                    Text(option)
+                                })
+                            }
                         }
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.textField)
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "arrow.up.and.down.text.horizontal")
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .onChange(of: selectedSort) {
+                        search == .isFocused ? searchSavedFoods() : nil
+                    }
                 }
-                SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $compareQueue, searchResults: $searchResults, selectedSort: selectedSort, savedFoods: [])
+                ScrollView {
+                    LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
+                        ForEach(searchResults, id: \.self) {food in
+                            SearchResultCellView(isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort)
+                        }.padding(.bottom, 5)
+                    }
+                }
             }.padding(.top, 10)
         }
         .sheet(isPresented: $editListScreenPresenting, onDismiss: {
@@ -48,10 +110,10 @@ struct SavedListSearchScreen: View {
         }) {
             EditListScreen(list: list)
         }
-        .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
-            viewModel.foodDetalsPresenting = false
+        .sheet(isPresented: $foodDetalsPresenting, onDismiss: {
+            foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: $viewModel.selectedFood)
+            FoodDetailsScreen(food: $selectedFood)
         }
         .onAppear {
             getSavedListFoods()

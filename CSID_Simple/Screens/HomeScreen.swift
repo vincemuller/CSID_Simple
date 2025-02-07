@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import Amplify
+import AWSPluginsCore
+import AWSAPIPlugin
 
 
 let columns: [GridItem] = [GridItem(.flexible()),
@@ -20,38 +23,60 @@ let columns: [GridItem] = [GridItem(.flexible()),
 
 struct HomeScreen: View {
     
+    //Title foreground color
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }
     
-    @FocusState private var isFocused: Bool
-    @StateObject private var viewModel = ViewModel()
-    @State private var opacityAnimation: CGFloat = 0.3
+    //User singleton
+    @State private var user = User.shared
     
-    @State private var sections: HomeScreenSections = .activity
+    //Search focus state
+    @FocusState private var isFocused: Bool
+    
+    //Search variables
     @State private var search: Search = .isNotFocused
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
     @State private var selectedFilter: SearchFilter = .allFoods
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
-    @State private var user = User.shared
-    
-    @State private var dashboardWeek: Date = Date.now
-    @State private var selectedDay: Date = Date.now
-    
     private let searchFilters: [SearchFilter] = SearchFilter.allCases
+    private let sortingOptions = ["Relevance",
+                                  "Carbs (Low to High)",
+                                  "Carbs (High to Low)",
+                                  "Sugars (Low to High)",
+                                  "Sugars (High to Low)",
+                                  "Starches (Low to High)",
+                                  "Starches (High to Low)"]
+    
+    //Compare foods variables
+    @State private var compareFoodsSheetPresenting: Bool = false
+    @State private var compareQueue: [FoodDetails] = []
+    @State private var comparisonNutData: [NutrientData] = []
+    
+    //Food details variables
+    @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
+    @State private var foodDetalsPresenting: Bool = false
+    
+    //Daily totals variables
+    @State private var dashboardWeek: Date = Date.now.addingTimeInterval(.days(-3))
+    @State private var selectedDay: Date = Date.now
 
+    //Saved Lists variables
+    @State private var createListScreenPresenting: Bool = false
+    
+    
     
     var body: some View {
-        
         NavigationStack {
             ZStack (alignment: .top) {
                 BackgroundView()
                     .navigationTitle("CSIDAssist")
+                
+                //Search bar section with sorting options
                 VStack (spacing: 0) {
                     HStack (spacing: 10) {
-//                        SearchBarView(searchText: $searchText, isFocused: $isFocused, searchState: $search, resetSearch: resetSearch, searchFoods: searchFoods)
                         ZStack (alignment: .leading) {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(.textField)
@@ -82,21 +107,37 @@ struct HomeScreen: View {
                                 }
                             }.padding(.leading)
                         }
-                        SortResultsView(selectedSort: $selectedSort)
-                            .onChange(of: selectedSort) {
-                                search == .isFocused ? searchFoods() : nil
+                        Menu {
+                            Picker("", selection: $selectedSort) {
+                                ForEach(sortingOptions, id: \.self){ option in
+                                    Button(action: {
+                                        self.selectedSort = option
+                                    }, label: {
+                                        Text(option)
+                                    })
+                                }
                             }
+                        } label: {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.textField)
+                                    .frame(width: 40, height: 40)
+                                Image(systemName: "arrow.up.and.down.text.horizontal")
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .onChange(of: selectedSort) {
+                            search == .isFocused ? searchFoods() : nil
+                        }
                     }
-                .padding(.top, 5)
+                    .padding(.vertical, 5)
                     switch search {
                     case .isNotFocused:
                         ForEach(HomeScreenSections.allCases) {section in
-                            if section == .activity {
-                                Text(section.label)
-                                    .font(.system(size: 25, weight: .semibold))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 350, alignment: .leading)
-                                    .padding(.vertical, 10)
+                            
+                            //User logged meals data section
+                            if section == .mealData {
+                                SectionTitleView(label: section.label)
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 15)
                                         .fill(.textField)
@@ -108,11 +149,14 @@ struct HomeScreen: View {
                                                     .font(.system(size: 14, weight: .semibold))
                                                     .onTapGesture {
                                                         dashboardWeek = Calendar.current.date(byAdding: .day, value: -7, to: dashboardWeek)!
-                                                        selectedDay = Calendar.current.date(byAdding: .day, value: -4, to: dashboardWeek)!
+                                                        selectedDay = Calendar.current.date(byAdding: .day, value: 6, to: dashboardWeek)!
+                                                        Task {
+                                                            await User.shared.getDailyMeals(selectedDay: selectedDay)
+                                                        }
                                                     }
                                                     .padding(.leading, 10)
-                                                ForEach((1...7), id: \.self) {day in
-                                                    let d = Calendar.current.date(byAdding: .day, value: day-4, to: dashboardWeek)!
+                                                ForEach((0...6), id: \.self) {day in
+                                                    let d = Calendar.current.date(byAdding: .day, value: day, to: dashboardWeek)!
                                                     let weekDay = d.formatted(.dateTime.weekday())
                                                     let calendarDay = d.formatted(.dateTime.day(.twoDigits))
                                                     let sD = selectedDay.formatted(.dateTime.weekday()) == weekDay
@@ -124,12 +168,8 @@ struct HomeScreen: View {
                                                             .frame(width: 40, height: 45)
                                                         : nil
                                                         VStack {
-                                                            Text(calendarDay)
-                                                                .font(.system(size: 12, weight: .medium, design: .default))
-                                                                .foregroundStyle(.white)
-                                                            Text(weekDay.uppercased())
-                                                                .font(.system(size: 12, weight: .medium, design: .default))
-                                                                .foregroundStyle(.iconTeal)
+                                                            StandardTextView(label: calendarDay, size: 12, weight: .medium)
+                                                            StandardTextView(label: weekDay.uppercased(), size: 12, weight: .medium, textColor: .iconTeal)
                                                         }
                                                         .onTapGesture {
                                                             selectedDay = d
@@ -142,7 +182,10 @@ struct HomeScreen: View {
                                                     .font(.system(size: 14, weight: .semibold))
                                                     .onTapGesture {
                                                         dashboardWeek = Calendar.current.date(byAdding: .day, value: 7, to: dashboardWeek)!
-                                                        selectedDay = Calendar.current.date(byAdding: .day, value: 4, to: dashboardWeek)!
+                                                        selectedDay = dashboardWeek
+                                                        Task {
+                                                            await User.shared.getDailyMeals(selectedDay: selectedDay.addingTimeInterval(.days(6)))
+                                                        }
                                                     }
                                                     .padding(.trailing, 10)
                                             }
@@ -153,49 +196,34 @@ struct HomeScreen: View {
                                                 ZStack {
                                                     ConsumptionCircle(ringWidth: 40, percent: 115, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
                                                         .padding(10)
-                                                    Text("50g")
-                                                        .font(.system(size: 18))
-                                                        .foregroundStyle(.white)
+                                                    StandardTextView(label: "50g", size: 18)
                                                 }
-                                                Text("Sugars")
-                                                    .font(.system(size: 14))
-                                                    .foregroundStyle(.white)
+                                                StandardTextView(label: "Sugars", size: 14)
                                             }
                                             VStack (spacing: 0) {
                                                 ZStack {
                                                     ConsumptionCircle(ringWidth: 40, percent: 75, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
                                                         .padding(10)
-                                                    Text("110g")
-                                                        .font(.system(size: 18))
-                                                        .foregroundStyle(.white)
+                                                    StandardTextView(label: "110g", size: 18)
                                                 }
-                                                Text("Carbs")
-                                                    .font(.system(size: 14))
-                                                    .foregroundStyle(.white)
+                                                StandardTextView(label: "Carbs", size: 14)
                                             }
                                             VStack (spacing: 0) {
                                                 ZStack {
                                                     ConsumptionCircle(ringWidth: 40, percent: 50, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
                                                         .padding(10)
-                                                    Text("60g")
-                                                        .font(.system(size: 18))
-                                                        .foregroundStyle(.white)
+                                                    StandardTextView(label: "60g", size: 18)
                                                 }
-                                                Text("Starches")
-                                                    .font(.system(size: 14))
-                                                    .foregroundStyle(.white)
+                                                StandardTextView(label: "Starches", size: 14)
                                             }
                                         }.padding(.bottom)
                                     }
                                 }
                                 .frame(width: 350, height: 200)
                             } else if section == .meals {
-                                Text(section.label)
-                                    .font(.system(size: 25, weight: .semibold))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 350, alignment: .leading)
-                                    .padding(.vertical, 10)
-//                                MealTypeSectionView()
+                                
+                                //Meal type section
+                                SectionTitleView(label: section.label)
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 15)
                                         .fill(.textField)
@@ -203,7 +231,7 @@ struct HomeScreen: View {
                                     LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
                                         ForEach(MealType.allCases, id: \.id) { meal in
                                             if  !meal.label.contains("Snack") {
-                                                NavigationLink(destination: MealLoggingScreen(mealType: meal)) {
+                                                NavigationLink(destination: MealLoggingScreen(mealType: meal, selectedDay: selectedDay)) {
                                                     VStack (spacing: 5) {
                                                         Image(meal.label.lowercased())
                                                             .resizable()
@@ -212,9 +240,7 @@ struct HomeScreen: View {
                                                                 Circle()
                                                                     .frame(width: 50, height: 50)
                                                             }
-                                                        Text(meal.label)
-                                                            .font(.system(size: 12, weight: .semibold))
-                                                            .foregroundStyle(.white)
+                                                        StandardTextView(label: meal.label, size: 12, weight: .semibold)
                                                     }
                                                 }
                                             }
@@ -238,20 +264,15 @@ struct HomeScreen: View {
                                                         Circle()
                                                             .frame(width: 50, height: 50)
                                                     }
-                                                Text("Snack")
-                                                    .font(.system(size: 12, weight: .semibold))
-                                                    .foregroundStyle(.white)
+                                                StandardTextView(label: "Snack", size: 12, weight: .semibold)
                                             }
                                         }
                                     }).frame(width: 300, alignment: .center)
                                 }
                             } else {
-                                Text(section.label)
-                                    .font(.system(size: 25, weight: .semibold))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 350, alignment: .leading)
-                                    .padding(.vertical, 10)
-//                                SavedListsView(savedLists: $user.userSavedLists , createListScreenPresenting: $viewModel.createListScreenPresenting)
+                                
+                                //User saved lists section
+                                SectionTitleView(label: section.label)
                                 ZStack (alignment: .top) {
                                     RoundedRectangle(cornerRadius: 15)
                                         .fill(.textField)
@@ -265,11 +286,9 @@ struct HomeScreen: View {
                                                             Image(systemName: "plus")
                                                                 .foregroundStyle(.iconTeal)
                                                         }
-                                                        Text("Create New List")
-                                                            .font(.system(size: 16))
-                                                            .foregroundStyle(.iconTeal)
+                                                        StandardTextView(label: "Create New List", size: 16, textColor: .iconTeal)
                                                     }.onTapGesture {
-                                                        viewModel.createListScreenPresenting = true
+                                                        createListScreenPresenting = true
                                                     }
                                                     Divider()
                                                         .padding(.leading, 25)
@@ -278,9 +297,7 @@ struct HomeScreen: View {
                                                     HStack {
                                                         Image(systemName: "bookmark")
                                                             .foregroundStyle(.white)
-                                                        Text(list.name ?? "")
-                                                            .foregroundStyle(.white)
-                                                            .font(.system(size: 16))
+                                                        StandardTextView(label: list.name ?? "", size: 16)
                                                     }
                                                 }
                                                 Divider()
@@ -294,14 +311,13 @@ struct HomeScreen: View {
                             }
                         }
                     case .isFocused:
-//                        SearchFiltersView(selectedFilter: $selectedFilter, searchText: searchText, searchFoods: searchFoods)
+                        
+                        //Search filters for Whole Foods, Branded Foods, and All Foods
                         LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
                             ForEach(searchFilters, id: \.self) { filter in
                                 Button(action: {selectedFilter = filter; searchText.isEmpty ? nil : searchFoods()}, label: {
-                                    Text(filter.selected)
-                                        .font(.system(size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold))
-                                        .foregroundStyle( selectedFilter.selected == filter.selected ? .white :
-                                                            .white.opacity(0.3))
+                                    StandardTextView(label: filter.selected, size: 13, weight: selectedFilter.selected == filter.selected ? .bold : .semibold, textColor: selectedFilter.selected == filter.selected ? .white :
+                                            .white.opacity(0.3))
                                 })
                                 .background(
                                     RoundedRectangle(cornerRadius: 7)
@@ -311,49 +327,43 @@ struct HomeScreen: View {
                             }
                         }.padding(.horizontal, 25).padding(.vertical, 20)
                         
-//                        SearchResultsView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, searchResults: $searchResults, selectedSort: selectedSort)
+                        //Search results view
                         ScrollView {
                             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                                 ForEach(searchResults, id: \.self) {food in
-                                    SearchResultCellView(isPresenting: $viewModel.foodDetalsPresenting, selectedFood: $viewModel.selectedFood, compareQueue: $viewModel.compareQueue, result: food, selectedSort: selectedSort)
+                                    SearchResultCellView(isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort)
                                 }.padding(.bottom, 5)
                             }
                         }
                         
+                        //Search results totals and compare foods options
                         searchResults.isEmpty ? nil :
                         HStack (spacing: 10) {
-                            viewModel.compareQueue.count == 2 ? nil :
-                            Text("\(searchResults.count) foods found")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(.white)
-
-                            viewModel.compareQueue.count != 2 ? nil :
+                            compareQueue.count == 2 ? nil :
+                            StandardTextView(label: "\(searchResults.count) foods found", size: 14, weight: .semibold)
+                            compareQueue.count != 2 ? nil :
                             Button(action: {
-                                viewModel.compareQueue = []
+                                compareQueue = []
                             }, label: {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 7)
                                         .stroke(.iconOrange)
                                         .frame(width: 120, height: 30)
-                                    Text("Clear Foods")
-                                        .font(.system(size: 14, weight: .semibold))
-                                        .foregroundStyle(.iconOrange)
+                                    StandardTextView(label: "Clear Foods", size: 14, weight: .semibold, textColor: .iconOrange)
                                 }
                             })
                             
-                            viewModel.compareQueue.count != 2 ? nil :
+                            compareQueue.count != 2 ? nil :
                             Button(action: {
-                                if viewModel.compareQueue.count == 2 {
-                                    viewModel.compareFoodsSheetPresenting = true
+                                if compareQueue.count == 2 {
+                                    compareFoodsSheetPresenting = true
                                 }
                             }, label: {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 7)
                                         .stroke(.iconTeal)
                                         .frame(width: 120, height: 30)
-                                    Text("Compare Foods")
-                                        .font(.system(size: 14, weight: .semibold))
-                                        .foregroundStyle(.iconTeal)
+                                    StandardTextView(label: "Compare Foods", size: 14, weight: .semibold, textColor: .iconTeal)
                                 }
                             })
                         }.frame(height: 30).offset(y: 8)
@@ -368,31 +378,33 @@ struct HomeScreen: View {
             })
         }
         .ignoresSafeArea()
-        .sheet(isPresented: $viewModel.compareFoodsSheetPresenting, onDismiss: {
-            viewModel.compareFoodsSheetPresenting = false
+        .sheet(isPresented: $compareFoodsSheetPresenting, onDismiss: {
+            compareFoodsSheetPresenting = false
         }) {
-            ComparisonScreen(foods: viewModel.compareQueue, nutrition: $viewModel.comparisonNutData)
+            ComparisonScreen(foods: compareQueue, nutrition: $comparisonNutData)
         }
-        .sheet(isPresented: $viewModel.foodDetalsPresenting, onDismiss: {
-            viewModel.foodDetalsPresenting = false
+        .sheet(isPresented: $foodDetalsPresenting, onDismiss: {
+            foodDetalsPresenting = false
         }) {
-            FoodDetailsScreen(food: $viewModel.selectedFood)
+            FoodDetailsScreen(food: $selectedFood)
         }
-        .sheet(isPresented: $viewModel.createListScreenPresenting, onDismiss: {
-            viewModel.createListScreenPresenting = false
+        .sheet(isPresented: $createListScreenPresenting, onDismiss: {
+            createListScreenPresenting = false
         }) {
             CreateListScreen()
         }
         .onAppear(perform: initializeDatabase)
         .onAppear(perform: {
+            print("on appear called")
             Task {
-//                await viewModel.getSavedLists()
-//                await viewModel.getSavedFoods()
+                await getSavedLists()
+                await getSavedFoods()
+                await User.shared.getDailyMeals(selectedDay: selectedDay)
 //                await User.shared.testMealLogging()
             }
         })
-        .onChange(of: viewModel.compareQueue) {
-            if viewModel.compareQueue.count == 2 {
+        .onChange(of: compareQueue) {
+            if compareQueue.count == 2 {
                 getComparisonNutDetails()
             }
         }
@@ -424,7 +436,15 @@ struct HomeScreen: View {
         search = .isNotFocused
         selectedSort = "Relevance"
         selectedFilter = .allFoods
-        viewModel.compareQueue = []
+        compareQueue = []
+
+        if selectedDay.formatted(.dateTime.month().day().year()) != Date.now.formatted(.dateTime.month().day().year()) {
+            dashboardWeek = Date.now.addingTimeInterval(.days(-3))
+            selectedDay = Date.now
+            Task {
+                await User.shared.getDailyMeals(selectedDay: selectedDay)
+            }
+        }
     }
     
     private func searchFoods() {
@@ -478,11 +498,11 @@ struct HomeScreen: View {
     
     private func getComparisonNutDetails() {
         DispatchQueue(label: "nutrition.serial.queue").async {
-            let queryResult1 = DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[0].fdicID, databasePointer: databasePointer)
-            let queryResult2 = DatabaseQueries.getNutrientData(fdicID: viewModel.compareQueue[1].fdicID, databasePointer: databasePointer)
+            let queryResult1 = DatabaseQueries.getNutrientData(fdicID: compareQueue[0].fdicID, databasePointer: databasePointer)
+            let queryResult2 = DatabaseQueries.getNutrientData(fdicID: compareQueue[1].fdicID, databasePointer: databasePointer)
             
             DispatchQueue.main.async {
-                viewModel.comparisonNutData = [queryResult1, queryResult2]
+                comparisonNutData = [queryResult1, queryResult2]
             }
         }
     }
@@ -490,6 +510,72 @@ struct HomeScreen: View {
     private func initializeDatabase() {
         if databasePointer == nil {
             databasePointer = CA_DatabaseHelper.getDatabasePointer(databaseName: "CSIDAssistPlusFoodDatabase.db")
+        }
+    }
+    
+    func getSavedLists() async {
+        let lists = SavedLists.keys
+        let predicate = lists.userID == User.shared.userID
+        let request = GraphQLRequest<SavedLists>.list(SavedLists.self, where: predicate)
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let lists):
+                print("Successfully retrieved saved lists: \(lists.count)")
+                DispatchQueue.main.async {
+                    User.shared.userSavedLists.removeAll()
+                }
+                for l in lists {
+                    DispatchQueue.main.async {
+                        User.shared.userSavedLists.append(l)
+                    }
+                }
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+//                errorAlert = true
+//                errorComment = error.errorDescription
+            }
+        } catch let error as APIError {
+            print("Failed to query saved lists: ", error)
+//            errorAlert = true
+//            errorComment = error.errorDescription
+        } catch {
+            print("Unexpected error: \(error)")
+//            errorAlert = true
+//            errorComment = error.localizedDescription
+        }
+    }
+    
+    func getSavedFoods() async {
+        let foods = SavedFoods.keys
+        let predicate = foods.userID == User.shared.userID
+        let request = GraphQLRequest<SavedFoods>.list(SavedFoods.self, where: predicate)
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let foods):
+                print("Successfully retrieved saved foods: \(foods.count)")
+                DispatchQueue.main.async {
+                    User.shared.userSavedFoods.removeAll()
+                }
+                for l in foods {
+                    DispatchQueue.main.async {
+                        User.shared.userSavedFoods.append(l)
+                    }
+                }
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+//                errorAlert = true
+//                errorComment = error.errorDescription
+            }
+        } catch let error as APIError {
+            print("Failed to query saved foods: ", error)
+//            errorAlert = true
+//            errorComment = error.errorDescription
+        } catch {
+            print("Unexpected error: \(error)")
+//            errorAlert = true
+//            errorComment = error.localizedDescription
         }
     }
 

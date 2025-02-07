@@ -10,11 +10,11 @@ import SwiftUI
 
 
 enum HomeScreenSections: Identifiable, CaseIterable {
-    case activity, meals, lists
+    case mealData, meals, lists
     var id: Self { self }
     var label: String {
         switch self {
-        case .activity:
+        case .mealData:
             return "Daily Totals"
         case .meals:
             return "Meals"

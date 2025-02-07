@@ -315,6 +315,7 @@ struct MealLoggingSearchResultCellView: View {
         .overlay(alignment: .topTrailing) {
             Button {
                 logServingSizeSheetIsPresenting = true
+                selectedFood = result
             } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 14, weight: .semibold))
