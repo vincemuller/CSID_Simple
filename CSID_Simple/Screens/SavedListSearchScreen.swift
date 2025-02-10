@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct SavedListSearchScreen: View {
-    
+    @EnvironmentObject var user: User
 //    @StateObject private var viewModel = ViewModel()
     @FocusState private var isFocused: Bool
     @State private var editListScreenPresenting: Bool = false
@@ -124,7 +124,7 @@ struct SavedListSearchScreen: View {
         //Build search terms "USDAFoodSearchTable.fdicID = 2700004"
         var searchTerms: [String] = []
         
-        for i in User.shared.userSavedFoods {
+        for i in user.userSavedFoods {
             if i.savedListsID == list.id {
                 searchTerms.append("USDAFoodSearchTable.fdicID = \(i.fdicID?.description ?? "")")
             }

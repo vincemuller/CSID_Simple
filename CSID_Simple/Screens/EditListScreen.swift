@@ -11,7 +11,7 @@ import AWSPluginsCore
 
 
 struct EditListScreen: View {
-    
+    @EnvironmentObject var user: User
     @Environment(\.presentationMode) var presentationMode
     
     @FocusState private var isFocused: Bool
@@ -108,7 +108,7 @@ struct EditListScreen: View {
                 print("Successfully updated SavedLists: \(model)")
                 self.presentationMode.wrappedValue.dismiss()
                 Task {
-                    await User.shared.getSavedLists()
+                    await user.getSavedLists()
                 }
             case .failure(let error):
                 print("Got failed result with \(error.errorDescription)")

@@ -12,25 +12,25 @@ import AWSAPIPlugin
 
 nonisolated(unsafe) public var databasePointer: OpaquePointer!
 
-@Observable
-class User {
-    static let shared = User()
+class User: ObservableObject {
     
-    var userID: String?
-    var userSavedLists: [SavedLists]
-    var userSavedFoods: [SavedFoods]
-    var dailyMeals: List<Meals>
+    let userID: String?
+    @Published var userSavedLists: [SavedLists]
+    @Published var userSavedFoods: [SavedFoods]
+    @Published var dailyMeals: List<Meals>
+    @Published var dailyMeal: Meals = Meals()
+    @Published var dailyMealFoods: [DailyMealFoods] = []
     
 
-    private init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = [], dailyMeals: List<Meals> = []) {
+    init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = [], dailyMeals: List<Meals> = []) {
         self.userID = userID
         self.userSavedLists = userSavedLists
         self.userSavedFoods = userSavedFoods
         self.dailyMeals = dailyMeals
     }
     
-
-    func mealLogging(meal: Meal) async {
+    //Function to log new meal to Amplify
+    func logNewMeal(meal: Meal) async {
         let model = Meals(
             userID: self.userID,
             mealDate: meal.mealDate,
@@ -39,7 +39,6 @@ class User {
             savedMeals: meal.getMealJSON(),
             additionalNotes: meal.additionalNotes
             )
-        
         
         do {
             let result = try await Amplify.API.mutate(request: .create(model))
@@ -56,10 +55,11 @@ class User {
         }
     }
     
-    func getDailyMeals(selectedDay: Date) async {
+    
+    func getUserMeals(selectedDay: Date) async {
         let d = Temporal.Date.init(selectedDay.addingTimeInterval(.days(-7)), timeZone: .autoupdatingCurrent)
         let meals = Meals.keys
-        let predicate = meals.userID == User.shared.userID && meals.mealDate > d && meals.mealDate <= Temporal.Date.init(selectedDay.addingTimeInterval(.days(6)), timeZone: .autoupdatingCurrent)
+        let predicate = meals.userID == userID && meals.mealDate > d && meals.mealDate <= Temporal.Date.init(selectedDay.addingTimeInterval(.days(6)), timeZone: .autoupdatingCurrent)
         let request = GraphQLRequest<Meals>.list(Meals.self, where: predicate)
         do {
             let result = try await Amplify.API.query(request: request)
@@ -67,8 +67,10 @@ class User {
             case .success(let meals):
                 print("Successfully retrieved meals: \(meals.count)")
                 
-                dailyMeals = meals
-                
+                DispatchQueue.main.async {
+                    self.dailyMeals = meals
+                }
+
             case .failure(let error):
                 print("Got failed result with \(error.errorDescription)")
 //                errorAlert = true
@@ -85,9 +87,43 @@ class User {
         }
     }
     
+    func getMealFoodDetails() {
+        //Build search terms "USDAFoodSearchTable.fdicID = 2700004"
+        var searchTerms: [String] = []
+        
+        for i in dailyMeal.decodeFoodJSON() {
+            searchTerms.append("USDAFoodSearchTable.fdicID = \(i.fdicID.description)")
+        }
+        
+        let sT = searchTerms.joined(separator: " OR ")
+        
+        DispatchQueue(label: "search.serial.queue").async {
+            var updatedDailyMealFoods: [DailyMealFoods] = []
+            let queryResult = DatabaseQueries.databaseSavedFoodsSearch(searchTerms: sT, databasePointer: databasePointer)
+            print(queryResult)
+            
+            for i in self.dailyMeal.decodeFoodJSON() {
+                updatedDailyMealFoods.append(DailyMealFoods(mealFood: i, foodDetails: queryResult.first(where: {$0.fdicID == i.fdicID})))
+            }
+            DispatchQueue.main.async {
+                self.dailyMealFoods = updatedDailyMealFoods
+            }
+        }
+    }
+    
+    func filterDailyMeal(selectedDay: Date, mealType: String) {
+        let sD = Temporal.Date.init(selectedDay, timeZone: .none)
+        let d = dailyMeals.filter {$0.mealDate?.iso8601FormattedString(format: .short) == sD.iso8601FormattedString(format: .short) }
+        dailyMeal = d.first(where: {$0.mealType == mealType}) ?? Meals()
+
+        if dailyMeal.mealType != nil {
+            getMealFoodDetails()
+        }
+    }
+    
     func getSavedLists() async {
         let lists = SavedLists.keys
-        let predicate = lists.userID == User.shared.userID
+        let predicate = lists.userID == userID
         let request = GraphQLRequest<SavedLists>.list(SavedLists.self, where: predicate)
         do {
             let result = try await Amplify.API.query(request: request)
@@ -95,11 +131,11 @@ class User {
             case .success(let lists):
                 print("Successfully retrieved saved lists: \(lists.count)")
                 DispatchQueue.main.async {
-                    User.shared.userSavedLists.removeAll()
+                    self.userSavedLists.removeAll()
                 }
                 for l in lists {
                     DispatchQueue.main.async {
-                        User.shared.userSavedLists.append(l)
+                        self.userSavedLists.append(l)
                     }
                 }
             case .failure(let error):
@@ -120,7 +156,7 @@ class User {
     
     func getSavedFoods() async {
         let foods = SavedFoods.keys
-        let predicate = foods.userID == User.shared.userID
+        let predicate = foods.userID == userID
         let request = GraphQLRequest<SavedFoods>.list(SavedFoods.self, where: predicate)
         do {
             let result = try await Amplify.API.query(request: request)
@@ -128,11 +164,11 @@ class User {
             case .success(let foods):
                 print("Successfully retrieved saved foods: \(foods.count)")
                 DispatchQueue.main.async {
-                    User.shared.userSavedFoods.removeAll()
+                    self.userSavedFoods.removeAll()
                 }
                 for l in foods {
                     DispatchQueue.main.async {
-                        User.shared.userSavedFoods.append(l)
+                        self.userSavedFoods.append(l)
                     }
                 }
             case .failure(let error):

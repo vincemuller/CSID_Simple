@@ -14,6 +14,8 @@ import AWSAPIPlugin
 
 struct FoodDetailsScreen: View {
 
+    @EnvironmentObject var user: User
+    
     @State private var nutData: NutrientData?
     @State private var adjustedNutrition: NutrientData?
     @State private var isLoaded: Bool = false
@@ -31,7 +33,7 @@ struct FoodDetailsScreen: View {
     @State private var savedListScreenPresenting: Bool = false
     
     @Binding var food: FoodDetails
-    @State private var user = User.shared
+    
     
     private var isFavorite: Bool {
         if user.userSavedFoods.contains(where: {$0.fdicID == food.fdicID}) {
@@ -342,7 +344,7 @@ struct FoodDetailsScreen: View {
                     .sheet(isPresented: $savedListScreenPresenting, onDismiss: {
                         savedListScreenPresenting = false
                     }) {
-                        FoodDetailsSavedListScreen(user: $user, fdicID: food.fdicID)
+                        FoodDetailsSavedListScreen(fdicID: food.fdicID)
                             .presentationDetents([.height(300)])
                             .presentationDragIndicator(.automatic)
                     }
@@ -428,6 +430,6 @@ struct FoodDetailsScreen: View {
     
 }
 
-#Preview {
-    FoodDetailsScreen(food: .constant(FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no")))
-}
+//#Preview {
+//    FoodDetailsScreen(food: .constant(FoodDetails(searchKeyWords: "", fdicID: 2154952, brandOwner: "M&M Mars", brandName: "Snickers", brandedFoodCategory: "Confectionary and Sweets", description: "S'mores Marsh mallow Sauce", servingSize: 12, servingSizeUnit: "g", carbs: "25", totalSugars: "18", totalStarches: "7", wholeFood: "no")))
+//}

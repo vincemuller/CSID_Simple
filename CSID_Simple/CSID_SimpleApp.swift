@@ -20,15 +20,22 @@ enum AuthState {
 
 @main
 struct CSID_SimpleApp: App {
-    
+    @StateObject var user = User()
     @State var authState: AuthState = .authenticated
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
     var body: some Scene {
         WindowGroup {
             HomeScreen()
+                .environmentObject(user)
                 .onAppear {
                     configureAmplify()
+                    Task {
+                        await user.getSavedLists()
+                        await user.getSavedFoods()
+                        await user.getUserMeals(selectedDay: Date().getNormalizedDate(adjustor: 0))
+        //                await User.shared.testMealLogging()
+                    }
                 }
 //            switch authState {
 //            case .signUp:

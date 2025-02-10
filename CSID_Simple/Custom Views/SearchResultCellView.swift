@@ -45,7 +45,7 @@ struct SearchResultCellView: View {
     
     var body: some View {
         
-        let brand = result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
+        let brand = result.wholeFood.lowercased() == "yes" ? "Whole Food" : result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
         let deepDiveNutData: [[String]] = [["Total Carbs", result.carbs], ["Total Sugars", result.totalSugars], ["Total Starches", result.totalStarches]]
         
         ZStack (alignment: .topLeading) {
@@ -211,7 +211,7 @@ struct MealLoggingSearchResultCellView: View {
     
     var body: some View {
         
-        let brand = result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
+        let brand = result.wholeFood.lowercased() == "yes" ? "Whole Food" : result.brandName?.brandFormater(brandOwner: result.brandOwner ?? "")
         let deepDiveNutData: [[String]] = [["Total Carbs", result.carbs], ["Total Sugars", result.totalSugars], ["Total Starches", result.totalStarches]]
         
         ZStack (alignment: .topLeading) {

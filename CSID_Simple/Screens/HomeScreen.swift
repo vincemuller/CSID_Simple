@@ -22,14 +22,14 @@ let columns: [GridItem] = [GridItem(.flexible()),
                            GridItem(.flexible())]
 
 struct HomeScreen: View {
-    
+    @EnvironmentObject var user: User
     //Title foreground color
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }
     
-    //User singleton
-    @State private var user = User.shared
+//    //User singleton
+//    @State private var user = User.shared
     
     //Search focus state
     @FocusState private var isFocused: Bool
@@ -60,8 +60,8 @@ struct HomeScreen: View {
     @State private var foodDetalsPresenting: Bool = false
     
     //Daily totals variables
-    @State private var dashboardWeek: Date = Date.now.addingTimeInterval(.days(-3))
-    @State private var selectedDay: Date = Date.now
+    @State private var dashboardWeek: Date = Date().getNormalizedDate(adjustor: -3)
+    @State private var selectedDay: Date = Date().getNormalizedDate(adjustor: 0)
 
     //Saved Lists variables
     @State private var createListScreenPresenting: Bool = false
@@ -151,7 +151,7 @@ struct HomeScreen: View {
                                                         dashboardWeek = Calendar.current.date(byAdding: .day, value: -7, to: dashboardWeek)!
                                                         selectedDay = Calendar.current.date(byAdding: .day, value: 6, to: dashboardWeek)!
                                                         Task {
-                                                            await User.shared.getDailyMeals(selectedDay: selectedDay)
+                                                            await user.getUserMeals(selectedDay: selectedDay)
                                                         }
                                                     }
                                                     .padding(.leading, 10)
@@ -184,7 +184,7 @@ struct HomeScreen: View {
                                                         dashboardWeek = Calendar.current.date(byAdding: .day, value: 7, to: dashboardWeek)!
                                                         selectedDay = dashboardWeek
                                                         Task {
-                                                            await User.shared.getDailyMeals(selectedDay: selectedDay.addingTimeInterval(.days(6)))
+                                                            await user.getUserMeals(selectedDay: selectedDay.addingTimeInterval(.days(6)))
                                                         }
                                                     }
                                                     .padding(.trailing, 10)
@@ -231,7 +231,7 @@ struct HomeScreen: View {
                                     LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
                                         ForEach(MealType.allCases, id: \.id) { meal in
                                             if  !meal.label.contains("Snack") {
-                                                NavigationLink(destination: MealLoggingScreen(mealType: meal, selectedDay: selectedDay)) {
+                                                NavigationLink(destination: MealFoodListScreen(mealType: meal, selectedDay: selectedDay)) {
                                                     VStack (spacing: 5) {
                                                         Image(meal.label.lowercased())
                                                             .resizable()
@@ -246,13 +246,13 @@ struct HomeScreen: View {
                                             }
                                         }
                                         Menu {
-                                            NavigationLink(destination: MealLoggingScreen(mealType: .eveningSnack)) {
+                                            NavigationLink(destination: FindMealFoodsScreen(mealType: .eveningSnack)) {
                                                 Text("Evening Snack")
                                             }
-                                            NavigationLink(destination: MealLoggingScreen(mealType: .afternoonSnack)) {
+                                            NavigationLink(destination: FindMealFoodsScreen(mealType: .afternoonSnack)) {
                                                 Text("Afternoon Snack")
                                             }
-                                            NavigationLink(destination: MealLoggingScreen(mealType: .morningSnack)) {
+                                            NavigationLink(destination: FindMealFoodsScreen(mealType: .morningSnack)) {
                                                 Text("Morning Snack")
                                             }
                                         } label: {
@@ -394,15 +394,6 @@ struct HomeScreen: View {
             CreateListScreen()
         }
         .onAppear(perform: initializeDatabase)
-        .onAppear(perform: {
-            print("on appear called")
-            Task {
-                await getSavedLists()
-                await getSavedFoods()
-                await User.shared.getDailyMeals(selectedDay: selectedDay)
-//                await User.shared.testMealLogging()
-            }
-        })
         .onChange(of: compareQueue) {
             if compareQueue.count == 2 {
                 getComparisonNutDetails()
@@ -442,7 +433,7 @@ struct HomeScreen: View {
             dashboardWeek = Date.now.addingTimeInterval(.days(-3))
             selectedDay = Date.now
             Task {
-                await User.shared.getDailyMeals(selectedDay: selectedDay)
+                await user.getUserMeals(selectedDay: selectedDay)
             }
         }
     }
@@ -515,7 +506,7 @@ struct HomeScreen: View {
     
     func getSavedLists() async {
         let lists = SavedLists.keys
-        let predicate = lists.userID == User.shared.userID
+        let predicate = lists.userID == user.userID
         let request = GraphQLRequest<SavedLists>.list(SavedLists.self, where: predicate)
         do {
             let result = try await Amplify.API.query(request: request)
@@ -523,11 +514,11 @@ struct HomeScreen: View {
             case .success(let lists):
                 print("Successfully retrieved saved lists: \(lists.count)")
                 DispatchQueue.main.async {
-                    User.shared.userSavedLists.removeAll()
+                    user.userSavedLists.removeAll()
                 }
                 for l in lists {
                     DispatchQueue.main.async {
-                        User.shared.userSavedLists.append(l)
+                        user.userSavedLists.append(l)
                     }
                 }
             case .failure(let error):
@@ -548,7 +539,7 @@ struct HomeScreen: View {
     
     func getSavedFoods() async {
         let foods = SavedFoods.keys
-        let predicate = foods.userID == User.shared.userID
+        let predicate = foods.userID == user.userID
         let request = GraphQLRequest<SavedFoods>.list(SavedFoods.self, where: predicate)
         do {
             let result = try await Amplify.API.query(request: request)
@@ -556,11 +547,11 @@ struct HomeScreen: View {
             case .success(let foods):
                 print("Successfully retrieved saved foods: \(foods.count)")
                 DispatchQueue.main.async {
-                    User.shared.userSavedFoods.removeAll()
+                    user.userSavedFoods.removeAll()
                 }
                 for l in foods {
                     DispatchQueue.main.async {
-                        User.shared.userSavedFoods.append(l)
+                        user.userSavedFoods.append(l)
                     }
                 }
             case .failure(let error):

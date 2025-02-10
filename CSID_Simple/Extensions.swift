@@ -52,3 +52,19 @@ extension Double {
         return CGFloat(self)
     }
 }
+
+extension Date {
+    func getNormalizedDate(adjustor: Double) -> Date {
+        let calendar = Calendar.current
+        let timeZone = TimeZone.current
+        let components = calendar.dateComponents([.month, .day, .year], from: self)
+        
+        let returnDate = calendar.date(from: components)
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+        formatter.timeZone = timeZone
+        
+        return returnDate?.addingTimeInterval(.days(adjustor)) ?? Date()
+    }
+}

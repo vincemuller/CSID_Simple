@@ -9,9 +9,14 @@ import SwiftUI
 import Amplify
 
 
+struct DailyMealFoods: Identifiable {
+    var id = UUID()
+    var mealFood: MealFood?
+    var foodDetails: FoodDetails?
+}
 
-struct MealLoggingScreen: View {
-    
+struct FindMealFoodsScreen: View {
+    @EnvironmentObject var user: User
     
     var mealType: MealType
     @FocusState private var isFocused: Bool
@@ -29,7 +34,7 @@ struct MealLoggingScreen: View {
     @State private var foodDetalsPresenting: Bool = false
     @State var selectedDay: Date = Date.now
     @State private var dailyMeal: Meals = Meals()
-    @State private var dailyMealFoods: [FoodDetails] = []
+    @State private var dailyMealFoods: [DailyMealFoods] = []
     
 
     private let sortingOptions = ["Relevance",
@@ -48,7 +53,7 @@ struct MealLoggingScreen: View {
             VStack (spacing: 0) {
                 HStack {
                     ForEach(MealLoggingScreenTab.allCases, id: \.id) { tab in
-                        VStack {
+                        tab.label == "Meal List" ? nil : VStack {
                             Text(tab.label)
                                 .font(.system(size: 14))
                                 .foregroundStyle(selectedMealTab == tab ? .iconTeal : .white)
@@ -122,16 +127,7 @@ struct MealLoggingScreen: View {
                     .padding(.vertical, 5) //adsfadsf
                     switch search {
                     case .isNotFocused:
-                        ScrollView {
-                            LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
-                                ForEach(dailyMealFoods, id: \.fdicID) {food in
-                                    HStack {
-                                        Text("\(food.brandOwner ?? "") | \(food.brandName ?? "")")
-                                        Text(food.description)
-                                    }
-                                }.padding(.bottom, 5)
-                            }
-                        }
+                        Text("")
                     case .isFocused:
                         LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]) {
                             ForEach(searchFilters, id: \.self) { filter in
@@ -161,9 +157,6 @@ struct MealLoggingScreen: View {
                         .offset(y: 100)
                 }
             }
-            .onAppear(perform: {
-                filterDailyMeal(selectedDay: selectedDay, mealType: mealType.label)
-            })
             .sheet(isPresented: $foodDetalsPresenting, onDismiss: {
                 foodDetalsPresenting = false
             }) {
@@ -176,13 +169,11 @@ struct MealLoggingScreen: View {
                     Task {
                         let d = Temporal.Date.init(selectedDay, timeZone: .none)
                         if (dailyMeal.mealType == nil) {
-                            await User.shared.mealLogging(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 1.5)], additionalNotes: "Food tasted yummy and was safe"))
+                            await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 1.5)], additionalNotes: "Food tasted yummy and was safe"))
                         } else {
                             updateFoodsJson()
                             await updateDailyMeals(meal: dailyMeal)
                         }
-                        await User.shared.getDailyMeals(selectedDay: selectedDay)
-                        filterDailyMeal(selectedDay: selectedDay, mealType: mealType.label)
                     }
                 } label: {
                     Text("Log Food")
@@ -191,26 +182,6 @@ struct MealLoggingScreen: View {
                 Text("servings bottom sheet")
                     .presentationDetents([.height(300)])
                     .presentationDragIndicator(.automatic)
-            }
-        }
-    }
-    
-    private func getMealFoodDetails() {
-        //Build search terms "USDAFoodSearchTable.fdicID = 2700004"
-        var searchTerms: [String] = []
-        
-        for i in dailyMeal.decodeFoodJSON() {
-            searchTerms.append("USDAFoodSearchTable.fdicID = \(i.fdicID.description)")
-        }
-        
-        let sT = searchTerms.joined(separator: " OR ")
-        
-        DispatchQueue(label: "search.serial.queue").async {
-            let queryResult = DatabaseQueries.databaseSavedFoodsSearch(searchTerms: sT, databasePointer: databasePointer)
-            print(queryResult)
-            
-            DispatchQueue.main.async {
-                self.dailyMealFoods = queryResult
             }
         }
     }
@@ -299,13 +270,6 @@ struct MealLoggingScreen: View {
         }
     }
     
-    func filterDailyMeal(selectedDay: Date, mealType: String) {
-        let sD = Temporal.Date.init(selectedDay, timeZone: .autoupdatingCurrent)
-        let d = User.shared.dailyMeals.filter {$0.mealDate?.iso8601FormattedString(format: .short, timeZone: .autoupdatingCurrent) == sD.iso8601FormattedString(format: .short, timeZone: .autoupdatingCurrent) }
-        dailyMeal = d.first(where: {$0.mealType == mealType}) ?? Meals()
-        getMealFoodDetails()
-    }
-    
     private func updateDailyMeals(meal: Meals) async {
         do {
             let result = try await Amplify.API.mutate(request: .update(meal))
@@ -313,7 +277,7 @@ struct MealLoggingScreen: View {
             case .success(let model):
                 print("Successfully updated daily meal: \(model)")
                 Task {
-                    await User.shared.getDailyMeals(selectedDay: selectedDay)
+                    await user.getUserMeals(selectedDay: selectedDay)
                 }
             case .failure(let error):
                 print("Got failed result with \(error.errorDescription)")
@@ -328,7 +292,7 @@ struct MealLoggingScreen: View {
 
 #Preview {
     NavigationStack {
-        MealLoggingScreen(mealType: .breakfast, selectedDay: Date.now)
+        FindMealFoodsScreen(mealType: .breakfast, selectedDay: Date.now)
     }
 }
 

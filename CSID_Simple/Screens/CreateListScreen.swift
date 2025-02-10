@@ -13,6 +13,7 @@ import AWSPluginsCore
 struct CreateListScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var user: User
     
     @FocusState private var isFocused: Bool
     
@@ -105,7 +106,7 @@ struct CreateListScreen: View {
             case .success(let model):
                 print("Successfully created TolerationRating: \(model)")
                 Task {
-                    await User.shared.getSavedLists()
+                    await user.getSavedLists()
                     self.presentationMode.wrappedValue.dismiss()
                 }
             case .failure(let graphQLError):

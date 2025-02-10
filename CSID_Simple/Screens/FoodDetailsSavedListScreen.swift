@@ -11,8 +11,8 @@ import AWSPluginsCore
 
 
 struct FoodDetailsSavedListScreen: View {
+    @EnvironmentObject var user: User
 
-    @Binding var user: User
     @State private var toSave: [SavedFoods] = []
     @State private var toDelete: [SavedFoods] = []
     
@@ -142,10 +142,13 @@ struct FoodDetailsSavedListScreen: View {
 }
 
 #Preview {
-    FoodDetailsSavedListScreen(user: .constant(User.shared), fdicID: 1004)
+    FoodDetailsSavedListScreen(fdicID: 1004)
+        .environmentObject(User())
 }
 
 struct CheckboxToggleStyle: View {
+    @EnvironmentObject var user: User
+    
     @Binding var toSave: [SavedFoods]
     @Binding var toDelete:[ SavedFoods]
     
@@ -180,7 +183,7 @@ struct CheckboxToggleStyle: View {
                 }
         }
         .onAppear {
-            if User.shared.userSavedFoods.contains(where: {$0.fdicID == fdicID && $0.savedListsID == list.id}) {
+            if user.userSavedFoods.contains(where: {$0.fdicID == fdicID && $0.savedListsID == list.id}) {
                 isOn = true
             }
         }
