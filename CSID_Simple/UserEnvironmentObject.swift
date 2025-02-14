@@ -12,6 +12,14 @@ import AWSAPIPlugin
 
 nonisolated(unsafe) public var databasePointer: OpaquePointer!
 
+struct DailyMealTotals {
+    var id = UUID()
+    var totalCarbs: String = ""
+    var netCarbs: String = ""
+    var totalSugars: String = ""
+    var totalStarches: String = ""
+}
+
 class User: ObservableObject {
     
     let userID: String?
@@ -20,13 +28,15 @@ class User: ObservableObject {
     @Published var dailyMeals: List<Meals>
     @Published var dailyMeal: Meals = Meals()
     @Published var dailyMealFoods: [DailyMealFoods] = []
-    
+    @Published var dailyMealTotals: DailyMealTotals = DailyMealTotals()
 
-    init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = [], dailyMeals: List<Meals> = []) {
+
+    init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = [], dailyMeals: List<Meals> = [], dailyMealTotals: DailyMealTotals = DailyMealTotals()) {
         self.userID = userID
         self.userSavedLists = userSavedLists
         self.userSavedFoods = userSavedFoods
         self.dailyMeals = dailyMeals
+        self.dailyMealTotals = dailyMealTotals
     }
     
     //Function to log new meal to Amplify
@@ -105,20 +115,48 @@ class User: ObservableObject {
             for i in self.dailyMeal.decodeFoodJSON() {
                 updatedDailyMealFoods.append(DailyMealFoods(mealFood: i, foodDetails: queryResult.first(where: {$0.fdicID == i.fdicID})))
             }
-            DispatchQueue.main.async {
+            DispatchQueue.main.async(execute: {
                 self.dailyMealFoods = updatedDailyMealFoods
-            }
+                var totals = DailyMealTotals()
+                
+                for i in self.dailyMealFoods {
+                    if i.foodDetails?.carbs != "N/A" {
+                        var aC:  Float  = ((Float(i.foodDetails?.carbs ?? "") ?? 0)*Float(i.mealFood?.customServingPercentage ?? 0))
+                        aC = aC + (Float(totals.totalCarbs) ?? 0)
+                        totals.totalCarbs = String(format: "%.1f", aC)
+                        
+                        var aSug:  Float  = ((Float(i.foodDetails?.totalSugars ?? "") ?? 0)*Float(i.mealFood?.customServingPercentage ?? 0))
+                        aSug = aSug + (Float(totals.totalSugars) ?? 0)
+                        totals.totalSugars = String(format: "%.1f", aSug)
+                        
+                        var aStarch:  Float  = ((Float(i.foodDetails?.totalStarches ?? "") ?? 0)*Float(i.mealFood?.customServingPercentage ?? 0))
+                        aStarch = aStarch + (Float(totals.totalStarches) ?? 0)
+                        totals.totalStarches = String(format: "%.1f", aStarch)
+                    }
+                }
+                
+                self.dailyMealTotals = totals
+            })
         }
+    }
+
+    func dailyMealCheck(selectedDay: Date, mealType: String) -> Bool {
+        let sD = Temporal.Date.init(selectedDay, timeZone: .none)
+        let d = dailyMeals.filter {$0.mealDate?.iso8601FormattedString(format: .short) == sD.iso8601FormattedString(format: .short) }
+        
+        if (d.first(where: {$0.mealType == mealType}) ?? Meals()).mealType != nil {
+            return true
+        }
+        
+        return false
     }
     
     func filterDailyMeal(selectedDay: Date, mealType: String) {
         let sD = Temporal.Date.init(selectedDay, timeZone: .none)
         let d = dailyMeals.filter {$0.mealDate?.iso8601FormattedString(format: .short) == sD.iso8601FormattedString(format: .short) }
         dailyMeal = d.first(where: {$0.mealType == mealType}) ?? Meals()
-
-        if dailyMeal.mealType != nil {
-            getMealFoodDetails()
-        }
+        
+        getMealFoodDetails()
     }
     
     func getSavedLists() async {

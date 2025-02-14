@@ -17,6 +17,7 @@ struct DailyMealFoods: Identifiable {
 
 struct FindMealFoodsScreen: View {
     @EnvironmentObject var user: User
+    @Environment(\.presentationMode) var presentationMode
     
     var mealType: MealType
     @FocusState private var isFocused: Bool
@@ -33,8 +34,7 @@ struct FindMealFoodsScreen: View {
     @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
     @State private var foodDetalsPresenting: Bool = false
     @State var selectedDay: Date = Date.now
-    @State private var dailyMeal: Meals = Meals()
-    @State private var dailyMealFoods: [DailyMealFoods] = []
+    @State private var customServingPercentage: String = ""
     
 
     private let sortingOptions = ["Relevance",
@@ -165,29 +165,37 @@ struct FindMealFoodsScreen: View {
             .sheet(isPresented: $logServingSizeSheetIsPresenting, onDismiss: {
                 logServingSizeSheetIsPresenting = false
             }) {
-                Button {
-                    Task {
-                        let d = Temporal.Date.init(selectedDay, timeZone: .none)
-                        if (dailyMeal.mealType == nil) {
-                            await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 1.5)], additionalNotes: "Food tasted yummy and was safe"))
-                        } else {
-                            updateFoodsJson()
-                            await updateDailyMeals(meal: dailyMeal)
+                VStack {
+                    TextField("Servings: ", text: $customServingPercentage)
+                        .keyboardType(.decimalPad)
+                        .onAppear {
+                            customServingPercentage = String(selectedFood.servingSize)
                         }
+                    Button {
+                        Task {
+                            let d = Temporal.Date.init(selectedDay, timeZone: .none)
+                            if (user.dailyMealFoods.isEmpty) {
+                                await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 1.5)], additionalNotes: "Food tasted yummy and was safe"))
+                                await user.getUserMeals(selectedDay: selectedDay)
+                            } else {
+                                updateFoodsJson()
+                                await updateDailyMeals(meal: user.dailyMeal)
+                                await user.getUserMeals(selectedDay: selectedDay)
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
+                        }
+                    } label: {
+                        Text("Log Food")
                     }
-                } label: {
-                    Text("Log Food")
                 }
-
-                Text("servings bottom sheet")
-                    .presentationDetents([.height(300)])
-                    .presentationDragIndicator(.automatic)
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.automatic)
             }
         }
     }
     
     func updateFoodsJson() {
-        var mealFoods: [MealFood] = dailyMeal.decodeFoodJSON()
+        var mealFoods: [MealFood] = user.dailyMeal.decodeFoodJSON()
         
         mealFoods.append(MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 0.5))
         
@@ -196,7 +204,7 @@ struct FindMealFoodsScreen: View {
 
         do {
             let encodeMeal = try jsonEncoder.encode(mealFoods)
-            dailyMeal.foods = String(data: encodeMeal, encoding: .utf8)!
+            user.dailyMeal.foods = String(data: encodeMeal, encoding: .utf8)!
         } catch {
             print(error.localizedDescription)
         }
@@ -276,9 +284,6 @@ struct FindMealFoodsScreen: View {
             switch result {
             case .success(let model):
                 print("Successfully updated daily meal: \(model)")
-                Task {
-                    await user.getUserMeals(selectedDay: selectedDay)
-                }
             case .failure(let error):
                 print("Got failed result with \(error.errorDescription)")
             }
@@ -287,6 +292,7 @@ struct FindMealFoodsScreen: View {
         } catch {
             print("Unexpected error: \(error)")
         }
+        
     }
 }
 

@@ -40,7 +40,7 @@
 		EBC2907A2CD6CE8500500D84 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290792CD6CE8500500D84 /* Models.swift */; };
 		EBC2907C2CD6D27100500D84 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */; };
 		EBC2907E2CD6D40700500D84 /* DatabaseQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */; };
-		EBC290802CD71C3500500D84 /* Singletons.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907F2CD71C3500500D84 /* Singletons.swift */; };
+		EBC290802CD71C3500500D84 /* UserEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC2907F2CD71C3500500D84 /* UserEnvironmentObject.swift */; };
 		EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290872CD8416E00500D84 /* BackgroundView.swift */; };
 		EBC290952CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db in Resources */ = {isa = PBXBuildFile; fileRef = EBC290942CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db */; };
 		EBC290972CDC263A00500D84 /* FoodDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */; };
@@ -96,7 +96,7 @@
 		EBC290792CD6CE8500500D84 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		EBC2907B2CD6D27100500D84 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		EBC2907D2CD6D40700500D84 /* DatabaseQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseQueries.swift; sourceTree = "<group>"; };
-		EBC2907F2CD71C3500500D84 /* Singletons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singletons.swift; sourceTree = "<group>"; };
+		EBC2907F2CD71C3500500D84 /* UserEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEnvironmentObject.swift; sourceTree = "<group>"; };
 		EBC290872CD8416E00500D84 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		EBC290942CDBDFFC00500D84 /* CSIDAssistPlusFoodDatabase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = CSIDAssistPlusFoodDatabase.db; sourceTree = "<group>"; };
 		EBC290962CDC263900500D84 /* FoodDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailsScreen.swift; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 				EBC2908F2CD872B600500D84 /* Custom Views */,
 				EBC290772CD59BBD00500D84 /* Extensions.swift */,
 				EBC290792CD6CE8500500D84 /* Models.swift */,
-				EBC2907F2CD71C3500500D84 /* Singletons.swift */,
+				EBC2907F2CD71C3500500D84 /* UserEnvironmentObject.swift */,
 				EB9E14FF2CE668470023BACE /* Helpers.swift */,
 				EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */,
 				EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */,
@@ -345,7 +345,7 @@
 				EBC290882CD8416E00500D84 /* BackgroundView.swift in Sources */,
 				EBCBF6A62D2457FE0059AA3D /* RatingsPieChartView.swift in Sources */,
 				EB1C0B1E2D4ECBAA007E2AE0 /* Enums.swift in Sources */,
-				EBC290802CD71C3500500D84 /* Singletons.swift in Sources */,
+				EBC290802CD71C3500500D84 /* UserEnvironmentObject.swift in Sources */,
 				EBC214792D3B66A400BD52EB /* ConsumptionCircle.swift in Sources */,
 				EBCBF6AA2D248AE40059AA3D /* CreateRatingAndReviewScreen.swift in Sources */,
 				EBC290662CD1FF9D00500D84 /* HomeScreen.swift in Sources */,

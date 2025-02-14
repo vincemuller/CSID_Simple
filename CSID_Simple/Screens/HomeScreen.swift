@@ -231,7 +231,7 @@ struct HomeScreen: View {
                                     LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
                                         ForEach(MealType.allCases, id: \.id) { meal in
                                             if  !meal.label.contains("Snack") {
-                                                NavigationLink(destination: MealFoodListScreen(mealType: meal, selectedDay: selectedDay)) {
+                                                NavigationLink(destination: getDestination(mealType: meal)) {
                                                     VStack (spacing: 5) {
                                                         Image(meal.label.lowercased())
                                                             .resizable()
@@ -418,6 +418,15 @@ struct HomeScreen: View {
                 .foregroundStyle(.white.opacity(0.5))
                 .frame(width: 160, height: 160)
         }.offset(y: 150)
+    }
+    
+    @ViewBuilder
+    private func getDestination(mealType: MealType) -> some View {
+        if user.dailyMealCheck(selectedDay: selectedDay, mealType: mealType.label) {
+            MealFoodListScreen(mealType: mealType, selectedDay: selectedDay)
+        } else {
+            FindMealFoodsScreen(mealType: mealType)
+        }
     }
     
     func resetSearch() {
