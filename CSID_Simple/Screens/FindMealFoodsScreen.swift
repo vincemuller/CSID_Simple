@@ -34,8 +34,9 @@ struct FindMealFoodsScreen: View {
     @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
     @State private var foodDetalsPresenting: Bool = false
     @State var selectedDay: Date = Date.now
-    @State private var customServingPercentage: String = ""
+    @State private var customServingPercentage: String = "1"
     
+    @State private var navigateToMealFoodList = false
 
     private let sortingOptions = ["Relevance",
                                   "Carbs (Low to High)",
@@ -168,25 +169,33 @@ struct FindMealFoodsScreen: View {
                 VStack {
                     TextField("Servings: ", text: $customServingPercentage)
                         .keyboardType(.decimalPad)
-                        .onAppear {
-                            customServingPercentage = String(selectedFood.servingSize)
-                        }
                     Button {
                         Task {
-                            let d = Temporal.Date.init(selectedDay, timeZone: .none)
-                            if (user.dailyMealFoods.isEmpty) {
-                                await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 1.5)], additionalNotes: "Food tasted yummy and was safe"))
-                                await user.getUserMeals(selectedDay: selectedDay)
-                            } else {
+                            let d = Temporal.Date.init(selectedDay.getNormalizedDate(adjustor: 0), timeZone: .none)
+                            if user.dailyMealCheck(selectedDay: selectedDay, mealType: mealType.label) {
+                                print("This function is executing!")
                                 updateFoodsJson()
                                 await updateDailyMeals(meal: user.dailyMeal)
                                 await user.getUserMeals(selectedDay: selectedDay)
                                 self.presentationMode.wrappedValue.dismiss()
+                            } else {
+                                print("Update function is executing!")
+                                await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: Float(customServingPercentage) ?? 1)], additionalNotes: "Food tasted yummy and was safe"))
+                                await user.getUserMeals(selectedDay: selectedDay)
+                                
+                                navigateToMealFoodList = true
                             }
                         }
                     } label: {
                         Text("Log Food")
                     }
+                    NavigationLink(
+                        destination: MealFoodListScreen(mealType: mealType, selectedDay: selectedDay),
+                        isActive: $navigateToMealFoodList
+                    ) {
+                        EmptyView()
+                    }
+                    .hidden()
                 }
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.automatic)
@@ -197,7 +206,7 @@ struct FindMealFoodsScreen: View {
     func updateFoodsJson() {
         var mealFoods: [MealFood] = user.dailyMeal.decodeFoodJSON()
         
-        mealFoods.append(MealFood(fdicID: selectedFood.fdicID, customServingPercentage: 0.5))
+        mealFoods.append(MealFood(fdicID: selectedFood.fdicID, customServingPercentage: Float(customServingPercentage) ?? 1.0))
         
         let jsonEncoder = JSONEncoder()
         jsonEncoder.outputFormatting = .prettyPrinted

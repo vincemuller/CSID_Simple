@@ -12,10 +12,18 @@ import AWSAPIPlugin
 
 nonisolated(unsafe) public var databasePointer: OpaquePointer!
 
-struct DailyMealTotals {
+struct DailyMealTotals: Identifiable {
     var id = UUID()
     var totalCarbs: String = ""
     var netCarbs: String = ""
+    var totalSugars: String = ""
+    var totalStarches: String = ""
+}
+
+struct WeeklyMealTotals: Identifiable {
+    var id = UUID()
+    var totalCarbs: String = ""
+    var totalNetCarbs: String = ""
     var totalSugars: String = ""
     var totalStarches: String = ""
 }
@@ -29,6 +37,10 @@ class User: ObservableObject {
     @Published var dailyMeal: Meals = Meals()
     @Published var dailyMealFoods: [DailyMealFoods] = []
     @Published var dailyMealTotals: DailyMealTotals = DailyMealTotals()
+    @Published var weeklyMealTotals: WeeklyMealTotals = WeeklyMealTotals()
+    @Published var carbPercentage: Double = 0
+    @Published var sugarsPercentage: Double = 0
+    @Published var starchesPercentage: Double = 0
 
 
     init(userID: String? = "vmuller2529", userSavedLists: [SavedLists] = [], userSavedFoods: [SavedFoods] = [], dailyMeals: List<Meals> = [], dailyMealTotals: DailyMealTotals = DailyMealTotals()) {
@@ -79,6 +91,7 @@ class User: ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.dailyMeals = meals
+                    self.getDailyMealTotals()
                 }
 
             case .failure(let error):
@@ -97,24 +110,79 @@ class User: ObservableObject {
         }
     }
     
+    func getDailyMealTotals() {
+        //Build search terms "USDAFoodSearchTable.fdicID = 2700004"
+        var searchTerms: [String] = []
+        
+//        for i in dailyMeal.decodeFoodJSON() {
+//            searchTerms.append("USDAFoodSearchTable.fdicID = \(i.fdicID.description)")
+//        }
+        
+        dailyMeals.forEach {$0.decodeFoodJSON().forEach {searchTerms.append("USDAFoodSearchTable.fdicID = \($0.fdicID.description)")}}
+        
+        let sT = searchTerms.joined(separator: " OR ")
+        
+        print(sT)
+        
+        DispatchQueue(label: "search.serial.queue2").async {
+            var updatedDailyMealFoods: [DailyMealFoods] = []
+            let queryResult = DatabaseQueries.databaseSavedFoodsSearch(searchTerms: sT, databasePointer: databasePointer)
+            
+            for meal in self.dailyMeals.filter {$0.mealDate == Temporal.Date.init(Date().getNormalizedDate(adjustor: 0), timeZone: .none)} {
+                for i in meal.decodeFoodJSON() {
+                    updatedDailyMealFoods.append(DailyMealFoods(mealFood: i, foodDetails: queryResult.first(where: {$0.fdicID == i.fdicID})))
+                }
+            }
+            
+            DispatchQueue.main.async(execute: {
+                self.dailyMealFoods = updatedDailyMealFoods
+                var totals = WeeklyMealTotals()
+                
+                for i in self.dailyMealFoods {
+                    if i.foodDetails?.carbs != "N/A" {
+                        var aC:  Float  = ((Float(i.foodDetails?.carbs ?? "") ?? 0)*Float(i.mealFood?.customServingPercentage ?? 0))
+                        aC = aC + (Float(totals.totalCarbs) ?? 0)
+                        totals.totalCarbs = String(format: "%.1f", aC)
+                        
+                        var aSug:  Float  = ((Float(i.foodDetails?.totalSugars ?? "") ?? 0)*Float(i.mealFood?.customServingPercentage ?? 0))
+                        aSug = aSug + (Float(totals.totalSugars) ?? 0)
+                        totals.totalSugars = String(format: "%.1f", aSug)
+                        
+                        var aStarch:  Float  = ((Float(i.foodDetails?.totalStarches ?? "") ?? 0)*Float(i.mealFood?.customServingPercentage ?? 0))
+                        aStarch = aStarch + (Float(totals.totalStarches) ?? 0)
+                        totals.totalStarches = String(format: "%.1f", aStarch)
+                    }
+                }
+                
+                self.weeklyMealTotals = totals
+                self.carbPercentage = ((Double(self.weeklyMealTotals.totalCarbs) ?? 0)/100) * 100
+                self.sugarsPercentage = ((Double(self.weeklyMealTotals.totalSugars) ?? 0)/100) * 100
+                self.starchesPercentage = ((Double(self.weeklyMealTotals.totalStarches) ?? 0)/100) * 100
+                
+            })
+        }
+    }
+    
     func getMealFoodDetails() {
         //Build search terms "USDAFoodSearchTable.fdicID = 2700004"
         var searchTerms: [String] = []
         
-        for i in dailyMeal.decodeFoodJSON() {
-            searchTerms.append("USDAFoodSearchTable.fdicID = \(i.fdicID.description)")
-        }
+//        for i in dailyMeal.decodeFoodJSON() {
+//            searchTerms.append("USDAFoodSearchTable.fdicID = \(i.fdicID.description)")
+//        }
+        
+        dailyMeal.decodeFoodJSON().forEach {searchTerms.append("USDAFoodSearchTable.fdicID = \($0.fdicID.description)")}
         
         let sT = searchTerms.joined(separator: " OR ")
         
         DispatchQueue(label: "search.serial.queue").async {
             var updatedDailyMealFoods: [DailyMealFoods] = []
             let queryResult = DatabaseQueries.databaseSavedFoodsSearch(searchTerms: sT, databasePointer: databasePointer)
-            print(queryResult)
             
             for i in self.dailyMeal.decodeFoodJSON() {
                 updatedDailyMealFoods.append(DailyMealFoods(mealFood: i, foodDetails: queryResult.first(where: {$0.fdicID == i.fdicID})))
             }
+            
             DispatchQueue.main.async(execute: {
                 self.dailyMealFoods = updatedDailyMealFoods
                 var totals = DailyMealTotals()

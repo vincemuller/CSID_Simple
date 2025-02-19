@@ -59,6 +59,10 @@ struct HomeScreen: View {
     @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
     @State private var foodDetalsPresenting: Bool = false
     
+    //New Date and Week Variables
+    @State private var calendar = Calendar.current
+    @State private var dates: [Date] = []
+    
     //Daily totals variables
     @State private var dashboardWeek: Date = Date().getNormalizedDate(adjustor: -3)
     @State private var selectedDay: Date = Date().getNormalizedDate(adjustor: 0)
@@ -155,10 +159,9 @@ struct HomeScreen: View {
                                                         }
                                                     }
                                                     .padding(.leading, 10)
-                                                ForEach((0...6), id: \.self) {day in
-                                                    let d = Calendar.current.date(byAdding: .day, value: day, to: dashboardWeek)!
-                                                    let weekDay = d.formatted(.dateTime.weekday())
-                                                    let calendarDay = d.formatted(.dateTime.day(.twoDigits))
+                                                ForEach(dates, id: \.self) {day in
+                                                    let weekDay = day.formatted(.dateTime.weekday())
+                                                    let calendarDay = day.formatted(.dateTime.day(.twoDigits))
                                                     let sD = selectedDay.formatted(.dateTime.weekday()) == weekDay
                                                     
                                                     ZStack {
@@ -172,7 +175,7 @@ struct HomeScreen: View {
                                                             StandardTextView(label: weekDay.uppercased(), size: 12, weight: .medium, textColor: .iconTeal)
                                                         }
                                                         .onTapGesture {
-                                                            selectedDay = d
+                                                            selectedDay = day
                                                             print(selectedDay.formatted())
                                                         }
                                                     }
@@ -194,7 +197,7 @@ struct HomeScreen: View {
                                         HStack (spacing: 0) {
                                             VStack (spacing: 0) {
                                                 ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: 115, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
+                                                    ConsumptionCircle(ringWidth: 40, percent: user.sugarsPercentage, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
                                                         .padding(10)
                                                     StandardTextView(label: "50g", size: 18)
                                                 }
@@ -202,7 +205,7 @@ struct HomeScreen: View {
                                             }
                                             VStack (spacing: 0) {
                                                 ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: 75, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
+                                                    ConsumptionCircle(ringWidth: 40, percent: user.carbPercentage, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
                                                         .padding(10)
                                                     StandardTextView(label: "110g", size: 18)
                                                 }
@@ -210,7 +213,7 @@ struct HomeScreen: View {
                                             }
                                             VStack (spacing: 0) {
                                                 ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: 50, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
+                                                    ConsumptionCircle(ringWidth: 40, percent: user.starchesPercentage, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
                                                         .padding(10)
                                                     StandardTextView(label: "60g", size: 18)
                                                 }
@@ -246,13 +249,13 @@ struct HomeScreen: View {
                                             }
                                         }
                                         Menu {
-                                            NavigationLink(destination: FindMealFoodsScreen(mealType: .eveningSnack)) {
+                                            NavigationLink(destination: getDestination(mealType: MealType.eveningSnack)) {
                                                 Text("Evening Snack")
                                             }
-                                            NavigationLink(destination: FindMealFoodsScreen(mealType: .afternoonSnack)) {
+                                            NavigationLink(destination: getDestination(mealType: MealType.afternoonSnack)) {
                                                 Text("Afternoon Snack")
                                             }
-                                            NavigationLink(destination: FindMealFoodsScreen(mealType: .morningSnack)) {
+                                            NavigationLink(destination: getDestination(mealType: MealType.morningSnack)) {
                                                 Text("Morning Snack")
                                             }
                                         } label: {
@@ -394,6 +397,14 @@ struct HomeScreen: View {
             CreateListScreen()
         }
         .onAppear(perform: initializeDatabase)
+        .onAppear(perform: {
+            let today = calendar.startOfDay(for: Date())
+            let dayOfWeek = calendar.component(.weekday, from: today)
+            dates = calendar.range(of: .weekday, in: .weekOfYear, for: today)!.compactMap({calendar.date(byAdding: .day, value: $0 - dayOfWeek, to: today)})
+            print(user.carbPercentage)
+            print(user.sugarsPercentage)
+            print(user.starchesPercentage)
+        })
         .onChange(of: compareQueue) {
             if compareQueue.count == 2 {
                 getComparisonNutDetails()
@@ -425,7 +436,7 @@ struct HomeScreen: View {
         if user.dailyMealCheck(selectedDay: selectedDay, mealType: mealType.label) {
             MealFoodListScreen(mealType: mealType, selectedDay: selectedDay)
         } else {
-            FindMealFoodsScreen(mealType: mealType)
+            FindMealFoodsScreen(mealType: mealType, selectedDay: selectedDay)
         }
     }
     

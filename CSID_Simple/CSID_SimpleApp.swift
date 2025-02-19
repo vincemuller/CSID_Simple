@@ -34,6 +34,7 @@ struct CSID_SimpleApp: App {
                         await user.getSavedLists()
                         await user.getSavedFoods()
                         await user.getUserMeals(selectedDay: Date().getNormalizedDate(adjustor: 0))
+                        
         //                await User.shared.testMealLogging()
                     }
                 }
