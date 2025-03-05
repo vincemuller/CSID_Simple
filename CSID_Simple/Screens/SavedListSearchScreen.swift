@@ -99,7 +99,7 @@ struct SavedListSearchScreen: View {
                 ScrollView {
                     LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                         ForEach(searchResults, id: \.self) {food in
-                            SearchResultCellView(isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort)
+                            SearchResultCellView(searchResultCellType: .savedLists, logServingSizeSheetIsPresenting: .constant(false), isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort)
                         }.padding(.bottom, 5)
                     }
                 }

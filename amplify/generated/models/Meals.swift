@@ -54,12 +54,19 @@ public struct Meals: Model {
         var decodedFood: [MealFood] = []
         let jsonDecoder = JSONDecoder()
         
-        do {
-            decodedFood = try jsonDecoder.decode([MealFood].self, from: Data(self.foods?.utf8 ?? "".utf8))
-        } catch {
-            print(error.localizedDescription)
+        if foods != nil {
+            do {
+                decodedFood = try jsonDecoder.decode([MealFood].self, from: Data(self.foods?.utf8 ?? "".utf8))
+            } catch {
+                print(error.localizedDescription)
+                decodedFood = [
+                    MealFood(fdicID: 1001, description: "Snickers Crunchers, Chocolate Bar", consumedServings: 1.5, totalCarbs: "25", totalFiber: "1", netCarbs: "24", totalSugars: "22", totalStarches: "2", wholeFood: "none"),
+                    MealFood(fdicID: 1100, description: "Ham Sandwich", consumedServings: 1.0, totalCarbs: "45", totalFiber: "5", netCarbs: "40", totalSugars: "12", totalStarches: "28", wholeFood: "none")]
+            }
+            
+            return decodedFood
+        } else {
+            return []
         }
-        
-        return decodedFood
     }
 }

@@ -21,7 +21,7 @@ struct MealLoggingSearchResultssView: View {
         ScrollView {
             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                 ForEach(searchResults, id: \.self) {food in
-                    MealLoggingSearchResultCellView(isPresenting: $isPresenting, logServingSizeSheetIsPresenting: $logServingSizeSheetIsPresenting, selectedFood: $selectedFood, result: food, isFavorite: false)
+                    SearchResultCellView(searchResultCellType: .mealFoods, logServingSizeSheetIsPresenting: $logServingSizeSheetIsPresenting, isPresenting: $isPresenting, selectedFood: $selectedFood, compareQueue: .constant([]), result: food)
                 }.padding(.bottom, 5)
             }
         }

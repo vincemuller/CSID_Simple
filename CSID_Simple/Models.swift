@@ -46,6 +46,13 @@ struct TolerationChunks: Identifiable {
     var canTolerate: [TolerationRating]
 }
 
+struct DailyThresholds {
+    var dailyTotalCarbsThreshold: Float
+    var dailyNetCarbsThreshold: Float
+    var dailySugarsThreshold: Float
+    var dailyStarchesThreshold: Float
+}
+
 struct Meal: Codable, Identifiable {
     var id = UUID()
     var mealDate: Temporal.Date
@@ -71,8 +78,18 @@ struct Meal: Codable, Identifiable {
 }
 
 
-struct MealFood: Codable, Hashable {
+struct MealFood: Codable, Hashable, Identifiable {
+    var id = UUID()
     var fdicID: Int
-    var customServingPercentage: Float
+    var brandOwner: String?
+    var brandName: String?
+    var description: String
+    var consumedServings: Float
+    var totalCarbs: String
+    var totalFiber: String
+    var netCarbs: String
+    var totalSugars: String
+    var totalStarches: String
+    var wholeFood: String
 }
 

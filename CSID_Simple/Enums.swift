@@ -92,6 +92,10 @@ enum MealLoggingScreenTab: CaseIterable, Identifiable {
     }
 }
 
+enum SearchResultCellType {
+    case generalSearch, savedLists, mealFoods
+}
+
 enum Ingredients: Identifiable, CaseIterable {
     case sucroseIngredients, completeIngredientList, tolerationRatings
     var id: Self { self }

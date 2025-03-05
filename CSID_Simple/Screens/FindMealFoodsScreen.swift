@@ -33,8 +33,8 @@ struct FindMealFoodsScreen: View {
     @State private var activeSearch: Bool = false
     @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
     @State private var foodDetalsPresenting: Bool = false
-    @State var selectedDay: Date = Date.now
     @State private var customServingPercentage: String = "1"
+    @State private var notificationAlert: Bool = false
     
     @State private var navigateToMealFoodList = false
 
@@ -166,58 +166,72 @@ struct FindMealFoodsScreen: View {
             .sheet(isPresented: $logServingSizeSheetIsPresenting, onDismiss: {
                 logServingSizeSheetIsPresenting = false
             }) {
-                VStack {
-                    TextField("Servings: ", text: $customServingPercentage)
-                        .keyboardType(.decimalPad)
-                    Button {
-                        Task {
-                            let d = Temporal.Date.init(selectedDay.getNormalizedDate(adjustor: 0), timeZone: .none)
-                            if user.dailyMealCheck(selectedDay: selectedDay, mealType: mealType.label) {
-                                print("This function is executing!")
-                                updateFoodsJson()
-                                await updateDailyMeals(meal: user.dailyMeal)
-                                await user.getUserMeals(selectedDay: selectedDay)
-                                self.presentationMode.wrappedValue.dismiss()
-                            } else {
-                                print("Update function is executing!")
-                                await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, customServingPercentage: Float(customServingPercentage) ?? 1)], additionalNotes: "Food tasted yummy and was safe"))
-                                await user.getUserMeals(selectedDay: selectedDay)
-                                
-                                navigateToMealFoodList = true
+                let brand = selectedFood.wholeFood.lowercased() == "yes" ? "Whole Food" : selectedFood.brandName?.brandFormater(brandOwner: selectedFood.brandOwner ?? "")
+                VStack (alignment: .leading, spacing: 10) {
+                    StandardTextView(label: brand ?? "", size: 14, textColor: .iconTeal)
+                    StandardTextView(label: selectedFood.description, size: 20, weight: .semibold)
+                    HStack (spacing: 5) {
+                        StandardTextView(label: "Servings: ", size: 14)
+                        TextField("Servings: ", text: $customServingPercentage)
+                            .keyboardType(.decimalPad)
+                    }
+                    Spacer()
+                    VStack {
+                        Button {
+                            Task {
+                                let d = Temporal.Date.init(user.selectedDay.getNormalizedDate(adjustor: 0), timeZone: .none)
+                                if user.dailyMealCheck(mealType: mealType.label) {
+                                    user.updateMeal(selectedFood: selectedFood, consumedServings: Float(customServingPercentage) ?? 1.0)
+                                    notificationAlert = true
+                                    await updateDailyMeals(meal: user.dailyMeal)
+                                    await user.getWeeklyMeals()
+                                } else {
+                                    await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, brandOwner: selectedFood.brandOwner, brandName: selectedFood.brandName, description: selectedFood.description, consumedServings: Float(customServingPercentage) ?? 1.0, totalCarbs: ((Float(selectedFood.carbs) ?? 0) * (Float(customServingPercentage) ?? 0)).description, totalFiber: "", netCarbs: "", totalSugars: ((Float(selectedFood.totalSugars) ?? 0) * (Float(customServingPercentage) ?? 0)).description, totalStarches: ((Float(selectedFood.totalStarches) ?? 0) * (Float(customServingPercentage) ?? 0)).description, wholeFood: selectedFood.wholeFood)], additionalNotes: "Food tasted yummy and was safe"))
+                                    await user.getWeeklyMeals()
+                                    navigateToMealFoodList = true
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                            }
+                        } label: {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 7)
+                                    .fill(.iconTeal)
+                                StandardTextView(label: "Log Food", size: 16, weight: .semibold)
                             }
                         }
-                    } label: {
-                        Text("Log Food")
-                    }
+                    }.frame(height: 40, alignment: .center)
                     NavigationLink(
-                        destination: MealFoodListScreen(mealType: mealType, selectedDay: selectedDay),
+                        destination: MealFoodListScreen(mealType: mealType),
                         isActive: $navigateToMealFoodList
                     ) {
                         EmptyView()
                     }
                     .hidden()
                 }
+                .padding()
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.automatic)
+            }
+            .alert("Meal Updated", isPresented: $notificationAlert) {
+                HStack {
+                    Button("Ok") {
+                        notificationAlert = false
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            } message: {
+                Text("You have successfully added \(selectedFood.description) to \(mealType.label)")
             }
         }
     }
     
-    func updateFoodsJson() {
-        var mealFoods: [MealFood] = user.dailyMeal.decodeFoodJSON()
-        
-        mealFoods.append(MealFood(fdicID: selectedFood.fdicID, customServingPercentage: Float(customServingPercentage) ?? 1.0))
-        
-        let jsonEncoder = JSONEncoder()
-        jsonEncoder.outputFormatting = .prettyPrinted
-
-        do {
-            let encodeMeal = try jsonEncoder.encode(mealFoods)
-            user.dailyMeal.foods = String(data: encodeMeal, encoding: .utf8)!
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
+    //Brand owner and/or brand name
+    //Food description
+    //Total and net carbs
+    //Total sugars
+    //Total starches
+    //Consumed serving that automatically adjusts totals presented
+    //Log Food button
     
     private var progressIndicator: some View {
         VStack {
@@ -293,6 +307,7 @@ struct FindMealFoodsScreen: View {
             switch result {
             case .success(let model):
                 print("Successfully updated daily meal: \(model)")
+
             case .failure(let error):
                 print("Got failed result with \(error.errorDescription)")
             }
@@ -301,13 +316,12 @@ struct FindMealFoodsScreen: View {
         } catch {
             print("Unexpected error: \(error)")
         }
-        
     }
 }
 
 #Preview {
     NavigationStack {
-        FindMealFoodsScreen(mealType: .breakfast, selectedDay: Date.now)
+        FindMealFoodsScreen(mealType: .breakfast)
     }
 }
 

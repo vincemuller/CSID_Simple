@@ -55,17 +55,11 @@ struct HomeScreen: View {
     @State private var compareQueue: [FoodDetails] = []
     @State private var comparisonNutData: [NutrientData] = []
     
+    @State private var logServingSizeSheetIsPresenting: Bool = false
+    
     //Food details variables
     @State private var selectedFood: FoodDetails = FoodDetails(searchKeyWords: "", fdicID: 0, brandedFoodCategory: "", description: "", servingSize: 0, servingSizeUnit: "", carbs: "", totalSugars: "", totalStarches: "", wholeFood: "")
     @State private var foodDetalsPresenting: Bool = false
-    
-    //New Date and Week Variables
-    @State private var calendar = Calendar.current
-    @State private var dates: [Date] = []
-    
-    //Daily totals variables
-    @State private var dashboardWeek: Date = Date().getNormalizedDate(adjustor: -3)
-    @State private var selectedDay: Date = Date().getNormalizedDate(adjustor: 0)
 
     //Saved Lists variables
     @State private var createListScreenPresenting: Bool = false
@@ -152,17 +146,19 @@ struct HomeScreen: View {
                                                     .foregroundStyle(.white)
                                                     .font(.system(size: 14, weight: .semibold))
                                                     .onTapGesture {
-                                                        dashboardWeek = Calendar.current.date(byAdding: .day, value: -7, to: dashboardWeek)!
-                                                        selectedDay = Calendar.current.date(byAdding: .day, value: 6, to: dashboardWeek)!
+                                                        user.updateWeek(dayInterval: -7)
+                                                        if let sD = user.dates.last {
+                                                            user.selectedDay = sD
+                                                        }
                                                         Task {
-                                                            await user.getUserMeals(selectedDay: selectedDay)
+                                                            await user.getWeeklyMeals()
                                                         }
                                                     }
                                                     .padding(.leading, 10)
-                                                ForEach(dates, id: \.self) {day in
+                                                ForEach(user.dates, id: \.self) {day in
                                                     let weekDay = day.formatted(.dateTime.weekday())
                                                     let calendarDay = day.formatted(.dateTime.day(.twoDigits))
-                                                    let sD = selectedDay.formatted(.dateTime.weekday()) == weekDay
+                                                    let sD = user.selectedDay.formatted(.dateTime.weekday()) == weekDay
                                                     
                                                     ZStack {
                                                         sD ?
@@ -175,8 +171,8 @@ struct HomeScreen: View {
                                                             StandardTextView(label: weekDay.uppercased(), size: 12, weight: .medium, textColor: .iconTeal)
                                                         }
                                                         .onTapGesture {
-                                                            selectedDay = day
-                                                            print(selectedDay.formatted())
+                                                            user.selectedDay = day
+                                                            user.getDailyMealDataTotals()
                                                         }
                                                     }
                                                 }
@@ -184,10 +180,13 @@ struct HomeScreen: View {
                                                     .foregroundStyle(.white)
                                                     .font(.system(size: 14, weight: .semibold))
                                                     .onTapGesture {
-                                                        dashboardWeek = Calendar.current.date(byAdding: .day, value: 7, to: dashboardWeek)!
-                                                        selectedDay = dashboardWeek
+                                                        user.updateWeek(dayInterval: 7)
+                                                        if let sD = user.dates.first {
+                                                            user.selectedDay = sD
+                                                        }
+                                                        
                                                         Task {
-                                                            await user.getUserMeals(selectedDay: selectedDay.addingTimeInterval(.days(6)))
+                                                            await user.getWeeklyMeals()
                                                         }
                                                     }
                                                     .padding(.trailing, 10)
@@ -197,25 +196,25 @@ struct HomeScreen: View {
                                         HStack (spacing: 0) {
                                             VStack (spacing: 0) {
                                                 ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: user.sugarsPercentage, backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
+                                                    ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalSugars / user.dailyThresholds.dailySugarsThreshold) * 100), backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
                                                         .padding(10)
-                                                    StandardTextView(label: "50g", size: 18)
+                                                    StandardTextView(label: "\(user.dailyTotalSugars)g", size: 16)
                                                 }
                                                 StandardTextView(label: "Sugars", size: 14)
                                             }
                                             VStack (spacing: 0) {
                                                 ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: user.carbPercentage, backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
+                                                    ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalCarbs / user.dailyThresholds.dailyTotalCarbsThreshold) * 100), backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
                                                         .padding(10)
-                                                    StandardTextView(label: "110g", size: 18)
+                                                    StandardTextView(label: "\(user.dailyTotalCarbs)g", size: 16)
                                                 }
                                                 StandardTextView(label: "Carbs", size: 14)
                                             }
                                             VStack (spacing: 0) {
                                                 ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: user.starchesPercentage, backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
+                                                    ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalStarches / user.dailyThresholds.dailyStarchesThreshold) * 100), backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
                                                         .padding(10)
-                                                    StandardTextView(label: "60g", size: 18)
+                                                    StandardTextView(label: "\(user.dailyTotalStarches)g", size: 16)
                                                 }
                                                 StandardTextView(label: "Starches", size: 14)
                                             }
@@ -334,7 +333,7 @@ struct HomeScreen: View {
                         ScrollView {
                             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
                                 ForEach(searchResults, id: \.self) {food in
-                                    SearchResultCellView(isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort)
+                                    SearchResultCellView(searchResultCellType: .generalSearch, logServingSizeSheetIsPresenting: $logServingSizeSheetIsPresenting, isPresenting: $foodDetalsPresenting, selectedFood: $selectedFood, compareQueue: $compareQueue, result: food, selectedSort: selectedSort, selectedCellAction: "", cellActions: [])
                                 }.padding(.bottom, 5)
                             }
                         }
@@ -397,14 +396,6 @@ struct HomeScreen: View {
             CreateListScreen()
         }
         .onAppear(perform: initializeDatabase)
-        .onAppear(perform: {
-            let today = calendar.startOfDay(for: Date())
-            let dayOfWeek = calendar.component(.weekday, from: today)
-            dates = calendar.range(of: .weekday, in: .weekOfYear, for: today)!.compactMap({calendar.date(byAdding: .day, value: $0 - dayOfWeek, to: today)})
-            print(user.carbPercentage)
-            print(user.sugarsPercentage)
-            print(user.starchesPercentage)
-        })
         .onChange(of: compareQueue) {
             if compareQueue.count == 2 {
                 getComparisonNutDetails()
@@ -433,10 +424,10 @@ struct HomeScreen: View {
     
     @ViewBuilder
     private func getDestination(mealType: MealType) -> some View {
-        if user.dailyMealCheck(selectedDay: selectedDay, mealType: mealType.label) {
-            MealFoodListScreen(mealType: mealType, selectedDay: selectedDay)
+        if user.dailyMealCheck(mealType: mealType.label) {
+            MealFoodListScreen(mealType: mealType)
         } else {
-            FindMealFoodsScreen(mealType: mealType, selectedDay: selectedDay)
+            FindMealFoodsScreen(mealType: mealType)
         }
     }
     
@@ -449,11 +440,11 @@ struct HomeScreen: View {
         selectedFilter = .allFoods
         compareQueue = []
 
-        if selectedDay.formatted(.dateTime.month().day().year()) != Date.now.formatted(.dateTime.month().day().year()) {
-            dashboardWeek = Date.now.addingTimeInterval(.days(-3))
-            selectedDay = Date.now
+        if user.selectedDay.formatted(.dateTime.month().day().year()) != Date.now.formatted(.dateTime.month().day().year()) {
+            user.selectedDay = Date.now.getNormalizedDate(adjustor: 0)
+            user.updateWeek()
             Task {
-                await user.getUserMeals(selectedDay: selectedDay)
+                await user.getWeeklyMeals()
             }
         }
     }
