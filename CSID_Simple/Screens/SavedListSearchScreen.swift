@@ -115,6 +115,9 @@ struct SavedListSearchScreen: View {
         }) {
             FoodDetailsScreen(food: $selectedFood)
         }
+        .onChange(of: user.userSavedFoods, {
+            getSavedListFoods()
+        })
         .onAppear {
             getSavedListFoods()
         }

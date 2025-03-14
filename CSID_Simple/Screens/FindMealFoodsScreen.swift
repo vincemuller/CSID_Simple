@@ -188,8 +188,12 @@ struct FindMealFoodsScreen: View {
                                 } else {
                                     await user.logNewMeal(meal: Meal(mealDate: d, mealType: mealType.label, foods: [MealFood(fdicID: selectedFood.fdicID, brandOwner: selectedFood.brandOwner, brandName: selectedFood.brandName, description: selectedFood.description, consumedServings: Float(customServingPercentage) ?? 1.0, totalCarbs: ((Float(selectedFood.carbs) ?? 0) * (Float(customServingPercentage) ?? 0)).description, totalFiber: "", netCarbs: "", totalSugars: ((Float(selectedFood.totalSugars) ?? 0) * (Float(customServingPercentage) ?? 0)).description, totalStarches: ((Float(selectedFood.totalStarches) ?? 0) * (Float(customServingPercentage) ?? 0)).description, wholeFood: selectedFood.wholeFood)], additionalNotes: "Food tasted yummy and was safe"))
                                     await user.getWeeklyMeals()
-                                    navigateToMealFoodList = true
-                                    self.presentationMode.wrappedValue.dismiss()
+                                    // **Delay Navigation to Allow UI Update**
+                                    mealType.label.contains("Snack") ? self.presentationMode.wrappedValue.dismiss() : nil
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        navigateToMealFoodList = true
+                                    }
                                 }
                             }
                         } label: {
@@ -200,18 +204,18 @@ struct FindMealFoodsScreen: View {
                             }
                         }
                     }.frame(height: 40, alignment: .center)
-                    NavigationLink(
-                        destination: MealFoodListScreen(mealType: mealType),
-                        isActive: $navigateToMealFoodList
-                    ) {
-                        EmptyView()
-                    }
-                    .hidden()
                 }
                 .padding()
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.automatic)
             }
+            NavigationLink(
+                destination: MealFoodListScreen(mealType: mealType),
+                isActive: $navigateToMealFoodList
+            ) {
+                EmptyView()
+            }
+            .hidden()
             .alert("Meal Updated", isPresented: $notificationAlert) {
                 HStack {
                     Button("Ok") {

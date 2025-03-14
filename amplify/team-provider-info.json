@@ -10,6 +10,11 @@
       "StackName": "amplify-csidsimple-dev-0e052",
       "StackId": "arn:aws:cloudformation:us-west-2:050682269423:stack/amplify-csidsimple-dev-0e052/30f36a90-c610-11ef-b431-0ac2a00d0037",
       "AmplifyAppId": "d198n96nkdvxwg"
+    },
+    "categories": {
+      "api": {
+        "CSIDSimple": {}
+      }
     }
   }
 }

@@ -2,7 +2,7 @@
 import Amplify
 import Foundation
 
-public struct SavedFoods: Model {
+public struct SavedFoods: Model, Equatable {
   public let id: String
   public var savedListsID: String?
   public var userID: String?
