@@ -10,6 +10,7 @@ import Amplify
 import AWSPluginsCore
 import AWSAPIPlugin
 
+
 nonisolated(unsafe) public var databasePointer: OpaquePointer!
 
 @MainActor
@@ -35,6 +36,7 @@ class User: ObservableObject {
     @Published var dailyNetCarbs: Float = 0
     @Published var dailyTotalSugars: Float = 0
     @Published var dailyTotalStarches: Float = 0
+    
     
 
     init(){

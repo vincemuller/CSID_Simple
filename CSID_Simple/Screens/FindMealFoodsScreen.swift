@@ -37,6 +37,7 @@ struct FindMealFoodsScreen: View {
     @State private var notificationAlert: Bool = false
     
     @State private var navigateToMealFoodList = false
+    
 
     private let sortingOptions = ["Relevance",
                                   "Carbs (Low to High)",
@@ -168,6 +169,7 @@ struct FindMealFoodsScreen: View {
             }) {
                 let brand = selectedFood.wholeFood.lowercased() == "yes" ? "Whole Food" : selectedFood.brandName?.brandFormater(brandOwner: selectedFood.brandOwner ?? "")
                 VStack (alignment: .leading, spacing: 10) {
+                    StandardTextView(label: user.selectedDay.formatted(.dateTime.month().day().year()), size: 14)
                     StandardTextView(label: brand ?? "", size: 14, textColor: .iconTeal)
                     StandardTextView(label: selectedFood.description, size: 20, weight: .semibold)
                     HStack (spacing: 5) {
@@ -226,6 +228,11 @@ struct FindMealFoodsScreen: View {
             } message: {
                 Text("You have successfully added \(selectedFood.description) to \(mealType.label)")
             }
+        }
+        .sheet(isPresented: $foodDetalsPresenting, onDismiss: {
+            foodDetalsPresenting = false
+        }) {
+            FoodDetailsScreen(food: $selectedFood)
         }
     }
     

@@ -34,6 +34,9 @@ struct HomeScreen: View {
     //Search focus state
     @FocusState private var isFocused: Bool
     
+    @State var navigation = Navigation().path
+    
+    
     //Search variables
     @State private var search: Search = .isNotFocused
     @State private var searchText: String = ""
@@ -67,7 +70,7 @@ struct HomeScreen: View {
     
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigation) {
             ZStack (alignment: .top) {
                 BackgroundView()
                     .navigationTitle("CSIDAssist")
@@ -233,7 +236,9 @@ struct HomeScreen: View {
                                     LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
                                         ForEach(MealType.allCases, id: \.id) { meal in
                                             if  !meal.label.contains("Snack") {
-                                                NavigationLink(destination: getDestination(mealType: meal)) {
+                                                Button(action: {
+                                                    navigation.append(meal)
+                                                }) {
                                                     VStack (spacing: 5) {
                                                         Image(meal.label.lowercased())
                                                             .resizable()
@@ -245,16 +250,34 @@ struct HomeScreen: View {
                                                         StandardTextView(label: meal.label, size: 12, weight: .semibold)
                                                     }
                                                 }
+//                                                NavigationLink(destination: getDestination(mealType: meal)) {
+//                                                    VStack (spacing: 5) {
+//                                                        Image(meal.label.lowercased())
+//                                                            .resizable()
+//                                                            .frame(width: 55, height: 55)
+//                                                            .mask {
+//                                                                Circle()
+//                                                                    .frame(width: 50, height: 50)
+//                                                            }
+//                                                        StandardTextView(label: meal.label, size: 12, weight: .semibold)
+//                                                    }
+//                                                }
                                             }
                                         }
                                         Menu {
-                                            NavigationLink(destination: getDestination(mealType: MealType.eveningSnack)) {
+                                            Button(action: {
+                                                navigation.append(MealType.eveningSnack)
+                                            }) {
                                                 Text("Evening Snack")
                                             }
-                                            NavigationLink(destination: getDestination(mealType: MealType.afternoonSnack)) {
+                                            Button(action: {
+                                                navigation.append(MealType.afternoonSnack)
+                                            }) {
                                                 Text("Afternoon Snack")
                                             }
-                                            NavigationLink(destination: getDestination(mealType: MealType.morningSnack)) {
+                                            Button(action: {
+                                                navigation.append(MealType.morningSnack)
+                                            }) {
                                                 Text("Morning Snack")
                                             }
                                         } label: {
@@ -378,6 +401,9 @@ struct HomeScreen: View {
             .overlay(alignment: .topLeading, content: {
                 topLeadingLogo
             })
+            .navigationDestination(for: MealType.self) { screen in
+                getDestination(mealType: screen)
+            }
         }
         .ignoresSafeArea()
         .sheet(isPresented: $compareFoodsSheetPresenting, onDismiss: {

@@ -23,6 +23,7 @@
 		EB1C0B242D5085A4007E2AE0 /* SectionTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C0B232D5085A4007E2AE0 /* SectionTitleView.swift */; };
 		EB1C0B262D5087E6007E2AE0 /* StandardTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C0B252D5087E6007E2AE0 /* StandardTextView.swift */; };
 		EB1C0B4C2D58819A007E2AE0 /* MealFoodListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C0B4B2D58819A007E2AE0 /* MealFoodListScreen.swift */; };
+		EB1FD24D2D907ADC0045586C /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1FD24C2D907ADC0045586C /* Navigation.swift */; };
 		EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */; };
 		EB9E15002CE668470023BACE /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E14FF2CE668470023BACE /* Helpers.swift */; };
 		EB9E15022CEDA31B0023BACE /* LogInScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E15012CEDA31B0023BACE /* LogInScreen.swift */; };
@@ -78,6 +79,7 @@
 		EB1C0B232D5085A4007E2AE0 /* SectionTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitleView.swift; sourceTree = "<group>"; };
 		EB1C0B252D5087E6007E2AE0 /* StandardTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardTextView.swift; sourceTree = "<group>"; };
 		EB1C0B4B2D58819A007E2AE0 /* MealFoodListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealFoodListScreen.swift; sourceTree = "<group>"; };
+		EB1FD24C2D907ADC0045586C /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		EB9E14F12CDEC2FE0023BACE /* ComparisonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScreen.swift; sourceTree = "<group>"; };
 		EB9E14FF2CE668470023BACE /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		EB9E15012CEDA31B0023BACE /* LogInScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInScreen.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				EBDA88602CEE9DEE001C53D5 /* SceneDelegate.swift */,
 				EBC58F882CF286B4004E2F73 /* PersistenceManager.swift */,
 				EB1C0B1D2D4ECBAA007E2AE0 /* Enums.swift */,
+				EB1FD24C2D907ADC0045586C /* Navigation.swift */,
 			);
 			path = CSID_Simple;
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				EBC290782CD59BBD00500D84 /* Extensions.swift in Sources */,
 				EBC290722CD20F2200500D84 /* SearchCarouselView.swift in Sources */,
 				EBC290972CDC263A00500D84 /* FoodDetailsScreen.swift in Sources */,
+				EB1FD24D2D907ADC0045586C /* Navigation.swift in Sources */,
 				EB9E15042CEE67170023BACE /* SignUpScreen.swift in Sources */,
 				EB1C0B4C2D58819A007E2AE0 /* MealFoodListScreen.swift in Sources */,
 				EB9E14F22CDEC2FE0023BACE /* ComparisonScreen.swift in Sources */,

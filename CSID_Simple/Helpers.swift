@@ -804,11 +804,19 @@ class Helpers {
     // Function to retrieve all sucrose-related ingredients
     func findSucroseIngredients(in ingredients: String) -> [[String]] {
         let replacedIngredients = replaceSugarIngredients(in: ingredients)
-        let categorizedIngredients = extractSugarCategories(from: replacedIngredients)
+        var categorizedIngredients = extractSugarCategories(from: replacedIngredients)
 //        let naturalSucrose = extractNaturalSucrose(from: ingredients)
 //        let naturalStarch = extractNaturalStarch(from: ingredients)
 //        categorizedIngredients.append(naturalSucrose)
 //        categorizedIngredients.append(naturalStarch)
+        if categorizedIngredients[0].isEmpty {
+            categorizedIngredients[0].append("No sucrose detected.\nPlease check complete ingredients")
+        }
+        
+        if categorizedIngredients[1].isEmpty {
+            categorizedIngredients[1].append("No other sugars detected.\nPlease check complete ingredients")
+        }
+        
         return categorizedIngredients
     }
 }

@@ -28,12 +28,18 @@ struct MealFoodListScreen: View {
     var body: some View {
         ZStack (alignment: .topLeading) {
             BackgroundView()
-                .navigationTitle(mealType.label)
-                .navigationBarItems(trailing: Text("Edit").onTapGesture(perform: {
-//                    editListScreenPresenting = true
+                .navigationTitle(user.selectedDay.formatted(.dateTime.month().day().year()))
+                .navigationBarItems(trailing:
+                    Text("Edit").onTapGesture(perform: {
+                    //                    editListScreenPresenting = true
                 }))
+                .navigationBarTitleDisplayMode(.inline)
             ScrollView {
                 VStack {
+                    HStack {
+                        StandardTextView(label: mealType.label, size: 30, weight: .bold)
+                        Spacer()
+                    }.padding(.horizontal)
                 HStack (spacing: 30) {
                     VStack (spacing: 5) {
                         ZStack {
@@ -148,6 +154,7 @@ struct MealFoodListScreen: View {
         }) {
             let brand = selectedFood.wholeFood.lowercased() == "yes" ? "Whole Food" : selectedFood.brandName?.brandFormater(brandOwner: selectedFood.brandOwner ?? "")
             VStack (alignment: .leading, spacing: 10) {
+                StandardTextView(label: user.selectedDay.formatted(.dateTime.month().day().year()), size: 14)
                 StandardTextView(label: brand ?? "", size: 14, textColor: .iconTeal)
                 StandardTextView(label: selectedFood.description, size: 20, weight: .semibold)
                 HStack (spacing: 5) {
@@ -159,7 +166,6 @@ struct MealFoodListScreen: View {
                 VStack {
                     Button {
                         Task {
-                            let d = Temporal.Date.init(user.selectedDay.getNormalizedDate(adjustor: 0), timeZone: .none)
                             selectedFood.totalCarbs = (((Float(selectedFood.totalCarbs) ?? 0) / selectedFood.consumedServings) * (Float(customServingPercentage) ?? 0)).description
                             selectedFood.totalSugars = (((Float(selectedFood.totalSugars) ?? 0) / selectedFood.consumedServings) * (Float(customServingPercentage) ?? 0)).description
                             selectedFood.totalStarches = (((Float(selectedFood.totalStarches) ?? 0) / selectedFood.consumedServings) * (Float(customServingPercentage) ?? 0)).description
@@ -168,6 +174,7 @@ struct MealFoodListScreen: View {
                             await updateDailyMeals(meal: user.dailyMeal)
                             await user.getWeeklyMeals()
                             getMealDataTotals()
+                            editFoodSheetIsPresenting = false
                         }
                     } label: {
                         ZStack {
