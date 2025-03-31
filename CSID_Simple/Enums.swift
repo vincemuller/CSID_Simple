@@ -10,16 +10,18 @@ import SwiftUI
 
 
 enum HomeScreenSections: Identifiable, CaseIterable {
-    case mealData, meals, lists
+    case mealData, meals, lists, customFoodsAndMeals
     var id: Self { self }
     var label: String {
         switch self {
         case .mealData:
             return "Daily Totals"
         case .meals:
-            return "Meals"
+            return "Meal Log"
         case .lists:
             return "Lists"
+        case .customFoodsAndMeals:
+            return "Custom Meals & Foods"
         }
     }
 }
@@ -97,12 +99,12 @@ enum SearchResultCellType {
 }
 
 enum Ingredients: Identifiable, CaseIterable {
-    case sucroseIngredients, completeIngredientList, tolerationRatings
+    case sugarIngredients, completeIngredientList, tolerationRatings
     var id: Self { self }
     var label: String {
         switch self {
-        case .sucroseIngredients:
-            return "Sucrose"
+        case .sugarIngredients:
+            return "Sugars"
         case .completeIngredientList:
             return "Complete"
         case .tolerationRatings:

@@ -6,9 +6,10 @@ extension SavedLists {
   // MARK: - CodingKeys 
    public enum CodingKeys: String, ModelKey {
     case id
+    case defaultList
     case name
-    case description
     case userID
+    case description
     case createdAt
     case updatedAt
   }
@@ -32,9 +33,10 @@ extension SavedLists {
     
     model.fields(
       .field(savedLists.id, is: .required, ofType: .string),
+      .field(savedLists.defaultList, is: .optional, ofType: .bool),
       .field(savedLists.name, is: .optional, ofType: .string),
-      .field(savedLists.description, is: .optional, ofType: .string),
       .field(savedLists.userID, is: .optional, ofType: .string),
+      .field(savedLists.description, is: .optional, ofType: .string),
       .field(savedLists.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(savedLists.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )

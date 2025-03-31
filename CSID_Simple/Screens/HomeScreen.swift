@@ -41,6 +41,7 @@ struct HomeScreen: View {
     @State private var search: Search = .isNotFocused
     @State private var searchText: String = ""
     @State private var selectedSort: String = "Relevance"
+    @State private var selectedCategory: String = "All"
     @State private var selectedFilter: SearchFilter = .allFoods
     @State private var searchResults: [FoodDetails] = []
     @State private var activeSearch: Bool = false
@@ -52,6 +53,29 @@ struct HomeScreen: View {
                                   "Sugars (High to Low)",
                                   "Starches (Low to High)",
                                   "Starches (High to Low)"]
+    private let categories: [String] = [
+        "All",
+        "Baby Foods & Formula",
+        "Baking Goods & Spices",
+        "Breakfast Foods",
+        "Canned Goods & Soups",
+        "Chips, Crackers, Nuts, & Snacks",
+        "Coffee & Tea",
+        "Condiments, Sauces, Spreads, & Dressings",
+        "Confectionery & Sweets",
+        "Dairy & Dairy Alternatives",
+        "Drinks",
+        "Egg Products & Egg Alternatives",
+        "Fats & Oils",
+        "Frozen Foods",
+        "Fruits & Veggies",
+        "Grains, Pasta, Potato, & Pizza",
+        "Health & Supplements",
+        "Meat & Fish",
+        "Miscellaneous",
+        "Pickles, Olives, Peppers & Relishes",
+        "Prepared Meals"
+    ]
     
     //Compare foods variables
     @State private var compareFoodsSheetPresenting: Bool = false
@@ -73,10 +97,19 @@ struct HomeScreen: View {
         NavigationStack(path: $navigation) {
             ZStack (alignment: .top) {
                 BackgroundView()
-                    .navigationTitle("CSIDAssist")
-                
-                //Search bar section with sorting options
                 VStack (spacing: 0) {
+                    VStack (alignment: .leading, spacing: -10) {
+                        Image("csidAssistLogo")
+                            .resizable()
+                            .frame(width: 70, height: 70)
+                        Text("CSIDAssist")
+                            .font(.system(size: 30, weight: .bold))
+                            .foregroundStyle(.white)
+                            .offset(x: 10)
+                    }
+                    .frame(width: 393, alignment: .leading)
+                    .padding(.leading, 20)
+                    .padding(.bottom)
                     HStack (spacing: 10) {
                         ZStack (alignment: .leading) {
                             RoundedRectangle(cornerRadius: 10)
@@ -109,15 +142,22 @@ struct HomeScreen: View {
                             }.padding(.leading)
                         }
                         Menu {
-                            Picker("", selection: $selectedSort) {
-                                ForEach(sortingOptions, id: \.self){ option in
-                                    Button(action: {
-                                        self.selectedSort = option
-                                    }, label: {
-                                        Text(option)
-                                    })
+                            Menu ("Categories") {
+                                Picker("", selection: $selectedCategory) {
+                                    ForEach(categories, id: \.self) { category in
+                                        Button(category, action: {self.selectedCategory = category})
+                                    }
                                 }
                             }
+                            .menuActionDismissBehavior(.disabled)
+                            Menu ("Sort") {
+                                Picker("", selection: $selectedSort) {
+                                    ForEach(sortingOptions, id: \.self){ option in
+                                        Button(option, action: {self.selectedSort = option})
+                                    }
+                                }
+                            }
+                            .menuActionDismissBehavior(.disabled)
                         } label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
@@ -130,210 +170,252 @@ struct HomeScreen: View {
                         .onChange(of: selectedSort) {
                             search == .isFocused ? searchFoods() : nil
                         }
+                        .onChange(of: selectedCategory) {
+                            search == .isFocused ? searchFoods() : nil
+                        }
                     }
                     .padding(.vertical, 5)
                     switch search {
                     case .isNotFocused:
-                        ForEach(HomeScreenSections.allCases) {section in
-                            
-                            //User logged meals data section
-                            if section == .mealData {
-                                SectionTitleView(label: section.label)
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(.textField)
-                                    VStack {
-                                        HStack {
-                                            LazyVGrid(columns: columns) {
-                                                Image(systemName: "chevron.left")
-                                                    .foregroundStyle(.white)
-                                                    .font(.system(size: 14, weight: .semibold))
-                                                    .onTapGesture {
-                                                        user.updateWeek(dayInterval: -7)
-                                                        if let sD = user.dates.last {
-                                                            user.selectedDay = sD
-                                                        }
-                                                        Task {
-                                                            await user.getWeeklyMeals()
-                                                        }
-                                                    }
-                                                    .padding(.leading, 10)
-                                                ForEach(user.dates, id: \.self) {day in
-                                                    let weekDay = day.formatted(.dateTime.weekday())
-                                                    let calendarDay = day.formatted(.dateTime.day(.twoDigits))
-                                                    let sD = user.selectedDay.formatted(.dateTime.weekday()) == weekDay
-                                                    
-                                                    ZStack {
-                                                        sD ?
-                                                        RoundedRectangle(cornerRadius: 10)
-                                                            .stroke(.white, lineWidth: 1.5)
-                                                            .frame(width: 40, height: 45)
-                                                        : nil
-                                                        VStack {
-                                                            StandardTextView(label: calendarDay, size: 12, weight: .medium)
-                                                            StandardTextView(label: weekDay.uppercased(), size: 12, weight: .medium, textColor: .iconTeal)
-                                                        }
+                        ScrollView {
+                            ForEach(HomeScreenSections.allCases) {section in
+                                
+                                //User logged meals data section
+                                if section == .mealData {
+                                    SectionTitleView(label: section.label)
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(.textField)
+                                        VStack {
+                                            HStack {
+                                                LazyVGrid(columns: columns) {
+                                                    Image(systemName: "chevron.left")
+                                                        .foregroundStyle(.white)
+                                                        .font(.system(size: 14, weight: .semibold))
                                                         .onTapGesture {
-                                                            user.selectedDay = day
-                                                            user.getDailyMealDataTotals()
-                                                        }
-                                                    }
-                                                }
-                                                Image(systemName: "chevron.right")
-                                                    .foregroundStyle(.white)
-                                                    .font(.system(size: 14, weight: .semibold))
-                                                    .onTapGesture {
-                                                        user.updateWeek(dayInterval: 7)
-                                                        if let sD = user.dates.first {
-                                                            user.selectedDay = sD
-                                                        }
-                                                        
-                                                        Task {
-                                                            await user.getWeeklyMeals()
-                                                        }
-                                                    }
-                                                    .padding(.trailing, 10)
-                                            }
-                                        }
-                                        .padding(.top, 10)
-                                        HStack (spacing: 0) {
-                                            VStack (spacing: 0) {
-                                                ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalSugars / user.dailyThresholds.dailySugarsThreshold) * 100), backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
-                                                        .padding(10)
-                                                    StandardTextView(label: "\(user.dailyTotalSugars)g", size: 16)
-                                                }
-                                                StandardTextView(label: "Sugars", size: 14)
-                                            }
-                                            VStack (spacing: 0) {
-                                                ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalCarbs / user.dailyThresholds.dailyTotalCarbsThreshold) * 100), backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
-                                                        .padding(10)
-                                                    StandardTextView(label: "\(user.dailyTotalCarbs)g", size: 16)
-                                                }
-                                                StandardTextView(label: "Carbs", size: 14)
-                                            }
-                                            VStack (spacing: 0) {
-                                                ZStack {
-                                                    ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalStarches / user.dailyThresholds.dailyStarchesThreshold) * 100), backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
-                                                        .padding(10)
-                                                    StandardTextView(label: "\(user.dailyTotalStarches)g", size: 16)
-                                                }
-                                                StandardTextView(label: "Starches", size: 14)
-                                            }
-                                        }.padding(.bottom)
-                                    }
-                                }
-                                .frame(width: 350, height: 200)
-                            } else if section == .meals {
-                                
-                                //Meal type section
-                                SectionTitleView(label: section.label)
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(.textField)
-                                        .frame(width: 350, height: 100)
-                                    LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
-                                        ForEach(MealType.allCases, id: \.id) { meal in
-                                            if  !meal.label.contains("Snack") {
-                                                Button(action: {
-                                                    navigation.append(meal)
-                                                }) {
-                                                    VStack (spacing: 5) {
-                                                        Image(meal.label.lowercased())
-                                                            .resizable()
-                                                            .frame(width: 55, height: 55)
-                                                            .mask {
-                                                                Circle()
-                                                                    .frame(width: 50, height: 50)
+                                                            user.updateWeek(dayInterval: -7)
+                                                            if let sD = user.dates.last {
+                                                                user.selectedDay = sD
                                                             }
-                                                        StandardTextView(label: meal.label, size: 12, weight: .semibold)
-                                                    }
-                                                }
-//                                                NavigationLink(destination: getDestination(mealType: meal)) {
-//                                                    VStack (spacing: 5) {
-//                                                        Image(meal.label.lowercased())
-//                                                            .resizable()
-//                                                            .frame(width: 55, height: 55)
-//                                                            .mask {
-//                                                                Circle()
-//                                                                    .frame(width: 50, height: 50)
-//                                                            }
-//                                                        StandardTextView(label: meal.label, size: 12, weight: .semibold)
-//                                                    }
-//                                                }
-                                            }
-                                        }
-                                        Menu {
-                                            Button(action: {
-                                                navigation.append(MealType.eveningSnack)
-                                            }) {
-                                                Text("Evening Snack")
-                                            }
-                                            Button(action: {
-                                                navigation.append(MealType.afternoonSnack)
-                                            }) {
-                                                Text("Afternoon Snack")
-                                            }
-                                            Button(action: {
-                                                navigation.append(MealType.morningSnack)
-                                            }) {
-                                                Text("Morning Snack")
-                                            }
-                                        } label: {
-                                            VStack (spacing: 5) {
-                                                Image("snack")
-                                                    .resizable()
-                                                    .frame(width: 55, height: 55)
-                                                    .mask {
-                                                        Circle()
-                                                            .frame(width: 50, height: 50)
-                                                    }
-                                                StandardTextView(label: "Snack", size: 12, weight: .semibold)
-                                            }
-                                        }
-                                    }).frame(width: 300, alignment: .center)
-                                }
-                            } else {
-                                
-                                //User saved lists section
-                                SectionTitleView(label: section.label)
-                                ZStack (alignment: .top) {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(.textField)
-                                        .frame(width: 350, height: 170)
-                                    ScrollView {
-                                        VStack (alignment: .leading, spacing: 10) {
-                                            ForEach(user.userSavedLists, id: \.id) { list in
-                                                if user.userSavedLists.firstIndex(of: list) == 0 {
-                                                    HStack {
-                                                        Group {
-                                                            Image(systemName: "plus")
-                                                                .foregroundStyle(.iconTeal)
+                                                            Task {
+                                                                await user.getWeeklyMeals()
+                                                            }
                                                         }
-                                                        StandardTextView(label: "Create New List", size: 16, textColor: .iconTeal)
-                                                    }.onTapGesture {
-                                                        createListScreenPresenting = true
+                                                        .padding(.leading, 10)
+                                                    ForEach(user.dates, id: \.self) {day in
+                                                        let weekDay = day.formatted(.dateTime.weekday())
+                                                        let calendarDay = day.formatted(.dateTime.day(.twoDigits))
+                                                        let sD = user.selectedDay.formatted(.dateTime.weekday()) == weekDay
+                                                        
+                                                        ZStack {
+                                                            sD ?
+                                                            RoundedRectangle(cornerRadius: 10)
+                                                                .stroke(.white, lineWidth: 1.5)
+                                                                .frame(width: 40, height: 45)
+                                                            : nil
+                                                            VStack {
+                                                                StandardTextView(label: calendarDay, size: 12, weight: .medium)
+                                                                StandardTextView(label: weekDay.uppercased(), size: 12, weight: .medium, textColor: .iconTeal)
+                                                            }
+                                                            .onTapGesture {
+                                                                user.selectedDay = day
+                                                                user.getDailyMealDataTotals()
+                                                            }
+                                                        }
+                                                    }
+                                                    Image(systemName: "chevron.right")
+                                                        .foregroundStyle(.white)
+                                                        .font(.system(size: 14, weight: .semibold))
+                                                        .onTapGesture {
+                                                            user.updateWeek(dayInterval: 7)
+                                                            if let sD = user.dates.first {
+                                                                user.selectedDay = sD
+                                                            }
+                                                            
+                                                            Task {
+                                                                await user.getWeeklyMeals()
+                                                            }
+                                                        }
+                                                        .padding(.trailing, 10)
+                                                }
+                                            }
+                                            .padding(.top, 10)
+                                            HStack (spacing: 0) {
+                                                VStack (spacing: 0) {
+                                                    ZStack {
+                                                        ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalSugars / user.dailyThresholds.dailySugarsThreshold) * 100), backgroundColor: .iconRed.opacity(0.2), foregroundColors: [.iconRed.opacity(0.5), .iconRed, Color(UIColor.systemRed)])
+                                                            .padding(10)
+                                                        StandardTextView(label: "\(user.dailyTotalSugars)g", size: 16)
+                                                    }
+                                                    StandardTextView(label: "Sugars", size: 14)
+                                                }
+                                                VStack (spacing: 0) {
+                                                    ZStack {
+                                                        ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalCarbs / user.dailyThresholds.dailyTotalCarbsThreshold) * 100), backgroundColor: .iconTeal.opacity(0.2), foregroundColors: [.iconTeal.opacity(0.5), .iconTeal, Color(UIColor.systemGreen)])
+                                                            .padding(10)
+                                                        StandardTextView(label: "\(user.dailyTotalCarbs)g", size: 16)
+                                                    }
+                                                    StandardTextView(label: "Carbs", size: 14)
+                                                }
+                                                VStack (spacing: 0) {
+                                                    ZStack {
+                                                        ConsumptionCircle(ringWidth: 40, percent: Double((user.dailyTotalStarches / user.dailyThresholds.dailyStarchesThreshold) * 100), backgroundColor: .iconOrange.opacity(0.2), foregroundColors: [.iconOrange.opacity(0.5), .iconOrange, Color(UIColor.systemYellow)])
+                                                            .padding(10)
+                                                        StandardTextView(label: "\(user.dailyTotalStarches)g", size: 16)
+                                                    }
+                                                    StandardTextView(label: "Starches", size: 14)
+                                                }
+                                            }.padding(.bottom)
+                                        }
+                                    }
+                                    .frame(width: 350, height: 200)
+                                } else if section == .meals {
+                                    
+                                    //Meal type section
+                                    SectionTitleView(label: section.label)
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(.textField)
+                                            .frame(width: 350, height: 100)
+                                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())], content: {
+                                            ForEach(MealType.allCases, id: \.id) { meal in
+                                                if  !meal.label.contains("Snack") {
+                                                    Button(action: {
+                                                        navigation.append(meal)
+                                                    }) {
+                                                        VStack (spacing: 5) {
+                                                            Image(meal.label.lowercased())
+                                                                .resizable()
+                                                                .frame(width: 55, height: 55)
+                                                                .mask {
+                                                                    Circle()
+                                                                        .frame(width: 50, height: 50)
+                                                                }
+                                                            StandardTextView(label: meal.label, size: 12, weight: .semibold)
+                                                        }
+                                                    }
+                                                    //                                                NavigationLink(destination: getDestination(mealType: meal)) {
+                                                    //                                                    VStack (spacing: 5) {
+                                                    //                                                        Image(meal.label.lowercased())
+                                                    //                                                            .resizable()
+                                                    //                                                            .frame(width: 55, height: 55)
+                                                    //                                                            .mask {
+                                                    //                                                                Circle()
+                                                    //                                                                    .frame(width: 50, height: 50)
+                                                    //                                                            }
+                                                    //                                                        StandardTextView(label: meal.label, size: 12, weight: .semibold)
+                                                    //                                                    }
+                                                    //                                                }
+                                                }
+                                            }
+                                            Menu {
+                                                Button(action: {
+                                                    navigation.append(MealType.eveningSnack)
+                                                }) {
+                                                    Text("Evening Snack")
+                                                }
+                                                Button(action: {
+                                                    navigation.append(MealType.afternoonSnack)
+                                                }) {
+                                                    Text("Afternoon Snack")
+                                                }
+                                                Button(action: {
+                                                    navigation.append(MealType.morningSnack)
+                                                }) {
+                                                    Text("Morning Snack")
+                                                }
+                                            } label: {
+                                                VStack (spacing: 5) {
+                                                    Image("snack")
+                                                        .resizable()
+                                                        .frame(width: 55, height: 55)
+                                                        .mask {
+                                                            Circle()
+                                                                .frame(width: 50, height: 50)
+                                                        }
+                                                    StandardTextView(label: "Snack", size: 12, weight: .semibold)
+                                                }
+                                            }
+                                        }).frame(width: 300, alignment: .center)
+                                    }
+                                } else if section == .lists {
+                                    
+                                    //User saved lists section
+                                    SectionTitleView(label: section.label)
+                                    ZStack (alignment: .top) {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(.textField)
+                                            .frame(width: 350, height: 170)
+                                        ScrollView {
+                                            VStack (alignment: .leading, spacing: 10) {
+                                                ForEach(user.userSavedLists, id: \.id) { list in
+                                                    if user.userSavedLists.firstIndex(of: list) == 0 {
+                                                        HStack {
+                                                            Group {
+                                                                Image(systemName: "plus")
+                                                                    .foregroundStyle(.iconTeal)
+                                                            }
+                                                            StandardTextView(label: "Create New List", size: 16, textColor: .iconTeal)
+                                                        }.onTapGesture {
+                                                            createListScreenPresenting = true
+                                                        }
+                                                        Divider()
+                                                            .padding(.leading, 25)
+                                                    }
+                                                    NavigationLink(destination: SavedListSearchScreen(list: list)) {
+                                                        HStack {
+                                                            Image(systemName: "bookmark")
+                                                                .foregroundStyle(.white)
+                                                            StandardTextView(label: list.name ?? "", size: 16)
+                                                            Spacer()
+                                                            StandardTextView(label: user.userSavedFoods.filter {$0.savedListsID == list.id}.count.description, size: 16)
+                                                        }
                                                     }
                                                     Divider()
                                                         .padding(.leading, 25)
                                                 }
-                                                NavigationLink(destination: SavedListSearchScreen(list: list)) {
+                                            }
+                                            .padding()
+                                        }
+                                        .frame(width: 350, height: 165, alignment: .leading)
+                                    }
+                                } else {
+                                    SectionTitleView(label: section.label)
+                                    ZStack (alignment: .top) {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(.textField)
+                                            .frame(width: 350, height: 100)
+                                        ScrollView {
+                                            VStack (alignment: .leading, spacing: 10) {
+                                                NavigationLink(destination: Text("Saved Meals")) {
                                                     HStack {
-                                                        Image(systemName: "bookmark")
+                                                        Image(systemName: "fork.knife")
                                                             .foregroundStyle(.white)
-                                                        StandardTextView(label: list.name ?? "", size: 16)
+                                                        StandardTextView(label: "Saved Meals", size: 16)
+                                                        Spacer()
+                                                        StandardTextView(label: "5", size: 16)
+                                                    }
+                                                }
+                                                Divider()
+                                                    .padding(.leading, 25)
+                                                NavigationLink(destination: Text("Custom Foods")) {
+                                                    HStack {
+                                                        Image(systemName: "pencil.and.list.clipboard")
+                                                            .foregroundStyle(.white)
+                                                        StandardTextView(label: "Custom Foods", size: 16)
+                                                        Spacer()
+                                                        StandardTextView(label: "10", size: 16)
                                                     }
                                                 }
                                                 Divider()
                                                     .padding(.leading, 25)
                                             }
+                                            .padding()
                                         }
-                                        .padding()
+                                        .frame(width: 350, height: 165, alignment: .leading)
                                     }
-                                    .frame(width: 350, height: 165, alignment: .leading)
                                 }
-                            }
+                            }.frame(width: 393)
                         }
                     case .isFocused:
                         
@@ -351,7 +433,6 @@ struct HomeScreen: View {
                                         .frame(width: 105, height: 30))
                             }
                         }.padding(.horizontal, 25).padding(.vertical, 20)
-                        
                         //Search results view
                         ScrollView {
                             LazyVGrid (columns: [GridItem(.flexible())], spacing: 5) {
@@ -398,14 +479,10 @@ struct HomeScreen: View {
                     }
                 }
             }
-            .overlay(alignment: .topLeading, content: {
-                topLeadingLogo
-            })
             .navigationDestination(for: MealType.self) { screen in
                 getDestination(mealType: screen)
             }
         }
-        .ignoresSafeArea()
         .sheet(isPresented: $compareFoodsSheetPresenting, onDismiss: {
             compareFoodsSheetPresenting = false
         }) {
@@ -427,15 +504,6 @@ struct HomeScreen: View {
                 getComparisonNutDetails()
             }
         }
-    }
-    
-    private var topLeadingLogo: some View {//.
-        Image("csidAssistLogo")
-            .resizable()
-            .frame(width: 70, height: 70)
-            .padding(.leading, 10)
-            .padding(.top, 35)
-            .ignoresSafeArea()
     }
     
     private var progressIndicator: some View {
@@ -463,6 +531,7 @@ struct HomeScreen: View {
         searchResults = []
         search = .isNotFocused
         selectedSort = "Relevance"
+        selectedCategory = "All"
         selectedFilter = .allFoods
         compareQueue = []
 
@@ -508,7 +577,7 @@ struct HomeScreen: View {
             }
         }()
         
-        return "\(filterClause) \(removeNullValues) \(searchComponents.map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }.joined(separator: " AND "))"
+        return "\(filterClause) \(removeNullValues) \(searchComponents.map { "USDAFoodSearchTable.searchKeyWords LIKE '%\($0)%'" }.joined(separator: " AND ")) \(getCategoryFilter())"
     }
     
     private func getSortFilter() -> String {
@@ -521,6 +590,34 @@ struct HomeScreen: View {
         case "Carbs (Low to High)": return "CAST(carbs AS REAL)"
         case "Carbs (High to Low)": return "CAST(carbs AS REAL) DESC"
         default: return "wholeFood DESC, length(description)"
+        }
+    }
+    
+    private func getCategoryFilter() -> String {
+        switch selectedCategory {
+            case "All": return ""
+            case "Baby Foods & Formula": return "AND brandedFoodCategory = 'Baby Foods & Formula'"
+            case "Baking Goods & Spices": return "AND brandedFoodCategory = 'Baking Goods & Spices'"
+            case "Breakfast Foods": return "AND brandedFoodCategory = 'Breakfast Foods'"
+            case "Canned Goods & Soups": return "AND brandedFoodCategory = 'Canned Goods & Soups'"
+            case "Chips, Crackers, Nuts, & Snacks": return "AND brandedFoodCategory = 'Chips, Crackers, Nuts, & Snacks'"
+            case "Coffee & Tea": return "AND brandedFoodCategory = 'Coffee & Tea'"
+            case "Condiments, Sauces, Spreads, & Dressings": return "AND brandedFoodCategory = 'Condiments, Sauces, Spreads, & Dressings'"
+            case "Confectionery & Sweets": return "AND brandedFoodCategory = 'Confectionary & Sweets'"
+            case "Dairy & Dairy Alternatives": return "AND brandedFoodCategory = 'Dairy & Dairy Alternatives'"
+            case "Drinks": return "AND brandedFoodCategory = 'Drinks'"
+            case "Egg Products & Egg Alternatives": return "AND brandedFoodCategory = 'Egg Products & Egg Alternatives'"
+            case "Fats & Oils": return "AND brandedFoodCategory = 'Fats & Oils'"
+            case "Frozen Foods": return "AND brandedFoodCategory = 'Frozen Foods'"
+            case "Fruits & Veggies": return "AND brandedFoodCategory = 'Fruits & Veggies'"
+            case "Grains, Pasta, Potato, & Pizza": return "AND brandedFoodCategory = 'Grains, Pasta, Potato, & Pizza'"
+            case "Health & Supplements": return "AND brandedFoodCategory = 'Health & Supplements'"
+            case "Meat & Fish": return "AND brandedFoodCategory = 'Meat & Fish'"
+            case "Miscellaneous": return "AND brandedFoodCategory = 'Miscellaneous'"
+            case "Pickles, Olives, Peppers & Relishes": return "AND brandedFoodCategory = 'Pickles, Olives, Peppers & Relishes'"
+            case "Prepared Meals": return "AND brandedFoodCategory = 'Prepared Meals'"
+        default:
+            return ""
         }
     }
     

@@ -220,6 +220,14 @@ class User: ObservableObject {
             switch result {
             case .success(let lists):
                 print("Successfully retrieved saved lists: \(lists.count)")
+                
+                if lists.count == 0 {
+                    Task {
+                        await createDefaultSavedList()
+                    }
+                    
+                }
+                
                 DispatchQueue.main.async {
                     self.userSavedLists.removeAll()
                 }
@@ -274,6 +282,53 @@ class User: ObservableObject {
             print("Unexpected error: \(error)")
 //            errorAlert = true
 //            errorComment = error.localizedDescription
+        }
+    }
+    
+    private func createDefaultSavedList() async {
+        let model = SavedLists(defaultList: true, name: "My Favs", userID: "vmuller2529", description: "")
+        do {
+            let result = try await Amplify.API.mutate(request: .create(model))
+            switch result {
+            case .success(let model):
+                let priorFavs = PersistenceManager.getUserFavs()
+                Task {
+                    await addOldFavsToDefaultList(priorFavs: priorFavs, list: model)
+                }
+            case .failure(let graphQLError):
+                print("Failed to create graphql \(graphQLError)")
+            }
+        } catch let error as APIError {
+            print("Failed to create TolerationRating - \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    private func addOldFavsToDefaultList(priorFavs: [USDAFoodDetails], list: SavedLists) async {
+
+        for fav in priorFavs {
+            let model = SavedFoods(
+                savedListsID: list.id,
+                userID: userID,
+                fdicID: fav.fdicID)
+            do {
+                let result = try await Amplify.API.mutate(request: .create(model))
+                switch result {
+                case .success(let model):
+                    print("Successfully created SavedFoods: \(model)")
+                case .failure(let graphQLError):
+                    print("Failed to create graphql \(graphQLError)")
+                }
+            } catch let error as APIError {
+                print("Failed to create SavedFoods - \(error)")
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        }
+        Task {
+            await getSavedLists()
+            await getSavedFoods()
         }
     }
 }

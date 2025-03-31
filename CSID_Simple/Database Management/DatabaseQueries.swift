@@ -113,9 +113,15 @@ class DatabaseQueries {
         var totalFat:           String = "N/A"
         var sodium:             String = "N/A"
         var ingredients:        String = "N/A"
+        var fructose:           String = "N/A"
+        var glucose:            String = "N/A"
+        var lactose:            String = "N/A"
+        var maltose:            String = "N/A"
+        var sucrose:            String = "N/A"
+        
         
         let queryStatementString = """
-            SELECT carbs, totalSugars, totalSugarAlcohols, fiber, protein, totalFat, sodium, ingredients FROM USDAFoodNutData
+            SELECT carbs, totalSugars, totalSugarAlcohols, fiber, protein, totalFat, sodium, ingredients, fructose, glucose, lactose, maltose, sucrose, starch FROM USDAFoodNutData
             WHERE fdicID=\(fdicID);
             """
         if sqlite3_prepare_v2(
@@ -166,6 +172,31 @@ class DatabaseQueries {
             } else {
                 ingredients = "N/A"
             }
+            if let queryResultFructose = sqlite3_column_text(queryStatement, 8) {
+                fructose = String(cString: queryResultFructose)
+            } else {
+                fructose = "N/A"
+            }
+            if let queryResultGlucose = sqlite3_column_text(queryStatement, 9) {
+                glucose = String(cString: queryResultGlucose)
+            } else {
+                glucose = "N/A"
+            }
+            if let queryResultLactose = sqlite3_column_text(queryStatement, 10) {
+                lactose = String(cString: queryResultLactose)
+            } else {
+                lactose = "N/A"
+            }
+            if let queryResultMaltose = sqlite3_column_text(queryStatement, 11) {
+                maltose = String(cString: queryResultMaltose)
+            } else {
+                maltose = "N/A"
+            }
+            if let queryResultSucrose = sqlite3_column_text(queryStatement, 12) {
+                sucrose = String(cString: queryResultSucrose)
+            } else {
+                sucrose = "N/A"
+            }
               }
             
           } else {
@@ -207,10 +238,15 @@ class DatabaseQueries {
         protein     = dataFormater(value: protein)
         totalFat    = dataFormater(value: totalFat)
         sodium      = dataFormater(value: sodium)
+        fructose    = dataFormater(value: fructose)
+        glucose     = dataFormater(value: glucose)
+        lactose     = dataFormater(value: lactose)
+        maltose     = dataFormater(value: maltose)
+        sucrose     = dataFormater(value: sucrose)
         
-        nutrientData = NutrientData(carbs: carbs, fiber: fiber, netCarbs: netCarbs, totalSugars: totalSugars, totalStarches: totalStarches, totalSugarAlcohols: totalSugarAlcohols, protein: protein, totalFat: totalFat, sodium: sodium, ingredients: ingredients)
+        nutrientData = NutrientData(carbs: carbs, fiber: fiber, netCarbs: netCarbs, totalSugars: totalSugars, totalStarches: totalStarches, totalSugarAlcohols: totalSugarAlcohols, protein: protein, totalFat: totalFat, sodium: sodium, ingredients: ingredients, fructose: fructose, glucose: glucose, lactose: lactose, maltose: maltose, sucrose: sucrose)
         
-        return nutrientData ?? NutrientData(carbs: "N/A", fiber: "N/A", netCarbs: "N/A", totalSugars: "N/A", totalStarches: "N/A", totalSugarAlcohols: "N/A", protein: "N/A", totalFat: "N/A", sodium: "N/A", ingredients: "N/A")
+        return nutrientData ?? NutrientData(carbs: "N/A", fiber: "N/A", netCarbs: "N/A", totalSugars: "N/A", totalStarches: "N/A", totalSugarAlcohols: "N/A", protein: "N/A", totalFat: "N/A", sodium: "N/A", ingredients: "N/A", fructose: "N/A", glucose: "N/A", lactose: "N/A", maltose: "N/A", sucrose: "N/A")
     }
     
 }

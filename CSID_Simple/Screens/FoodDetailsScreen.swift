@@ -21,7 +21,7 @@ struct FoodDetailsScreen: View {
     @State private var isLoaded: Bool = false
     @State private var selectedList: String = ""
     @State private var customServing: String = ""
-    @State private var selectedIngredientList: Ingredients = .sucroseIngredients
+    @State private var selectedIngredientList: Ingredients = .sugarIngredients
     @State private var sucroseAndStarchIngredients: [[String]] = [[],[]]
     @State private var tolerationRatings: [TolerationRating] = []
     @State private var tolerationRating: Toleration = .inconclusive
@@ -208,42 +208,53 @@ struct FoodDetailsScreen: View {
                                 }
                             }
                             GeometryReader(content: { geometry in
+                                
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 15)
                                         .fill(.textField)
                                     switch selectedIngredientList {
-                                    case .sucroseIngredients:
-                                        HStack {
-                                            VStack (alignment: .leading, spacing: 5) {
-                                                Text("Sucrose detected in:")
-                                                    .font(.system(size: 13, weight: .semibold))
-                                                    .foregroundStyle(.iconTeal)
-                                                List(sucroseAndStarchIngredients[0], id: \.self) { ingredient in
-                                                    Text(ingredient.trimmingCharacters(in: .whitespacesAndNewlines).capitalized)
-                                                        .font(.system(size: 12))
-                                                        .foregroundStyle(.white)
-                                                        .listRowBackground(Color.clear)
-                                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                                        .listRowSpacing(0)
-                                                }.listStyle(.plain)
-                                                    .environment(\.defaultMinListRowHeight, 20)
-                                            }.padding(.top, 10)
-                                            Spacer()
-                                            VStack (alignment: .leading, spacing: 5) {
-                                                Text("Other sugars detected in:")
-                                                    .font(.system(size: 13, weight: .semibold))
-                                                    .foregroundStyle(.iconTeal)
-                                                List(sucroseAndStarchIngredients[1], id: \.self) { ingredient in
-                                                    Text(ingredient.trimmingCharacters(in: .whitespacesAndNewlines).capitalized)
-                                                        .font(.system(size: 12))
-                                                        .foregroundStyle(.white)
-                                                        .listRowBackground(Color.clear)
-                                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                                        .listRowSpacing(0)
-                                                }.listStyle(.plain)
-                                                    .environment(\.defaultMinListRowHeight, 20)
-                                            }.padding(.top, 10)
-                                        }.frame(width: 340)
+                                    case .sugarIngredients:
+                                        if food.wholeFood.lowercased() == "yes" {
+                                            VStack {
+                                                Text("Sucrose: \(nutData?.sucrose ?? "N/A")")
+                                                Text("Fructose: \(nutData?.fructose ?? "N/A")")
+                                                Text("Glucose: \(nutData?.glucose ?? "N/A")")
+                                                Text("Lactose: \(nutData?.lactose ?? "N/A")")
+                                                Text("Maltose: \(nutData?.maltose ?? "N/A")")
+                                            }
+                                        } else {
+                                            HStack {
+                                                VStack (alignment: .leading, spacing: 5) {
+                                                    Text("Sucrose detected in:")
+                                                        .font(.system(size: 13, weight: .semibold))
+                                                        .foregroundStyle(.iconTeal)
+                                                    List(sucroseAndStarchIngredients[0], id: \.self) { ingredient in
+                                                        Text(ingredient.trimmingCharacters(in: .whitespacesAndNewlines).capitalized)
+                                                            .font(.system(size: 12))
+                                                            .foregroundStyle(.white)
+                                                            .listRowBackground(Color.clear)
+                                                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                                            .listRowSpacing(0)
+                                                    }.listStyle(.plain)
+                                                        .environment(\.defaultMinListRowHeight, 20)
+                                                }.padding(.top, 10)
+                                                Spacer()
+                                                VStack (alignment: .leading, spacing: 5) {
+                                                    Text("Other sugars detected in:")
+                                                        .font(.system(size: 13, weight: .semibold))
+                                                        .foregroundStyle(.iconTeal)
+                                                    List(sucroseAndStarchIngredients[1], id: \.self) { ingredient in
+                                                        Text(ingredient.trimmingCharacters(in: .whitespacesAndNewlines).capitalized)
+                                                            .font(.system(size: 12))
+                                                            .foregroundStyle(.white)
+                                                            .listRowBackground(Color.clear)
+                                                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                                            .listRowSpacing(0)
+                                                    }.listStyle(.plain)
+                                                        .environment(\.defaultMinListRowHeight, 20)
+                                                }.padding(.top, 10)
+                                            }.frame(width: 340)
+                                        }
                                     case .completeIngredientList:
                                         ScrollView {
                                             Text(nutData?.ingredients ?? "")

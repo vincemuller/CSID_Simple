@@ -25,6 +25,19 @@ struct FoodDetails: Codable, Hashable, Identifiable {
     var wholeFood:              String
 }
 
+struct USDAFoodDetails: Codable {
+    var searchKeyWords:         String
+    var fdicID:                 Int
+    var brandOwner:             String?
+    var brandName:              String?
+    var brandedFoodCategory:    String
+    var description:            String
+    var servingSize:            Float
+    var servingSizeUnit:        String
+    var ingredients:            String
+    var wholeFood:              String
+}
+
 struct NutrientData: Codable, Identifiable {
     var id = UUID()
     var carbs:                  String
@@ -37,6 +50,11 @@ struct NutrientData: Codable, Identifiable {
     var totalFat:               String
     var sodium:                 String
     var ingredients:            String
+    var fructose:               String
+    var glucose:                String
+    var lactose:                String
+    var maltose:                String
+    var sucrose:                String
 }
 
 struct TolerationChunks: Identifiable {

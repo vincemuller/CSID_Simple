@@ -98,8 +98,7 @@ struct CreateListScreen: View {
     
     private func createSavedList() async {
         let model = SavedLists(name: listName,
-                               description: description,
-                               userID: "vmuller2529")
+                               userID: "vmuller2529", description: description)
         do {
             let result = try await Amplify.API.mutate(request: .create(model))
             switch result {

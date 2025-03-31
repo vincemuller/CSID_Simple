@@ -28,6 +28,11 @@ class Helpers {
         var adjustedStarches: String    = "N/A"
         var adjustedTotalSugars: String = "N/A"
         var adjustedFiber: String       = "N/A"
+        var adjustedFructose: String    = "N/A"
+        var adjustedGlucose: String     = "N/A"
+        var adjustedLactose: String     = "N/A"
+        var adjustedMaltose: String     = "N/A"
+        var adjustedSucrose: String     = "N/A"
         
         if nutrientData.carbs != "N/A" {
             let aC:  Float  = (Float(nutrientData.carbs)!*adjustor)
@@ -54,7 +59,32 @@ class Helpers {
             adjustedTotalSugars = String(format: "%.1f", aTS)
         }
         
-        let adjustedNutrientData = NutrientData(carbs: adjustedCarbs, fiber: adjustedFiber, netCarbs: adjustedNetCarbs, totalSugars: adjustedTotalSugars, totalStarches: adjustedStarches, totalSugarAlcohols: "", protein: "", totalFat: "", sodium: "", ingredients: nutrientData.ingredients)
+        if nutrientData.fructose != "N/A" {
+            let aF:  Float      = (Float(nutrientData.fructose)!*adjustor)
+            adjustedFructose    = String(format: "%.1f", aF)
+        }
+        
+        if nutrientData.glucose != "N/A" {
+            let aGl:  Float     = (Float(nutrientData.glucose)!*adjustor)
+            adjustedGlucose     = String(format: "%.1f", aGl)
+        }
+        
+        if nutrientData.lactose != "N/A" {
+            let aL:  Float      = (Float(nutrientData.lactose)!*adjustor)
+            adjustedLactose     = String(format: "%.1f", aL)
+        }
+        
+        if nutrientData.maltose != "N/A" {
+            let aM:  Float      = (Float(nutrientData.maltose)!*adjustor)
+            adjustedMaltose     = String(format: "%.1f", aM)
+        }
+        
+        if nutrientData.sucrose != "N/A" {
+            let aSuc:  Float    = (Float(nutrientData.sucrose)!*adjustor)
+            adjustedSucrose     = String(format: "%.1f", aSuc)
+        }
+        
+        let adjustedNutrientData = NutrientData(carbs: adjustedCarbs, fiber: adjustedFiber, netCarbs: adjustedNetCarbs, totalSugars: adjustedTotalSugars, totalStarches: adjustedStarches, totalSugarAlcohols: "", protein: "", totalFat: "", sodium: "", ingredients: nutrientData.ingredients, fructose: adjustedFructose, glucose: adjustedGlucose, lactose: adjustedLactose, maltose: adjustedMaltose, sucrose: adjustedSucrose)
         
         return adjustedNutrientData
     }
@@ -810,11 +840,11 @@ class Helpers {
 //        categorizedIngredients.append(naturalSucrose)
 //        categorizedIngredients.append(naturalStarch)
         if categorizedIngredients[0].isEmpty {
-            categorizedIngredients[0].append("No sucrose detected.\nPlease check complete ingredients")
+            categorizedIngredients[0].append("No sucrose detected.\nAs always, check the ingredients")
         }
         
         if categorizedIngredients[1].isEmpty {
-            categorizedIngredients[1].append("No other sugars detected.\nPlease check complete ingredients")
+            categorizedIngredients[1].append("No other sugars detected.\nAs always check the ingredients")
         }
         
         return categorizedIngredients

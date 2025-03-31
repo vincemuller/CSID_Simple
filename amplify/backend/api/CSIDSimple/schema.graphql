@@ -25,9 +25,10 @@ type SavedFoods @model @auth(rules: [{allow: public}]) {
 
 type SavedLists @model @auth(rules: [{allow: public}]) {
   id: ID!
+  defaultList: Boolean
   name: String
-  description: String
   userID: String
+  description: String
 }
 
 type TolerationRating @model @auth(rules: [{allow: public}]) {

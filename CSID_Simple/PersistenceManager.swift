@@ -1,53 +1,55 @@
 //
 //  PersistanceManager.swift
+//  CSID_App
 //
-//  Created by Vince Muller on 11/23/2024.
+//  Created by Vince Muller on 3/10/24.
 //
-
 
 import Foundation
 
+enum FavoriteActionType {
+    case add, remove
+}
+
+enum CreateActionType {
+    case create, modify, delete
+}
 
 enum PersistenceManager {
     
     static private let defaults = UserDefaults.standard
     
     enum Keys {
-        static let userSession = "userSession"
+        static let favorites = "favorites"
+        static let userFoods = "userFoods"
     }
     
-    static func retrieveUserSession(completed: @escaping (Result<String, Error>) -> Void) {
-        guard let sessionData = defaults.object(forKey: Keys.userSession) as? Data else {
-            completed(.success("n/a"))
+    static func retrieveFavorites(completed: @escaping (Result<[USDAFoodDetails], Error>) -> Void) {
+        guard let favoritesData = defaults.object(forKey: Keys.favorites) as? Data else {
+            completed(.success([]))
             return
         }
         
         do {
             let decoder = JSONDecoder()
-            let session = try decoder.decode(String.self, from: sessionData)
-            completed(.success(session))
+            let favorites = try decoder.decode([USDAFoodDetails].self, from: favoritesData)
+            completed(.success(favorites))
         } catch {
-            print("Unable to retrieve session, check persistence manager")
+            print("Unable to favorite!, check PersistenceManager")
             completed(.failure(error))
         }
     }
     
-    static func logIn(userID: String) -> Error? {
-        do {
-            let encoder = JSONEncoder()
-            let encodedUser = try encoder.encode(userID)
-            defaults.set(encodedUser, forKey: Keys.userSession)
-            return nil
-        } catch {
-            print("Unable to log user data logIn func in PersistenceManager")
-            return error
+    static func getUserFavs() -> [USDAFoodDetails] {
+        var userFavs: [USDAFoodDetails] = []
+        PersistenceManager.retrieveFavorites { result in
+            switch result {
+            case .success(let favorites):
+                userFavs = favorites
+            case .failure(let error):
+                print(error)
+            }
         }
+        return userFavs
     }
-    
-    static func logOut() {
-        defaults.removeObject(forKey: Keys.userSession)
-        print("Log Out successful")
-    }
-
-    
 }

@@ -150,9 +150,9 @@ struct CheckboxToggleStyle: View {
     @EnvironmentObject var user: User
     
     @Binding var toSave: [SavedFoods]
-    @Binding var toDelete:[ SavedFoods]
+    @Binding var toDelete: [SavedFoods]
     
-    var list: SavedLists
+    @State var list: SavedLists
     var fdicID: Int
     @State private var isOn: Bool = false
     
@@ -183,7 +183,7 @@ struct CheckboxToggleStyle: View {
                 }
         }
         .onAppear {
-            if user.userSavedFoods.contains(where: {$0.fdicID == fdicID && $0.savedListsID == list.id}) {
+            if user.userSavedFoods.contains(where: {$0.fdicID == fdicID && $0.savedListsID == list.id}) && !toDelete.contains(where: {$0.fdicID == fdicID}) {
                 isOn = true
             }
         }
